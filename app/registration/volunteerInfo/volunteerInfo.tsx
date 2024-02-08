@@ -88,16 +88,16 @@ function VolunteerInfo() {
         <div className="inputFieldBlock">
           <div className="inputFieldFlex">
             <div className="inputFieldBlock">
-            <label htmlFor="inputPhone" className="form-label">
-              Primary Phone number
-            </label>
-            <input type="text" className="form-control" id="inputZip" />
+              <label htmlFor="inputPhone" className="form-label">
+                Primary Phone number
+              </label>
+              <input type="text" className="form-control" id="inputZip" />
             </div>
             <div>
-            <label htmlFor="inputPhone" className="form-label">
-              Secondary Phone number
-            </label>
-            <input type="text" className="form-control" id="inputZip" />
+              <label htmlFor="inputPhone" className="form-label">
+                Secondary Phone number
+              </label>
+              <input type="text" className="form-control" id="inputZip" />
             </div>
           </div>
           <div>
@@ -111,6 +111,16 @@ function VolunteerInfo() {
               placeholder="name@example.com"
             />
           </div>
+        </div>
+
+        <div className="inputFieldBlock">
+          <label htmlFor="exampleFormControlTextarea1" className="form-label">
+            Notes:
+          </label>
+          <textarea
+            className="form-control"
+            id="exampleFormControlTextarea1"
+          ></textarea>
         </div>
 
         <div className="buttonDiv">
