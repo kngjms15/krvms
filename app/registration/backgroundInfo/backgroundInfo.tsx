@@ -4,6 +4,7 @@ import "./backgroundInfo.css";
 function BackgroundInfo() {
   return (
     <>
+    
       <form>
         <div className="formHeader">
           <h1>BACKGROUND INFORMATION</h1>
@@ -18,6 +19,17 @@ function BackgroundInfo() {
           </div>
 
           <div className="inputFieldBlock">
+            <label htmlFor="exampleFormControlTextarea1" className="form-label">
+              Please list previous volunteer experience (who you volunteered
+              with and what your tasks were):
+            </label>
+            <textarea
+              className="form-control"
+              id="exampleFormControlTextarea1"
+            ></textarea>
+          </div>
+
+          <div className="inputFieldBlock">
             <label htmlFor="conviction" className="form-label">
               Have you had any criminal conviction for which a pardon has not
               been granted?
@@ -28,8 +40,8 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
+                  name="conviction"
+                  id="convictionYes"
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   Yes
@@ -39,8 +51,8 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
+                  name="conviction"
+                  id="convictionNo"
                   checked
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
@@ -51,14 +63,8 @@ function BackgroundInfo() {
 
             <div className="inputFieldBlock">
               <label htmlFor="inputZip" className="form-label">
-                If Yes, Please provide more details:
+                (Please note: a security reference check is required)
               </label>
-              <input
-                type="text"
-                className="form-control"
-                id="inputZip"
-                placeholder="Please leave blank if it doesn't apply"
-              />
             </div>
           </div>
 
@@ -72,8 +78,9 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
+                  name="bondable"
+                  id="bondableYes"
+                  checked
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   Yes
@@ -83,9 +90,8 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
-                  checked
+                  name="bondable"
+                  id="bondableNo"
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                   No
@@ -105,8 +111,8 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
+                  name="medicalCondition"
+                  id="medicalConditionYes"
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault1">
                   Yes
@@ -116,8 +122,8 @@ function BackgroundInfo() {
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
+                  name="medicalCondition"
+                  id="medicalConditionNo"
                   checked
                 />
                 <label className="form-check-label" htmlFor="flexRadioDefault2">

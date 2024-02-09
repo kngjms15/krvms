@@ -31,8 +31,10 @@ h1 {
 
 .inputFieldFlex {
     display: flex;
+    flex-grow: 1;
     justify-content: space-between;
     margin-bottom: 20px;
+
 }
 
 .inputFieldBlock {
@@ -74,6 +76,16 @@ h1 {
 
 .form-control {
   width: 400px;
+  height: auto;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box; 
+  
+}
+
+.form-control2 {
+  width: 900px;
   height: auto;
   padding: 8px;
   border: 1px solid #ccc;

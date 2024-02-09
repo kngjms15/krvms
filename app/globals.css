@@ -1,3 +1,5 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,11 +19,12 @@
 }
 
 body {
-  background-color: FFFFFF;
   width: auto;
-  font-family: Barlow, Arial, Helvetica, sans-serif;
-  
 }
+/* 
+@layer components {
+  @apply 
+} */
 
 @layer utilities {
   .text-balance {

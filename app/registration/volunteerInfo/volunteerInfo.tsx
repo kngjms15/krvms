@@ -1,12 +1,66 @@
+"use client";
+
 import React from "react";
 import "./volunteerInfo.css";
+import { useState } from "react";
 
 function VolunteerInfo() {
+
+  const provinces = [];
+
+  const albertaChapters = [
+    "Bonnyville",
+    "Bow Valley",
+    "Calgary",
+    "Camrose",
+    "Claresholm",
+    "Cold Lake",
+    "Crowsnest Pass",
+    "Delia",
+    "Drumheller",
+    "Edmonton",
+    "Fairview",
+    "Fort Saskatchewan",
+    "Grande Cache",
+    "Hanna",
+    "Kneehill",
+    "Lac La Biche",
+    "Lacombe",
+    "Leduc & County",
+    "Lethbridge & Taber",
+    "Medicine Hat & Redcliff",
+    "Okotoks",
+    "Parkland",
+    "Pincher Creek",
+    "Ponoka",
+    "Provost",
+    "Red Deer",
+    "Slave Lake",
+    "St Albert",
+    "St Paul",
+    "Stettler",
+    "Vegreville (County of Minburn)",
+    "Vermilion",
+    "Viking",
+    "Vulcan County",
+    "Wainwright",
+    "Whitecourt",
+    "Wood Buffalo"
+  ];
+
+  const [chapter, setChapter] = useState("");
+
+  const [province, setProvince] = useState("");  
+
+
+
+
+
   return (
     <>
       <form>
         <div className="formHeader">
-          <h1>Volunteer Information</h1>
+          <h1 className="text-blue- ">VOLUNTEER INFORMATION</h1>
         </div>
 
         <div className="inputFieldFlex">
@@ -35,26 +89,29 @@ function VolunteerInfo() {
         </div>
 
         <div className="inputFieldFlex">
+          <div className="fNameDiv">
+            <label htmlFor="inputFirstName" className="form-label">
+              Date of birth
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="dd/mm/yyyy"
+              aria-label="First name"
+            />
+          </div>
+        </div>
+
+        <div className="inputFieldFlex">
           <div className="address1">
             <label htmlFor="inputAddress" className="form-label">
               Address
             </label>
             <input
               type="text"
-              className="form-control"
+              className="form-control2"
               id="inputAddress"
               placeholder="1234 Main St"
-            />
-          </div>
-          <div className="address2">
-            <label htmlFor="inputAddress2" className="form-label">
-              Address 2
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputAddress2"
-              placeholder="Apartment, studio, or floor"
             />
           </div>
         </div>
@@ -66,6 +123,7 @@ function VolunteerInfo() {
             </label>
             <input type="text" className="form-control-small" id="inputCity" />
           </div>
+
           <div>
             <label htmlFor="Province" className="form-label">
               Province
@@ -84,6 +142,22 @@ function VolunteerInfo() {
             <input type="text" className="form-control" id="inputZip" />
           </div>
         </div>
+
+        <div>
+            <label htmlFor="Chapter" className="form-label">
+              Chapter
+            </label>
+            <select className="formSelect">
+              {
+                albertaChapters.map((chapter) => {
+                  if(chapter == 'AB')
+                  return <option value={chapter}>{chapter}</option>
+                })
+              }
+         
+            </select>
+          </div>
+
 
         <div className="inputFieldBlock">
           <div className="inputFieldFlex">
@@ -111,16 +185,6 @@ function VolunteerInfo() {
               placeholder="name@example.com"
             />
           </div>
-        </div>
-
-        <div className="inputFieldBlock">
-          <label htmlFor="exampleFormControlTextarea1" className="form-label">
-            Notes:
-          </label>
-          <textarea
-            className="form-control"
-            id="exampleFormControlTextarea1"
-          ></textarea>
         </div>
 
         <div className="buttonDiv">
