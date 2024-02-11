@@ -2,10 +2,12 @@ import React from "react";
 
 const VolInfo = () => {
   return (
-    <div className="flex-grow max-w-[940px] m-auto">
+    <div className="flex-grow max-w-[940px] m-auto ">
       <form className="bg-[#F2F2F2] rounded-lg p-4  ">
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
+        <div className="block text-center">
+          <h1>Volunteer Information</h1>
+        </div>
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label
               htmlFor="first-name"
@@ -19,7 +21,7 @@ const VolInfo = () => {
                 name="first-name"
                 id="first-name"
                 autoComplete="given-name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="First Name"
               />
             </div>
@@ -38,25 +40,67 @@ const VolInfo = () => {
                 name="last-name"
                 id="last-name"
                 autoComplete="family-name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Last Name"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="dob"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Date of Birth
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="dob"
+                id="dob"
+                autoComplete="family-name"
+                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="dd/mm/yyyy"
               />
             </div>
           </div>
 
           <div className="col-span-full">
-              <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-                Address
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="volunteer-address"
-                  id="volunteer-address"
-                  autoComplete="street-address"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+            <label
+              htmlFor="street-address"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Address
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="volunteer-address"
+                id="volunteer-address"
+                autoComplete="street-address"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
             </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              City
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="city"
+                id="city"
+                autoComplete="family-name"
+                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="City"
+              />
+            </div>
+          </div>
 
         </div>
       </form>
