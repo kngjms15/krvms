@@ -3,58 +3,31 @@
 import React from "react";
 import "./volunteerInfo.css";
 import { useState } from "react";
+import ProvinceChapters from "./provinceChapters.json";
 
 function VolunteerInfo() {
+  const [province] = useState(
+    ProvinceChapters.map((province) => province.Province)
+  );
 
-  const provinces = [];
+  const [selectedProvince, setSelectedProvince] = useState("AB");
+  const [selectedChapter, setSelectedChapter] = useState("");
 
-  const albertaChapters = [
-    "Bonnyville",
-    "Bow Valley",
-    "Calgary",
-    "Camrose",
-    "Claresholm",
-    "Cold Lake",
-    "Crowsnest Pass",
-    "Delia",
-    "Drumheller",
-    "Edmonton",
-    "Fairview",
-    "Fort Saskatchewan",
-    "Grande Cache",
-    "Hanna",
-    "Kneehill",
-    "Lac La Biche",
-    "Lacombe",
-    "Leduc & County",
-    "Lethbridge & Taber",
-    "Medicine Hat & Redcliff",
-    "Okotoks",
-    "Parkland",
-    "Pincher Creek",
-    "Ponoka",
-    "Provost",
-    "Red Deer",
-    "Slave Lake",
-    "St Albert",
-    "St Paul",
-    "Stettler",
-    "Vegreville (County of Minburn)",
-    "Vermilion",
-    "Viking",
-    "Vulcan County",
-    "Wainwright",
-    "Whitecourt",
-    "Wood Buffalo"
-  ];
+  // Function to handle province change
+  const handleProvinceChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedProvince(event.target.value);
+    setSelectedChapter(""); // Reset chapter selection when province changes
+  };
 
-  const [chapter, setChapter] = useState("");
+  const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedChapter(event.target.value);
+  };
 
-  const [province, setProvince] = useState("");  
-
-
-
-
+  const chaptersForSelectedProvince = ProvinceChapters.find(
+    (province) => province.Province === selectedProvince
+  )?.Chapters;
 
   return (
     <>
@@ -128,10 +101,17 @@ function VolunteerInfo() {
             <label htmlFor="Province" className="form-label">
               Province
             </label>
-            <select className="formSelect">
-              <option value="AB">AB</option>
-              <option value="SK">SK</option>
-              <option value="BC">BC</option>
+            <select
+              className="formSelect"
+              id="province"
+              value={selectedProvince}
+              onChange={handleProvinceChange}
+            >
+              {ProvinceChapters.map((province) => (
+                <option key={province.Province} value={province.Province}>
+                  {province.Province}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -144,20 +124,29 @@ function VolunteerInfo() {
         </div>
 
         <div>
-            <label htmlFor="Chapter" className="form-label">
-              Chapter
-            </label>
-            <select className="formSelect">
-              {
-                albertaChapters.map((chapter) => {
-                  if(chapter == 'AB')
-                  return <option value={chapter}>{chapter}</option>
-                })
-              }
-         
-            </select>
-          </div>
-
+          <label htmlFor="Chapter" className="form-label">
+            Chapter
+          </label>
+          <select
+            className="formSelect"
+            id="chapter"
+            value={selectedChapter}
+            onChange={handleChapterChange}
+          >
+            {chaptersForSelectedProvince &&
+            typeof chaptersForSelectedProvince !== "string" ? (
+              chaptersForSelectedProvince.map((chapter, index) => (
+                <option key={index} value={chapter}>
+                  {chapter}
+                </option>
+              ))
+            ) : (
+              <option value="No Chapters Available">
+                No Chapters Available
+              </option>
+            )}
+          </select>
+        </div>
 
         <div className="inputFieldBlock">
           <div className="inputFieldFlex">

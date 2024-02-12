@@ -8,10 +8,8 @@ import VolInfo from "./registration/volInfo/volInfo";
 export default function Home() {
   return (
     <>
-      
-      <VolunteerInfo />
-      <BackgroundInfo />
       <VolInfo />
+      <BackgroundInfo />
       
     </>
   );
