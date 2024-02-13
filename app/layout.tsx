@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <title>KidSport Volunteer Registration</title>
+      <title>KidSport</title>
       <body className={inter.className}>{children}</body>
     </html>
   );

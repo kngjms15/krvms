@@ -1,5 +1,6 @@
 "use client";
 
+
 import React from "react";
 import { useState } from "react";
 import ProvinceChapters from "./provinceChapters.json";
@@ -10,7 +11,7 @@ const VolunteerInfo = () => {
   );
 
   const [selectedProvince, setSelectedProvince] = useState("AB");
-  const [selectedChapter, setSelectedChapter] = useState("");
+  const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
 
   // Function to handle province change
   const handleProvinceChange = (
@@ -29,10 +30,12 @@ const VolunteerInfo = () => {
   )?.Chapters;
 
   return (
-    <div className="flex-grow max-w-[940px] m-auto ">
-      <form className="bg-[#F2F2F2] rounded-lg p-4  ">
-        <div className="block text-center my-4">
-          <h1>Volunteer Information</h1>
+    // Volunteer Information form
+    <div className="flex-grow max-w-[940px] m-auto">
+      <title>KidSport Volunteer Information</title>
+      <form className="bg-[#F2F2F2] rounded-lg p-8  ">
+        <div className="block text-center">
+          <h1 className="">Volunteer Information</h1>
         </div>
 
         <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-6">
@@ -83,13 +86,14 @@ const VolunteerInfo = () => {
             </label>
             <div className="mt-2">
               <input
-                type="text"
+                type="date"
                 name="dob"
                 id="dob"
                 autoComplete="family-name"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="dd/mm/yyyy"
+                placeholder="yyyy-mm-dd"
               />
+              
             </div>
           </div>
 
@@ -112,7 +116,7 @@ const VolunteerInfo = () => {
             </div>
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-3">
             <label
               htmlFor="city"
               className="block text-sm font-medium leading-6 text-gray-900"
@@ -131,7 +135,7 @@ const VolunteerInfo = () => {
             </div>
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-3">
             <label
               htmlFor="province"
               className="block text-sm font-medium leading-6 text-gray-900"
@@ -154,7 +158,26 @@ const VolunteerInfo = () => {
             </div>
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="postal-code"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Postal Code
+            </label>
+            <div className="mt-2">
+              <input
+                type="postal-code"
+                name="postal-code"
+                id="postal-code"
+                autoComplete="family-name"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="A1A 1A1"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
             <label
               htmlFor="chapter"
               className="block text-sm font-medium leading-6 text-gray-900"
