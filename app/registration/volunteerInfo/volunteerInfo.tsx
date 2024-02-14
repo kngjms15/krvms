@@ -5,6 +5,7 @@ import React from "react";
 import { useState } from "react";
 import ProvinceChapters from "./provinceChapters.json";
 
+
 const VolunteerInfo = () => {
   const [province] = useState(
     ProvinceChapters.map((province) => province.Province)
@@ -31,11 +32,11 @@ const VolunteerInfo = () => {
 
   return (
     // Volunteer Information form
-    <div className="flex-grow max-w-[940px] m-auto">
+    <div className="flex-grow max-w-[940px] m-auto my-6" >
       <title>KidSport Volunteer Information</title>
-      <form className="bg-[#F2F2F2] rounded-lg p-8  ">
+      <form className="bg-[#F2F2F2] rounded-lg p-8">
         <div className="block text-center">
-          <h1 className="">Volunteer Information</h1>
+          <h1 className="font-bold ">VOLUNTEER INFORMATION</h1>
         </div>
 
         <div className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-6">
@@ -93,7 +94,6 @@ const VolunteerInfo = () => {
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="yyyy-mm-dd"
               />
-              
             </div>
           </div>
 

@@ -25,6 +25,9 @@ body {
 @layer components {
   @apply 
 } */
+h1 {
+  @apply text-4xl;
+}
 
 @layer utilities {
   .text-balance {

@@ -1,9 +1,9 @@
-import VolInfo from "./volunteerInfo";
+import VolunteerInfo from "./volunteerInfo";
 
 
 
-export default function volInfo() {
+export default function VolunteerInfoPage() {
   return (
-    <VolInfo />
+    <VolunteerInfo />
   );
 }
