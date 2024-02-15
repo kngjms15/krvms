@@ -1,6 +1,11 @@
+'use client'
+
 import React from "react";
+import { useState } from "react";
 
 const Acknowledgement = () => {
+  const [agreed,setAgreed] = useState(false);
+
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport Acknowledgement</title>
@@ -104,7 +109,8 @@ const Acknowledgement = () => {
               name="acknowledgement"
               id="acknowledgement"
               className="align-middle justify-center w-5 h-5"
-              required
+              checked={agreed}
+              onChange={() => setAgreed(!agreed)}
             />
             <label htmlFor="acknowledgement" className="ml-3">
               I agree to the terms and conditions.
@@ -127,7 +133,8 @@ const Acknowledgement = () => {
             <button
               type="submit"
               id="volunteer-info-next"
-              className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+              className={`rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ${agreed ? ' hover:opacity-75 bg-[#6CC24A]' : 'bg-gray-400'}`}
+              disabled={!agreed}
             >
               Finish
             </button>
