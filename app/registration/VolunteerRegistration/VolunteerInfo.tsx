@@ -11,6 +11,19 @@ const VolunteerInfo = () => {
     ProvinceChapters.map((province) => province.Province)
   );
 
+  const ReadjustDate = (ageLimit = 18) => {
+    var currentDate = new Date();
+
+    var year = currentDate.getFullYear()-ageLimit;
+    var month = ("0" + (currentDate.getMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
+    var day = ("0" + currentDate.getDate()).slice(-2); 
+
+    var formattedDate = year + "-" + month + "-" + day;
+    return formattedDate;
+  }
+
+  const [maxDate,setMaxDate] = useState(ReadjustDate());
+
   const [selectedProvince, setSelectedProvince] = useState("AB");
   const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
 
@@ -93,6 +106,7 @@ const VolunteerInfo = () => {
                 autoComplete="family-name"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="yyyy-mm-dd"
+                max={maxDate}
               />
             </div>
           </div>
