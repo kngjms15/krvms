@@ -22,7 +22,26 @@ const VolunteerInfo = () => {
     return formattedDate;
 }
 
-  const [maxDate,setMaxDate] = useState(ReadjustDate());
+  const [maxDate] = useState(ReadjustDate());
+
+  const [validPrimePhoneNum,setValidPrimePhoneNum] = useState(true);
+  const [validSecondPhoneNum,setValidSecondPhoneNum] = useState(true);
+
+  const CheckValidNumber = (docID:string = 'primary-phone') => {
+    const directElement = document.getElementById(docID) as HTMLInputElement;
+    const phoneNumber = directElement?.value?.trim() || '';
+
+
+    const phoneNumberRegex = /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/;
+
+    if(phoneNumber.length>0){
+      if(docID=='primary-phone'){
+        setValidPrimePhoneNum(phoneNumberRegex.test(phoneNumber));
+      }else{
+        setValidSecondPhoneNum(phoneNumberRegex.test(phoneNumber));
+      }
+    }
+  }
 
   const [selectedProvince, setSelectedProvince] = useState("AB");
   const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
@@ -222,39 +241,77 @@ const VolunteerInfo = () => {
           </div>
 
           <div className="sm:col-span-3">
-            <label
-              htmlFor="primary-phone"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Primary Phone
-            </label>
+          {
+            !validPrimePhoneNum ?
+              <div className="flex items-center">
+                <label
+                  htmlFor="primary-phone"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Primary Phone
+                </label>
+                <label
+                  htmlFor="primary-phone"
+                  className="block ml-2 text-xs font-small leading-6 text-red-600"
+                >
+                  Invalid Primary Number
+                </label>
+              </div>
+              :
+              <label
+                htmlFor="primary-phone"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Primary Phone
+              </label>
+          }
             <div className="mt-2">
               <input
                 type="phone"
                 name="primary-phone"
                 id="primary-phone"
                 autoComplete="given-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border ${!validPrimePhoneNum &&'border-2 border-red-500'} p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 placeholder="Primary Phone"
+                onChange={() => CheckValidNumber('primary-phone')}
               />
             </div>
           </div>
 
           <div className="sm:col-span-3">
-            <label
-              htmlFor="secondary-phone"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Secondary Phone
-            </label>
+          {
+            !validSecondPhoneNum ?
+              <div className="flex items-center">
+                <label
+                  htmlFor="primary-phone"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Secondary Phone
+                </label>
+                <label
+                  htmlFor="primary-phone"
+                  className="block ml-2 text-xs font-small leading-6 text-red-600"
+                >
+                  Invalid Secondary Number
+                </label>
+              </div>
+              :
+              <label
+                htmlFor="primary-phone"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Primary Phone
+              </label>
+          }
             <div className="mt-2">
               <input
                 type="phone"
                 name="secondary-phone"
                 id="secondary-phone"
                 autoComplete="family-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border ${!validSecondPhoneNum &&'border-red-500'} p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 placeholder="Secondary Phone"
+                onChange={() => CheckValidNumber('secondary-phone')}
               />
             </div>
           </div>
