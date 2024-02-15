@@ -1,4 +1,4 @@
-import VolunteerInfo from "./volunteerInfo";
+import VolunteerInfo from "./VolunteerInfo";
 
 
 

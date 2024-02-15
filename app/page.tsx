@@ -1,7 +1,7 @@
-import Acknowledgement from "./registration/acknowledgement/acknowledgement";
-import BackgroundInfo from "./registration/backgroundInfo/backgroundInfo";
-import VolunteerInfo from "./registration/volunteerInfo/volunteerInfo";
-import WhatsNext from "./registration/whatsNext/whatsNext";
+import Acknowledgement from "./registration/VolunteerRegistration/Acknowledgement";
+import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
+import VolunteerInfo from "./registration/VolunteerRegistration/VolunteerInfo";
+import WhatsNext from "./registration/VolunteerRegistration/WhatsNext";
 
 
 export default function Home() {
@@ -11,6 +11,7 @@ export default function Home() {
       <BackgroundInfo />
       <Acknowledgement />
       <WhatsNext />
+
       
     </>
   );
