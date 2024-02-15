@@ -1,6 +1,14 @@
+"use client";
+
 import React from "react";
+import { useState } from "react";
 
 const BackgroundInfo = () => {
+
+  const [conviction,setConviction] = useState(false);
+  const [bondable,setBondable] = useState(true);
+  const [medicalCondition, setMedicalCondition] = useState(false);
+
   return (
     // Volunteer Background Info Form
     <div className="flex-grow max-w-[940px] m-auto">
@@ -45,6 +53,7 @@ const BackgroundInfo = () => {
                   name="conviction"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  checked={conviction}
                 />
                 <label>Yes</label>
               </div>
@@ -54,7 +63,7 @@ const BackgroundInfo = () => {
                   name="conviction"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={!conviction}
                 />
                 <label>No</label>
               </div>
@@ -93,7 +102,7 @@ const BackgroundInfo = () => {
                   name="bondable"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={bondable}
                 />
                 <label>Yes</label>
               </div>
@@ -103,6 +112,7 @@ const BackgroundInfo = () => {
                   name="bondable"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  checked={!bondable}
                 />
                 <label>No</label>
               </div>
@@ -124,7 +134,7 @@ const BackgroundInfo = () => {
                   name="medicalCondition"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={medicalCondition}
                 />
                 <label>Yes</label>
               </div>
@@ -134,7 +144,7 @@ const BackgroundInfo = () => {
                   name="medicalCondition"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={!medicalCondition}
                 />
                 <label>No</label>
               </div>
