@@ -133,7 +133,7 @@ const Acknowledgement = () => {
             <button
               type="submit"
               id="volunteer-info-next"
-              className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+              className={`rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 ${agreed ? 'bg-[#6CC24A]' : 'bg-gray-400'}`}
               disabled={!agreed}
             >
               Finish
