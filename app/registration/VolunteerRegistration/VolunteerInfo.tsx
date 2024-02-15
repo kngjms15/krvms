@@ -269,7 +269,7 @@ const VolunteerInfo = () => {
           <button
             type="button"
             id="volunteer-info-cancel"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-400 "
+            className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
           >
             Cancel
           </button>

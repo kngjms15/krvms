@@ -1,6 +1,14 @@
+"use client";
+
 import React from "react";
+import { useState } from "react";
 
 const BackgroundInfo = () => {
+
+  const [conviction,setConviction] = useState(false);
+  const [bondable,setBondable] = useState(true);
+  const [medicalCondition, setMedicalCondition] = useState(false);
+
   return (
     // Volunteer Background Info Form
     <div className="flex-grow max-w-[940px] m-auto">
@@ -45,6 +53,8 @@ const BackgroundInfo = () => {
                   name="conviction"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  checked={conviction}
+                  onChange={() => setConviction(true)}
                 />
                 <label>Yes</label>
               </div>
@@ -54,7 +64,8 @@ const BackgroundInfo = () => {
                   name="conviction"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={!conviction}
+                  onChange={() => setConviction(false)}
                 />
                 <label>No</label>
               </div>
@@ -72,9 +83,13 @@ const BackgroundInfo = () => {
               <textarea
                 id="conviction-details"
                 name="conviction-details"
+                placeholder={`${conviction ? 'Please provide details of your bond.' : 'Please select Yes to gain access to this field'}`}
                 rows={1}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  conviction ? 'bg-white' : 'bg-gray-200'
+                } ${!conviction && 'resize-none'}`}
                 defaultValue={""}
+                disabled={!conviction}
               />
             </div>
           </div>
@@ -93,7 +108,8 @@ const BackgroundInfo = () => {
                   name="bondable"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={bondable}
+                  onChange={() => setBondable(true)}
                 />
                 <label>Yes</label>
               </div>
@@ -103,6 +119,8 @@ const BackgroundInfo = () => {
                   name="bondable"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  checked={!bondable}
+                  onChange={() => setBondable(false)}
                 />
                 <label>No</label>
               </div>
@@ -124,7 +142,8 @@ const BackgroundInfo = () => {
                   name="medicalCondition"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={medicalCondition}
+                  onChange={() => setMedicalCondition(true)}
                 />
                 <label>Yes</label>
               </div>
@@ -134,7 +153,8 @@ const BackgroundInfo = () => {
                   name="medicalCondition"
                   type="radio"
                   className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked
+                  checked={!medicalCondition}
+                  onChange={() => setMedicalCondition(false)}
                 />
                 <label>No</label>
               </div>
@@ -143,19 +163,22 @@ const BackgroundInfo = () => {
 
           <div className="sm:col-span-3">
             <label
-              htmlFor="conviction-details"
+              htmlFor="condition-details"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               If yes, please provide details:
             </label>
             <div className="mt-2">
               <textarea
-                id="conviction-details"
-                name="conviction-details"
+                id="condition-details"
+                name="condition-details"
                 rows={1}
-                placeholder="Please provide details of your medical condition or disability."
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder={`${medicalCondition ? 'Please provide details of your medical condition or disability.' : 'Please select Yes to gain access to this field'}`}
+                className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                  medicalCondition ? 'bg-white' : 'bg-gray-200'
+                } ${!medicalCondition && 'resize-none'}`}
                 defaultValue={""}
+                disabled={!medicalCondition}
               />
             </div>
           </div>
@@ -233,8 +256,8 @@ const BackgroundInfo = () => {
             </label>
             <div className="mt-2">
               <textarea
-                id="conviction-details"
-                name="conviction-details"
+                id="other-notes"
+                name="other-notes"
                 rows={3}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 defaultValue={""}

@@ -4,7 +4,7 @@ import React from "react";
 const WhatsNext = () => {
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
-      <title>KidSport What's next</title>
+      <title>KidSport What's Next</title>
       <form action="" className="bg-[#F2F2F2] rounded-lg p-8">
         <div className="block text-center">
           <h1 className="font-bold ">What's Next</h1>
