@@ -33,7 +33,7 @@ const Acknowledgement = () => {
             <p>
               {" "}
               • I understand the information will be kept confidential in
-              accordance with Alberta's Personal Information Protection Act
+              accordance with Alberta&apos;s Personal Information Protection Act
               (PIPA).{" "}
             </p>
           </div>
@@ -94,7 +94,7 @@ const Acknowledgement = () => {
               registration process, to administer and evaluate our volunteers
               and programs, statistical purposes and to activate the Volunteer
               Accident Insurance coverage. This information may be shared with
-              other volunteers and volunteers' supervisory staff.
+              other volunteers and volunteers&apos; supervisory staff.
             </p>
           </div>
 
