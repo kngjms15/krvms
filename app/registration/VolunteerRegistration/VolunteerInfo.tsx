@@ -14,13 +14,13 @@ const VolunteerInfo = () => {
   const ReadjustDate = (ageLimit = 18) => {
     var currentDate = new Date();
 
-    var year = currentDate.getFullYear()-ageLimit;
+    var year = currentDate.getFullYear() - ageLimit;
     var month = ("0" + (currentDate.getMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
-    var day = ("0" + currentDate.getDate()).slice(-2); 
+    var day = ("0" + (currentDate.getDate() - 1)).slice(-2); // Subtracting 1 day
 
     var formattedDate = year + "-" + month + "-" + day;
     return formattedDate;
-  }
+}
 
   const [maxDate,setMaxDate] = useState(ReadjustDate());
 
