@@ -1,19 +1,10 @@
 "use client";
 
-
 import React from "react";
 import { useState } from "react";
 import provinceChapters from "./provinceChapters.json";
 
-
 const VolunteerInfo = () => {
-  const [province] = useState(
-    provinceChapters.map((province) => province.province)
-  );
-
-
-  
-
   const ReadjustDate = (ageLimit = 18) => {
     var currentDate = new Date();
 
@@ -23,28 +14,37 @@ const VolunteerInfo = () => {
 
     var formattedDate = year + "-" + month + "-" + day;
     return formattedDate;
-}
+  };
 
   const [maxDate] = useState(ReadjustDate());
 
-  const [validPrimePhoneNum,setValidPrimePhoneNum] = useState(true);
-  const [validSecondPhoneNum,setValidSecondPhoneNum] = useState(true);
+  const [validPrimePhoneNum, setValidPrimePhoneNum] = useState(true);
+  const [validSecondPhoneNum, setValidSecondPhoneNum] = useState(true);
 
-  const CheckValidNumber = (docID:string = 'primary-phone') => {
-    const directElement = document.getElementById(docID) as HTMLInputElement;
-    const phoneNumber = directElement?.value?.trim() || '';
+  const [primaryPhone, setPrimaryPhone] = useState("");
+  const [secondaryPhone, setSecondaryPhone] = useState("");
 
+  const CheckValidNumber = (phoneNumber: string, isPrimary = true) => {
+    const phoneNumberRegex =
+      /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/;
 
-    const phoneNumberRegex = /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/;
-
-    if(phoneNumber.length>0){
-      if(docID=='primary-phone'){
-        setValidPrimePhoneNum(phoneNumberRegex.test(phoneNumber));
-      }else{
-        setValidSecondPhoneNum(phoneNumberRegex.test(phoneNumber));
-      }
+    if (isPrimary) {
+      setValidPrimePhoneNum(phoneNumberRegex.test(phoneNumber));
+    } else {
+      setValidSecondPhoneNum(phoneNumberRegex.test(phoneNumber));
     }
-  }
+  };
+  const handlePrimaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const phoneNumber = event.target.value;
+    setPrimaryPhone(phoneNumber);
+    CheckValidNumber(phoneNumber, true);
+  };
+
+  const handleSecondaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const phoneNumber = event.target.value;
+    setSecondaryPhone(phoneNumber);
+    CheckValidNumber(phoneNumber, false);
+  };
 
   const [selectedProvince, setSelectedProvince] = useState("AB");
   const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
@@ -67,7 +67,7 @@ const VolunteerInfo = () => {
 
   return (
     // Volunteer Information form
-    <div className="flex-grow max-w-[940px] m-auto my-6" >
+    <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport Volunteer Information</title>
       <form className="bg-[#F2F2F2] rounded-lg p-8">
         <div className="block text-center">
@@ -244,8 +244,7 @@ const VolunteerInfo = () => {
           </div>
 
           <div className="sm:col-span-3">
-          {
-            !validPrimePhoneNum ?
+            {!validPrimePhoneNum ? (
               <div className="flex items-center">
                 <label
                   htmlFor="primary-phone"
@@ -260,30 +259,31 @@ const VolunteerInfo = () => {
                   Invalid Primary Number
                 </label>
               </div>
-              :
+            ) : (
               <label
                 htmlFor="primary-phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Primary Phone
               </label>
-          }
+            )}
             <div className="mt-2">
               <input
                 type="phone"
                 name="primary-phone"
                 id="primary-phone"
-                autoComplete="given-name"
-                className={`block w-full rounded-md border ${!validPrimePhoneNum &&'border-2 border-red-500'} p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                value={primaryPhone}
+                onChange={handlePrimaryPhoneChange}
+                className={`block w-full rounded-md border ${
+                  !validPrimePhoneNum && "border-2 border-red-500"
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 placeholder="Primary Phone"
-                onChange={() => CheckValidNumber('primary-phone')}
               />
             </div>
           </div>
 
           <div className="sm:col-span-3">
-          {
-            !validSecondPhoneNum ?
+            {!validSecondPhoneNum ? (
               <div className="flex items-center">
                 <label
                   htmlFor="primary-phone"
@@ -298,23 +298,25 @@ const VolunteerInfo = () => {
                   Invalid Secondary Number
                 </label>
               </div>
-              :
+            ) : (
               <label
                 htmlFor="primary-phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Secondary Phone
               </label>
-          }
+            )}
             <div className="mt-2">
               <input
                 type="phone"
                 name="secondary-phone"
                 id="secondary-phone"
-                autoComplete="family-name"
-                className={`block w-full rounded-md border ${!validSecondPhoneNum &&'border-2 border-red-500'} p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                value={secondaryPhone}
+                onChange={handleSecondaryPhoneChange}
+                className={`block w-full rounded-md border ${
+                  !validSecondPhoneNum && "border-2 border-red-500"
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 placeholder="Secondary Phone"
-                onChange={() => CheckValidNumber('secondary-phone')}
               />
             </div>
           </div>
@@ -340,14 +342,14 @@ const VolunteerInfo = () => {
         </div>
 
         <div className="flex justify-between mt-20">
-                      <button
-              type="button"
-              id="volunteer-info-cancel"
-              className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
-            >
-              Cancel
-            </button>
-          
+          <button
+            type="button"
+            id="volunteer-info-cancel"
+            className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+          >
+            Cancel
+          </button>
+
           <div>
             <button
               type="submit"
