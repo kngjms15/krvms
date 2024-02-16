@@ -34,7 +34,7 @@ const BackgroundInfo = () => {
                 id="employer"
                 value={employer}
                 onChange={(e) => setEmployer(e.target.value)}
-                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Employer"
               />
             </div>
@@ -51,7 +51,7 @@ const BackgroundInfo = () => {
                     id="conviction-yes"
                     name="conviction"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={conviction}
                     onChange={() => setConviction(true)}
                   />
@@ -62,7 +62,7 @@ const BackgroundInfo = () => {
                     id="conviction-no"
                     name="conviction"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={!conviction}
                     onChange={() => setConviction(false)}
                   />
@@ -83,7 +83,7 @@ const BackgroundInfo = () => {
                 rows={1}
                 value={convictionDetails}
                 onChange={(e) => setConvictionDetails(e.target.value)}
-                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 resize-none"
+                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6 resize-none"
                 placeholder="Please provide details of your conviction."
                 disabled={!conviction}
               />
@@ -101,7 +101,7 @@ const BackgroundInfo = () => {
                     id="bondable-yes"
                     name="bondable"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={bondable}
                     onChange={() => setBondable(true)}
                   />
@@ -112,7 +112,7 @@ const BackgroundInfo = () => {
                     id="bondable-no"
                     name="bondable"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={!bondable}
                     onChange={() => setBondable(false)}
                   />
@@ -133,7 +133,7 @@ const BackgroundInfo = () => {
                     id="medicalCondition-yes"
                     name="medicalCondition"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={medicalCondition}
                     onChange={() => setMedicalCondition(true)}
                   />
@@ -144,7 +144,7 @@ const BackgroundInfo = () => {
                     id="medicalCondition-no"
                     name="medicalCondition"
                     type="radio"
-                    className="h-4 w-4 mr-2 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                     checked={!medicalCondition}
                     onChange={() => setMedicalCondition(false)}
                   />
@@ -165,7 +165,7 @@ const BackgroundInfo = () => {
                 rows={1}
                 value={medicalConditionDetails}
                 onChange={(e) => setMedicalConditionDetails(e.target.value)}
-                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 resize-none"
+                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6 resize-none"
                 placeholder="Please provide details of your medical condition or disability."
                 disabled={!medicalCondition}
               />
@@ -189,7 +189,7 @@ const BackgroundInfo = () => {
                 id="emergency-full-name"
                 value={emergencyContactName}
                 onChange={(e) => setEmergencyContactName(e.target.value)}
-                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Full Name"
               />
             </div>
@@ -206,7 +206,7 @@ const BackgroundInfo = () => {
                 id="relationship"
                 value={emergencyContactRelationship}
                 onChange={(e) => setEmergencyContactRelationship(e.target.value)}
-                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Relationship"
               />
             </div>
@@ -223,7 +223,7 @@ const BackgroundInfo = () => {
                 id="emergency-phone"
                 value={emergencyContactPhone}
                 onChange={(e) => setEmergencyContactPhone(e.target.value)}
-                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Primary Phone"
               />
             </div>
@@ -240,7 +240,7 @@ const BackgroundInfo = () => {
                 rows={3}
                 value={otherNotes}
                 onChange={(e) => setOtherNotes(e.target.value)}
-                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Please provide any additional notes or information you would like to disclose."
               />
             </div>

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import provinceChapters from "./provinceChapters.json";
 
 const VolunteerInfo = () => {
-  const [maxDate] = useState(getFormattedDate(18));
+  const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
   const [validPrimePhoneNum, setValidPrimePhoneNum] = useState(true);
   const [validSecondPhoneNum, setValidSecondPhoneNum] = useState(true);
   const [primaryPhone, setPrimaryPhone] = useState("");
@@ -12,11 +12,11 @@ const VolunteerInfo = () => {
   const [selectedProvince, setSelectedProvince] = useState("AB");
   const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
 
-  function getFormattedDate(ageLimit: number = 18) {
+  function getFormattedDate(ageLimit: number = 14) {
     const currentDate = new Date();
     const year = currentDate.getFullYear() - ageLimit;
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-    const day = ("0" + (currentDate.getDate() - 1)).slice(-2);
+    const day = ("0" + currentDate.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
 
@@ -81,7 +81,7 @@ const VolunteerInfo = () => {
                 name="first-name"
                 id="first-name"
                 autoComplete="given-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="First Name"
               />
             </div>
@@ -100,7 +100,7 @@ const VolunteerInfo = () => {
                 name="last-name"
                 id="last-name"
                 autoComplete="family-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Last Name"
               />
             </div>
@@ -119,7 +119,7 @@ const VolunteerInfo = () => {
                 name="dob"
                 id="dob"
                 autoComplete="bday"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="yyyy-mm-dd"
                 max={maxDate}
               />
@@ -140,7 +140,7 @@ const VolunteerInfo = () => {
                 id="volunteer-address"
                 autoComplete="street-address"
                 placeholder="Street Address"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
               />
             </div>
           </div>
@@ -158,7 +158,7 @@ const VolunteerInfo = () => {
                 name="city"
                 id="city"
                 autoComplete="address-level2"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="City"
               />
             </div>
@@ -173,7 +173,7 @@ const VolunteerInfo = () => {
             </label>
             <div className="mt-2">
               <select
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 id="province"
                 value={selectedProvince}
                 onChange={handleProvinceChange}
@@ -200,40 +200,47 @@ const VolunteerInfo = () => {
                 name="postal-code"
                 id="postal-code"
                 autoComplete="postal-code"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="A1A 1A1"
               />
             </div>
           </div>
 
           <div className="sm:col-span-3">
-            <label
-              htmlFor="chapter"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Chapter
-            </label>
-            <div className="mt-2">
-              <select
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                id="chapter"
-                value={selectedChapter}
-                onChange={handleChapterChange}
-              >
-                {chaptersForSelectedProvince.length > 0 ? (
-                  chaptersForSelectedProvince.map((chapter: string, index: number) => (
-                    <option key={index} value={chapter}>
-                      {chapter}
-                    </option>
-                  ))
-                ) : (
-                  <option value="No Chapters Available">
-                    No Chapters Available
-                  </option>
-                )}
-              </select>
-            </div>
-          </div>
+  <label
+    htmlFor="chapter"
+    className="block text-sm font-medium leading-6 text-gray-900"
+  >
+    Chapter
+  </label>
+  <div className="mt-2">
+    <select
+      className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
+      id="chapter"
+      value={selectedChapter}
+      onChange={handleChapterChange}
+    >
+      {chaptersForSelectedProvince.length > 0 ? (
+        typeof chaptersForSelectedProvince[0] === "string" ? (
+          chaptersForSelectedProvince.map((chapter, index) => (
+            <option key={index} value={chapter}>
+              {chapter}
+            </option>
+          ))
+        ) : (
+          <option value="No Chapters Available">
+            No Chapters Available
+          </option>
+        )
+      ) : (
+        <option value="No Chapters Available">
+          No Chapters Available
+        </option>
+      )}
+    </select>
+  </div>
+</div>
+
 
            <div className="sm:col-span-3">
             {!validPrimePhoneNum ? (
@@ -268,7 +275,7 @@ const VolunteerInfo = () => {
                 onChange={handlePrimaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validPrimePhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                 placeholder="Primary Phone"
               />
             </div>
@@ -307,7 +314,7 @@ const VolunteerInfo = () => {
                 onChange={handleSecondaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validSecondPhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                 placeholder="Secondary Phone"
               />
             </div>
@@ -326,7 +333,7 @@ const VolunteerInfo = () => {
                 name="email"
                 id="email"
                 autoComplete="email"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="abcde@gmail.com"
               />
             </div>
