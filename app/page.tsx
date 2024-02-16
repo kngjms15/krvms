@@ -1,6 +1,8 @@
 
+import Acknowledgement from "./registration/VolunteerRegistration/Acknowledgement";
 import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
 import VolunteerInfo from "./registration/VolunteerRegistration/VolunteerInfo";
+import WhatsNext from "./registration/VolunteerRegistration/WhatsNext";
 
 
 export default function Home() {
@@ -8,6 +10,8 @@ export default function Home() {
     <>
       <VolunteerInfo />
       <BackgroundInfo />  
+      <Acknowledgement />
+      <WhatsNext/>
       
 
       
