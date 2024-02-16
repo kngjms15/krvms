@@ -3,13 +3,16 @@
 
 import React from "react";
 import { useState } from "react";
-import ProvinceChapters from "./provinceChapters.json";
+import provinceChapters from "./provinceChapters.json";
 
 
 const VolunteerInfo = () => {
   const [province] = useState(
-    ProvinceChapters.map((province) => province.Province)
+    provinceChapters.map((province) => province.province)
   );
+
+
+  
 
   const ReadjustDate = (ageLimit = 18) => {
     var currentDate = new Date();
@@ -58,9 +61,9 @@ const VolunteerInfo = () => {
     setSelectedChapter(event.target.value);
   };
 
-  const chaptersForSelectedProvince = ProvinceChapters.find(
-    (province) => province.Province === selectedProvince
-  )?.Chapters;
+  const chaptersForSelectedProvince = provinceChapters.find(
+    (province) => province.province === selectedProvince
+  )?.chapters;
 
   return (
     // Volunteer Information form
@@ -182,9 +185,9 @@ const VolunteerInfo = () => {
                 value={selectedProvince}
                 onChange={handleProvinceChange}
               >
-                {ProvinceChapters.map((province) => (
-                  <option key={province.Province} value={province.Province}>
-                    {province.Province}
+                {provinceChapters.map((province) => (
+                  <option key={province.province} value={province.province}>
+                    {province.province}
                   </option>
                 ))}
               </select>
@@ -337,14 +340,14 @@ const VolunteerInfo = () => {
         </div>
 
         <div className="flex justify-between mt-20">
-          <button
-            type="button"
-            id="volunteer-info-cancel"
-            className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
-          >
-            Cancel
-          </button>
-
+                      <button
+              type="button"
+              id="volunteer-info-cancel"
+              className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+            >
+              Cancel
+            </button>
+          
           <div>
             <button
               type="submit"

@@ -1,7 +1,7 @@
 [
     {
-        "Province": "AB",
-        "Chapters": [
+        "province": "AB",
+        "chapters": [
             "Bonnyville",
             "Bow Valley",
             "Calgary & Area",
@@ -41,8 +41,8 @@
             "Wood Buffalo"
         ]},
         {
-        "Province": "BC",
-        "Chapters": [
+        "province": "BC",
+        "chapters": [
             "100 Mile House",
             "Burnaby",
             "Abbotsford",
@@ -85,8 +85,8 @@
             "Williams Lake"
         ]},
         {
-        "Province": "NB",
-        "Chapters": [
+        "province": "NB",
+        "chapters": [
             "Acadian Peninsula",
             "Chaleur",
             "Fredericton, Moncton, Saint John",
@@ -96,8 +96,8 @@
             "St. Stephen"
         ]},
         {
-        "Province": "MB",
-        "Chapters": [
+        "province": "MB",
+        "chapters": [
             "Manitoba East Region",
             "Manitoba North Region",
             "Manitoba South Region",
@@ -105,16 +105,16 @@
             "Winnipeg"
         ]},
         {
-        "Province": "NL",
-        "Chapters": "No Chapters Available"
+        "province": "NL",
+        "chapters": "No Chapters Available"
         },
         {
-        "Province": "NT",
-        "Chapters": "No Chapters Available"
+        "province": "NT",
+        "chapters": "No Chapters Available"
         },
         {
-        "Province": "NS",
-        "Chapters": [
+        "province": "NS",
+        "chapters": [
             "Annapolis / Digby",
             "Antigonish",
             "CBRM / Victoria",
@@ -130,8 +130,8 @@
             "Shelburne / Yarmouth"
         ]},
         {
-        "Province": "ON",
-        "Chapters": [
+        "province": "ON",
+        "chapters": [
             "Atikokan",
             "Fort Frances", 
             "Halton",
@@ -154,16 +154,16 @@
         ]
         },
         {
-            "Province": "PE",
-            "Chapters": "No Chapters Available"
+            "province": "PE",
+            "chapters": "No Chapters Available"
         },
         {
-            "Province": "QC",
-            "Chapters":"No Chapters Available"
+            "province": "QC",
+            "chapters":"No Chapters Available"
         },
         {
-            "Province": "SK",
-            "Chapters": [
+            "province": "SK",
+            "chapters": [
                 "Asquith",
                 "Battlefords",
                 "Big River",
