@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import provinceChapters from "./provinceChapters.json";
+import Image from "next/image";
 
 const VolunteerInfo = () => {
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
@@ -63,6 +64,9 @@ const VolunteerInfo = () => {
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport Volunteer Information</title>
       <form className="bg-[#F2F2F2] rounded-lg p-8">
+        <div className="flex flex-auto m-auto max-w-40 max-h-40">
+          <Image src="/KidSport-Month-Graphic-SS-Website.png" layout="responsive"  height={80} width={80} alt="KidSport" className="mx-auto mb-4 max-w-max max-h-max rounded-lg opacity-80"/>
+        </div>
         <div className="block text-center">
           <h1 className="font-bold">VOLUNTEER INFORMATION</h1>
         </div>
