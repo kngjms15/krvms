@@ -383,7 +383,7 @@ const VolunteerInfo = () => {
                 onChange={handlePrimaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validPrimePhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                } p-1.5 text-gray-900 ring-1 ring-inset border-0 ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
                 placeholder="10-digit phone number"
               />
             </div>
@@ -422,7 +422,7 @@ const VolunteerInfo = () => {
                 onChange={handleSecondaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validSecondPhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                } p-1.5 text-gray-900 ring-1 ring-inset border-0 ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
                 placeholder="10-digit phone number"
               />
             </div>
@@ -442,7 +442,7 @@ const VolunteerInfo = () => {
                 id="email"
                 autoComplete="email"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
-                placeholder="abcde@gmail.com"
+                placeholder="@example.com"
                 value={email}
                 onChange={handleEmailChange}
               />
