@@ -6,8 +6,8 @@ import Image from "next/image";
 
 const VolunteerInfo = () => {
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
-  const [primaryPhone, setPrimaryPhone] = useState(""); const [validPrimePhoneNum, setValidPrimePhoneNum] = useState(false);
-  const [secondaryPhone, setSecondaryPhone] = useState(""); const [validSecondPhoneNum, setValidSecondPhoneNum] = useState(false);
+  const [primaryPhone, setPrimaryPhone] = useState(""); const [validPrimePhoneNum, setValidPrimePhoneNum] = useState(true);
+  const [secondaryPhone, setSecondaryPhone] = useState(""); const [validSecondPhoneNum, setValidSecondPhoneNum] = useState(true);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedChapter, setSelectedChapter] = useState("");
   const [email, setEmail] = useState(""); const [validEmail, setValidEmail] = useState(false);
@@ -383,8 +383,8 @@ const VolunteerInfo = () => {
                 onChange={handlePrimaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validPrimePhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-                placeholder="Primary Phone"
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                placeholder="10-digit phone number"
               />
             </div>
           </div>
@@ -422,8 +422,8 @@ const VolunteerInfo = () => {
                 onChange={handleSecondaryPhoneChange}
                 className={`block w-full rounded-md border ${
                   !validSecondPhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-                placeholder="Secondary Phone"
+                } p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                placeholder="10-digit phone number"
               />
             </div>
           </div>
