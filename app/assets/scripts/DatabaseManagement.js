@@ -1,4 +1,4 @@
-import pool from "./db";
+import dbpool from "./db";
 import { bondable, employer, conviction, convictionDetails, medicalCondition,
          medicalConditionDetails, emergencyContactName, emergencyContactRelationShip,
          emergencyContactPhone, otherNotes } from "../../registration/VolunteerRegistration/BackgroundInfo";

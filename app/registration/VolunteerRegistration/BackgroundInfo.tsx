@@ -12,7 +12,7 @@ const BackgroundInfo = () => {
   const [emergencyContactName, setEmergencyContactName] = useState("");
   const [emergencyContactRelationship, setEmergencyContactRelationship] = useState("");
   const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
-  const [otherNotes, setOtherNotes] = useState("");
+  const [otherNotes, setOtherNotes] = useState(" ");
 
   return (
     <div className="flex-grow max-w-[940px] m-auto">

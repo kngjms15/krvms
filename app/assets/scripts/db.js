@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const pool = mysql.createPool({
+const dbpool = mysql.createPool({
   connectionLimit: 10,
   host: 'localhost',
   user: 'user',
@@ -8,4 +8,4 @@ const pool = mysql.createPool({
   database: 'KidSport_1'
 });
 
-module.exports = pool;
+module.exports = dbpool;
