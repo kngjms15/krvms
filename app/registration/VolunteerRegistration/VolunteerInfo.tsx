@@ -357,7 +357,7 @@ const VolunteerInfo = () => {
                   htmlFor="primary-phone"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Primary Phone
+                  Primary Phone Number
                 </label>
                 <label
                   htmlFor="primary-phone"
@@ -371,7 +371,7 @@ const VolunteerInfo = () => {
                 htmlFor="primary-phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Primary Phone
+                Primary Phone Number
               </label>
             )}
             <div className="mt-2">
@@ -396,7 +396,7 @@ const VolunteerInfo = () => {
                   htmlFor="secondary-phone"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Secondary Phone
+                  Secondary Phone Number
                 </label>
                 <label
                   htmlFor="secondary-phone"
@@ -410,7 +410,7 @@ const VolunteerInfo = () => {
                 htmlFor="secondary-phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Secondary Phone
+                Secondary Phone Number
               </label>
             )}
             <div className="mt-2">
