@@ -107,9 +107,9 @@ const Acknowledgement = () => {
               type="checkbox"
               name="acknowledgement"
               id="acknowledgement"
-              className="align-middle justify-center w-5 h-5"
+              className="align-middle justify-center w-5 h-5 rounded-sm text-[#6CC24A] focus:ring-[#6CC24A]"
               checked={agreed}
-              onChange={() => setAgreed(!agreed)}
+              onChange={() =>  setAgreed(!agreed)}
             />
             <label htmlFor="acknowledgement" className="ml-3">
               I agree to the terms and conditions.
