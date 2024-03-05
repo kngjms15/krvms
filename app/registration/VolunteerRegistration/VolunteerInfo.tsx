@@ -4,22 +4,59 @@ import React, { useState } from "react";
 import provinceChapters from "./provinceChapters.json";
 import Image from "next/image";
 import { z } from "zod";
+import Link from "next/link";
 
-const phoneNumberSchema = z.string().regex(
-  /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-  "Invalid phone number"
-);
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  dob?: string;
+  address?: string;
+  city?: string;
+  province?: string;
+  postalCode?: string;
+  chapter?: string;
+  primaryPhone?: string;
+  secondaryPhone?: string;
+  email?: string;
+}
 
-const emailSchema = z.string().email("Invalid email address");
+const volunteerShcema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  dob: z.string().min(1, "Date of birth is required"),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  province: z
+    .string()
+    .min(2, "Province is required")
+    .max(2, "Province must be 2 characters"),
+  postalCode: z
+    .string()
+    .regex(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/, "Invalid postal code"),
+  chapter: z.string().min(1, "Chapter is required"),
+  primaryPhone: z
+    .string()
+    .regex(
+      /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
+      "Invalid phone number"
+    ),
+  secondaryPhone: z
+    .string()
+    .regex(
+      /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
+      "Invalid phone number"
+    )
+    .or(z.string().length(0))
+    .optional(),
+  email: z.string().email("Invalid email address"),
+});
 
 const VolunteerInfo = () => {
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
   const [primaryPhone, setPrimaryPhone] = useState("");
-  const [validPrimePhoneNum, setValidPrimePhoneNum] = useState(true);
   const [secondaryPhone, setSecondaryPhone] = useState("");
-  const [validSecondPhoneNum, setValidSecondPhoneNum] = useState(true);
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedChapter, setSelectedChapter] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState("AB");
+  const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,6 +64,18 @@ const VolunteerInfo = () => {
   const [address, setAddress] = useState("");
   const [cityInfo, setCityInfo] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [validationErrors, setValidationErrors] = useState<z.ZodError | null>(
+    null
+  );
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  const getErrorMessage = (fieldName: string): string | undefined => {
+    const fieldError = validationErrors?.errors.find((error) =>
+      error.path.includes(fieldName)
+    );
+    return fieldError?.message;
+  };
   
 
   function getFormattedDate(ageLimit: number = 14) {
@@ -48,17 +97,6 @@ const VolunteerInfo = () => {
     setSelectedChapter(event.target.value);
   };
 
-  const checkValidNumber = (phoneNumber: string, isPrimary: boolean = true) => {
-    const phoneNumberRegex =
-      /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/;
-    if (isPrimary) {
-      setValidPrimePhoneNum(phoneNumberRegex.test(phoneNumber));
-    } else {
-      setValidSecondPhoneNum(phoneNumberRegex.test(phoneNumber));
-    }
-  };
-
-
   const handlePrimaryPhoneChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -73,12 +111,14 @@ const VolunteerInfo = () => {
     setSecondaryPhone(phoneNumber);
   };
 
-  const handleFirstNameChange = (event: string) => {
-    setFirstName(event);
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFirstName(event.target.value);
   };
 
-  const handleLastNameChange = (event: string) => {
-    setLastName(event);
+  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLastName(event.target.value);
   };
 
   const handleDobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,15 +145,41 @@ const VolunteerInfo = () => {
     (province) => province.province === selectedProvince
   )?.chapters || []) as string[];
 
-  const isValidPrimaryPhone = phoneNumberSchema.safeParse(primaryPhone).success;
-  const isValidSecondaryPhone = phoneNumberSchema.safeParse(secondaryPhone)
-    .success;
-  const isValidEmail = emailSchema.safeParse(email).success;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const volunteerData = {
+      firstName,
+      lastName,
+      dob,
+      address,
+      city: cityInfo,
+      province: selectedProvince,
+      postalCode,
+      chapter: selectedChapter,
+      primaryPhone,
+      secondaryPhone,
+      email,
+    };
+    console.log(volunteerData);
+    try {
+      volunteerShcema.parse(volunteerData);
+      setValidationErrors(null);
+      setIsFormValid(true);
+      setIsFormSubmitted(true);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error);
+        setIsFormValid(false);
+        setIsFormSubmitted(false);
+        
+      }
+    }
+  };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport Volunteer Information</title>
-      <form className="bg-[#F2F2F2] rounded-lg p-8">
+      <form className="bg-[#F2F2F2] rounded-lg p-8" onSubmit={handleSubmit}>
         <div className="flex flex-auto m-auto max-w-40 max-h-40">
           <Image
             src="/KidSport-Month-Graphic-SS-Website.png"
@@ -142,13 +208,16 @@ const VolunteerInfo = () => {
                 name="first-name"
                 id="first-name"
                 autoComplete="given-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="First Name"
+                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
+                  getErrorMessage("firstName") ? "border-red-500" : ""
+                }`}
                 value={firstName}
-                onChange={(e) => {
-                  handleFirstNameChange(e.target.value);
-                }}
+                onChange={handleFirstNameChange}
               />
+              {getErrorMessage("firstName") && (
+                <p className="text-red-500">{getErrorMessage("firstName")}</p>
+              )}
             </div>
           </div>
 
@@ -165,13 +234,16 @@ const VolunteerInfo = () => {
                 name="last-name"
                 id="last-name"
                 autoComplete="family-name"
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
+                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
+                  getErrorMessage("lastName") ? "border-red-500" : ""
+                }`}
                 placeholder="Last Name"
                 value={lastName}
-                onChange={(e) => {
-                  handleLastNameChange(e.target.value);
-                }}
+                onChange={handleLastNameChange}
               />
+              {getErrorMessage("lastName") && (
+                <p className="text-red-500">{getErrorMessage("lastName")}</p>
+              )}
             </div>
           </div>
 
@@ -194,6 +266,9 @@ const VolunteerInfo = () => {
                 value={dob}
                 onChange={handleDobChange}
               />
+              {getErrorMessage("dob") && (
+                <p className="text-red-500">{getErrorMessage("dob")}</p>
+              )}
             </div>
           </div>
 
@@ -215,6 +290,9 @@ const VolunteerInfo = () => {
                 value={address}
                 onChange={handleAddressChange}
               />
+              {getErrorMessage("address") && (
+                <p className="text-red-500">{getErrorMessage("address")}</p>
+              )}
             </div>
           </div>
 
@@ -236,6 +314,9 @@ const VolunteerInfo = () => {
                 value={cityInfo}
                 onChange={handleCityChange}
               />
+              {getErrorMessage("city") && (
+                <p className="text-red-500">{getErrorMessage("city")}</p>
+              )}
             </div>
           </div>
 
@@ -280,6 +361,9 @@ const VolunteerInfo = () => {
                 value={postalCode}
                 onChange={handlePostalChange}
               />
+              {getErrorMessage("postalCode") && (
+                <p className="text-red-500">{getErrorMessage("postalCode")}</p>
+              )}
             </div>
           </div>
 
@@ -319,29 +403,12 @@ const VolunteerInfo = () => {
           </div>
 
           <div className="sm:col-span-3">
-            {!validPrimePhoneNum ? (
-              <div className="flex items-center">
-                <label
-                  htmlFor="primary-phone"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Primary Phone Number
-                </label>
-                <label
-                  htmlFor="primary-phone"
-                  className="block ml-2 text-xs font-small leading-6 text-red-600"
-                >
-                  Invalid Primary Number
-                </label>
-              </div>
-            ) : (
-              <label
-                htmlFor="primary-phone"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Primary Phone Number
-              </label>
-            )}
+            <label
+              htmlFor="primary-phone"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Primary Phone Number
+            </label>
             <div className="mt-2">
               <input
                 type="text"
@@ -349,38 +416,26 @@ const VolunteerInfo = () => {
                 id="primary-phone"
                 value={primaryPhone}
                 onChange={handlePrimaryPhoneChange}
-                className={`block w-full rounded-md border ${
-                  !validPrimePhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 ring-1 ring-inset border-0 ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
+                  getErrorMessage("primaryPhone") ? "border-red-500" : ""
+                }`}
                 placeholder="10-digit phone number"
               />
+              {getErrorMessage("primaryPhone") && (
+                <p className="text-red-500">
+                  {getErrorMessage("primaryPhone")}
+                </p>
+              )}
             </div>
           </div>
 
           <div className="sm:col-span-3">
-            {!validSecondPhoneNum ? (
-              <div className="flex items-center">
-                <label
-                  htmlFor="secondary-phone"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Secondary Phone Number
-                </label>
-                <label
-                  htmlFor="secondary-phone"
-                  className="block ml-2 text-xs font-small leading-6 text-red-600"
-                >
-                  Invalid Secondary Number
-                </label>
-              </div>
-            ) : (
-              <label
-                htmlFor="secondary-phone"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Secondary Phone Number
-              </label>
-            )}
+            <label
+              htmlFor="secondary-phone"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Secondary Phone Number
+            </label>
             <div className="mt-2">
               <input
                 type="text"
@@ -388,9 +443,9 @@ const VolunteerInfo = () => {
                 id="secondary-phone"
                 value={secondaryPhone}
                 onChange={handleSecondaryPhoneChange}
-                className={`block w-full rounded-md border ${
-                  !validSecondPhoneNum ? "border-2 border-red-500" : ""
-                } p-1.5 text-gray-900 ring-1 ring-inset border-0 ring-gray-300 placeholder:text-gray-400 focus:ring-[#6CC24A] focus:border-[#6CC24A] sm:text-sm sm:leading-6`}
+                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
+                  getErrorMessage("secondaryPhone") ? "border-red-500" : ""
+                }`}
                 placeholder="10-digit phone number"
               />
             </div>
@@ -414,6 +469,11 @@ const VolunteerInfo = () => {
                 value={email}
                 onChange={handleEmailChange}
               />
+              {getErrorMessage("email") && (
+                <p className="text-red-500">
+                  {getErrorMessage("email")}
+                </p>
+              )}
             </div>
           </div>
         </div>

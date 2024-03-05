@@ -1,20 +1,14 @@
-
-import Acknowledgement from "./registration/VolunteerRegistration/Acknowledgement";
-import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
+import React from "react";
 import VolunteerInfo from "./registration/VolunteerRegistration/VolunteerInfo";
-import WhatsNext from "./registration/VolunteerRegistration/WhatsNext";
+import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
 
 
 export default function Home() {
   return (
     <>
       <VolunteerInfo />
-      <BackgroundInfo />  
-      <Acknowledgement />
-      <WhatsNext/>
-      
-
-      
+      <BackgroundInfo />
     </>
+    
   );
 }
