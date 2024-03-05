@@ -3,6 +3,14 @@
 import React, { useState } from "react";
 import provinceChapters from "./provinceChapters.json";
 import Image from "next/image";
+import { z } from "zod";
+
+const phoneNumberSchema = z.string().regex(
+  /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
+  "Invalid phone number"
+);
+
+const emailSchema = z.string().email("Invalid email address");
 
 const VolunteerInfo = () => {
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
@@ -13,20 +21,13 @@ const VolunteerInfo = () => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedChapter, setSelectedChapter] = useState("");
   const [email, setEmail] = useState("");
-  const [validEmail, setValidEmail] = useState(false);
   const [firstName, setFirstName] = useState("");
-  const [validFirstName, setValidFirstName] = useState(false);
   const [lastName, setLastName] = useState("");
-  const [validLastName, setValidLastName] = useState(false);
   const [dob, setDob] = useState("");
-  const [validDob, setValidDob] = useState(false);
   const [address, setAddress] = useState("");
-  const [validAddress, setValidAddress] = useState(false);
   const [cityInfo, setCityInfo] = useState("");
-  const [validCityInfo, setValidCityInfo] = useState(false);
   const [postalCode, setPostalCode] = useState("");
-  const [validPostalCode, setValidPostalCode] = useState(false);
-  const [allCleared, setAllCleared] = useState(false);
+  
 
   function getFormattedDate(ageLimit: number = 14) {
     const currentDate = new Date();
@@ -57,53 +58,12 @@ const VolunteerInfo = () => {
     }
   };
 
-  const checkValidEmail = (emailAddress: string) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    setValidEmail(emailRegex.test(emailAddress));
-  };
-
-  const checkValidPostalCode = (postalCode: string) => {
-    const postalCodeRegex = /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/;
-    setValidPostalCode(postalCodeRegex.test(postalCode));
-  };
-
-  const checkEmptyValues = () => {
-    const validPrimeNumber = validPrimePhoneNum || primaryPhone == "";
-    const validSecondaryNumber =
-      secondaryPhone == "" ? true : validSecondPhoneNum;
-    const emailValid = validEmail || email == "";
-    const validatedFirstName = validFirstName || firstName == "";
-    const validatedLastName = validLastName || lastName == "";
-    const validatedDob = validDob || dob == "";
-    const validatedAddress = validAddress || address == "";
-    const validatedCity = validCityInfo || cityInfo == "";
-    const validatedPostalCode = validPostalCode || postalCode == "";
-    const validChapter = selectedChapter == "";
-    const validProvince = selectedProvince == "";
-
-    const validInfo = [
-      validPrimeNumber,
-      validSecondaryNumber,
-      emailValid,
-      validatedFirstName,
-      validatedLastName,
-      validatedDob,
-      validatedAddress,
-      validatedCity,
-      validatedPostalCode,
-      validChapter,
-      validProvince,
-    ];
-
-    setAllCleared(!validInfo.includes(false));
-  };
 
   const handlePrimaryPhoneChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const phoneNumber = event.target.value;
     setPrimaryPhone(phoneNumber);
-    checkValidNumber(phoneNumber, true);
   };
 
   const handleSecondaryPhoneChange = (
@@ -111,54 +71,44 @@ const VolunteerInfo = () => {
   ) => {
     const phoneNumber = event.target.value;
     setSecondaryPhone(phoneNumber);
-    checkValidNumber(phoneNumber, false);
   };
 
   const handleFirstNameChange = (event: string) => {
-    const firstName = event;
-    setFirstName(firstName);
-    setValidFirstName(firstName == "");
+    setFirstName(event);
   };
 
   const handleLastNameChange = (event: string) => {
-    const lastName = event;
-    setLastName(lastName);
-    setValidLastName(lastName == "");
+    setLastName(event);
   };
 
   const handleDobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const dob = event.target.value.toString();
-    setDob(dob);
-    setValidDob(dob == "");
+    setDob(event.target.value);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const address = event.target.value;
-    setAddress(address);
-    setValidAddress(address == "");
+    setAddress(event.target.value);
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const email = event.target.value;
-    setEmail(email);
-    setValidEmail(email == "");
+    setEmail(event.target.value);
   };
 
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const city = event.target.value;
-    setCityInfo(city);
-    setValidCityInfo(city == "");
+    setCityInfo(event.target.value);
   };
 
   const handlePostalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const postalCode = event.target.value;
-    setPostalCode(postalCode);
-    checkValidPostalCode(postalCode);
+    setPostalCode(event.target.value);
   };
 
   const chaptersForSelectedProvince = (provinceChapters.find(
     (province) => province.province === selectedProvince
   )?.chapters || []) as string[];
+
+  const isValidPrimaryPhone = phoneNumberSchema.safeParse(primaryPhone).success;
+  const isValidSecondaryPhone = phoneNumberSchema.safeParse(secondaryPhone)
+    .success;
+  const isValidEmail = emailSchema.safeParse(email).success;
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
