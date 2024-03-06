@@ -1,17 +1,14 @@
-"use client";
-
-import React, { useState } from "react";
-import provinceChapters from "./provinceChapters.json";
+import React, { useState, useEffect, FC } from "react";
 import Image from "next/image";
-import { z } from "zod";
-import Link from "next/link";
+import { set, z } from "zod";
+import provinceChapters from "../provinceChapters.json";
 
 interface FormErrors {
   firstName?: string;
   lastName?: string;
   dob?: string;
   address?: string;
-  city?: string;
+  cityInfo?: string;
   province?: string;
   postalCode?: string;
   chapter?: string;
@@ -25,7 +22,7 @@ const volunteerShcema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   dob: z.string().min(1, "Date of birth is required"),
   address: z.string().min(1, "Address is required"),
-  city: z.string().min(1, "City is required"),
+  cityInfo: z.string().min(1, "City is required"),
   province: z
     .string()
     .min(2, "Province is required")
@@ -51,7 +48,17 @@ const volunteerShcema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
-const VolunteerInfo = () => {
+type VolunteerInfoProps = {
+  formData: any;
+  setFormData: (data: any) => void;
+  setCurrentStep: (step: number) => void;
+};
+
+const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
+  formData,
+  setFormData,
+  setCurrentStep,
+}) => {
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
   const [primaryPhone, setPrimaryPhone] = useState("");
   const [secondaryPhone, setSecondaryPhone] = useState("");
@@ -69,6 +76,29 @@ const VolunteerInfo = () => {
   );
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
+
+  const resetForm = () => {
+    // Reset all the state variables holding form field values
+    setPrimaryPhone("");
+    setSecondaryPhone("");
+    setSelectedProvince("AB");
+    setSelectedChapter("Calgary & Area");
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setDob("");
+    setAddress("");
+    setCityInfo("");
+    setPostalCode("");
+  };
+
+  useEffect(() => {
+    setIsComponentMounted(true);
+    return () => {
+      setIsComponentMounted(false);
+    };
+  }, []);
 
   const getErrorMessage = (fieldName: string): string | undefined => {
     const fieldError = validationErrors?.errors.find((error) =>
@@ -76,7 +106,6 @@ const VolunteerInfo = () => {
     );
     return fieldError?.message;
   };
-  
 
   function getFormattedDate(ageLimit: number = 14) {
     const currentDate = new Date();
@@ -89,57 +118,59 @@ const VolunteerInfo = () => {
   const handleProvinceChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    setFormData({ ...formData, province: event.target.value });
     setSelectedProvince(event.target.value);
-    setSelectedChapter("");
   };
-
   const handleChapterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, chapter: event.target.value });
     setSelectedChapter(event.target.value);
   };
-
-  const handlePrimaryPhoneChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const phoneNumber = event.target.value;
-    setPrimaryPhone(phoneNumber);
+  
+  const handlePrimaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, primaryPhone: event.target.value });
+    setPrimaryPhone(event.target.value);
   };
-
-  const handleSecondaryPhoneChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const phoneNumber = event.target.value;
-    setSecondaryPhone(phoneNumber);
+  
+  const handleSecondaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, secondaryPhone: event.target.value });
+    setSecondaryPhone(event.target.value);
   };
-
-  const handleFirstNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  
+  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, firstName: event.target.value });
     setFirstName(event.target.value);
   };
-
+  
   const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, lastName: event.target.value });
     setLastName(event.target.value);
   };
-
+  
   const handleDobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, dob: event.target.value });
     setDob(event.target.value);
   };
-
+  
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, address: event.target.value });
     setAddress(event.target.value);
   };
-
+  
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, email: event.target.value });
     setEmail(event.target.value);
   };
-
+  
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, cityInfo: event.target.value });
     setCityInfo(event.target.value);
   };
-
+  
   const handlePostalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, postalCode: event.target.value });
     setPostalCode(event.target.value);
   };
+  
 
   const chaptersForSelectedProvince = (provinceChapters.find(
     (province) => province.province === selectedProvince
@@ -152,7 +183,7 @@ const VolunteerInfo = () => {
       lastName,
       dob,
       address,
-      city: cityInfo,
+      cityInfo: cityInfo,
       province: selectedProvince,
       postalCode,
       chapter: selectedChapter,
@@ -166,12 +197,13 @@ const VolunteerInfo = () => {
       setValidationErrors(null);
       setIsFormValid(true);
       setIsFormSubmitted(true);
+      resetForm();
+      setCurrentStep(2);
     } catch (error) {
       if (error instanceof z.ZodError) {
         setValidationErrors(error);
         setIsFormValid(false);
         setIsFormSubmitted(false);
-        
       }
     }
   };
@@ -212,7 +244,7 @@ const VolunteerInfo = () => {
                 className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
                   getErrorMessage("firstName") ? "border-red-500" : ""
                 }`}
-                value={firstName}
+                value={formData.firstName}
                 onChange={handleFirstNameChange}
               />
               {getErrorMessage("firstName") && (
@@ -238,7 +270,7 @@ const VolunteerInfo = () => {
                   getErrorMessage("lastName") ? "border-red-500" : ""
                 }`}
                 placeholder="Last Name"
-                value={lastName}
+                value={formData.lastName}
                 onChange={handleLastNameChange}
               />
               {getErrorMessage("lastName") && (
@@ -263,7 +295,7 @@ const VolunteerInfo = () => {
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="yyyy-mm-dd"
                 max={maxDate}
-                value={dob}
+                value={formData.dob}
                 onChange={handleDobChange}
               />
               {getErrorMessage("dob") && (
@@ -287,7 +319,7 @@ const VolunteerInfo = () => {
                 autoComplete="street-address"
                 placeholder="Street Address"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
-                value={address}
+                value={formData.address}
                 onChange={handleAddressChange}
               />
               {getErrorMessage("address") && (
@@ -298,7 +330,7 @@ const VolunteerInfo = () => {
 
           <div className="sm:col-span-3">
             <label
-              htmlFor="city"
+              htmlFor="cityInfo"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               City
@@ -306,16 +338,16 @@ const VolunteerInfo = () => {
             <div className="mt-2">
               <input
                 type="text"
-                name="city"
-                id="city"
+                name="cityInfo"
+                id="cityInfo"
                 autoComplete="address-level2"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="City"
-                value={cityInfo}
+                value={formData.cityInfo}
                 onChange={handleCityChange}
               />
-              {getErrorMessage("city") && (
-                <p className="text-red-500">{getErrorMessage("city")}</p>
+              {getErrorMessage("cityInfo") && (
+                <p className="text-red-500">{getErrorMessage("cityInfo")}</p>
               )}
             </div>
           </div>
@@ -331,7 +363,7 @@ const VolunteerInfo = () => {
               <select
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 id="province"
-                value={selectedProvince}
+                value={formData.selectedProvince}
                 onChange={handleProvinceChange}
               >
                 {provinceChapters.map((province) => (
@@ -358,7 +390,7 @@ const VolunteerInfo = () => {
                 autoComplete="postal-code"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="A1A 1A1"
-                value={postalCode}
+                value={formData.postalCode}
                 onChange={handlePostalChange}
               />
               {getErrorMessage("postalCode") && (
@@ -378,7 +410,7 @@ const VolunteerInfo = () => {
               <select
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 id="chapter"
-                value={selectedChapter}
+                value={formData.selectedChapter}
                 onChange={handleChapterChange}
               >
                 {chaptersForSelectedProvince.length > 0 ? (
@@ -414,7 +446,7 @@ const VolunteerInfo = () => {
                 type="text"
                 name="primary-phone"
                 id="primary-phone"
-                value={primaryPhone}
+                value={formData.primaryPhone}
                 onChange={handlePrimaryPhoneChange}
                 className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
                   getErrorMessage("primaryPhone") ? "border-red-500" : ""
@@ -441,7 +473,7 @@ const VolunteerInfo = () => {
                 type="text"
                 name="secondary-phone"
                 id="secondary-phone"
-                value={secondaryPhone}
+                value={formData.secondaryPhone}
                 onChange={handleSecondaryPhoneChange}
                 className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
                   getErrorMessage("secondaryPhone") ? "border-red-500" : ""
@@ -466,13 +498,11 @@ const VolunteerInfo = () => {
                 autoComplete="email"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="@example.com"
-                value={email}
+                value={formData.email}
                 onChange={handleEmailChange}
               />
               {getErrorMessage("email") && (
-                <p className="text-red-500">
-                  {getErrorMessage("email")}
-                </p>
+                <p className="text-red-500">{getErrorMessage("email")}</p>
               )}
             </div>
           </div>

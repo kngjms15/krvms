@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const WhatsNext = () => {
+const whatsNext = () => {
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport What's Next</title>
@@ -40,4 +40,4 @@ const WhatsNext = () => {
   );
 };
 
-export default WhatsNext;
+export default whatsNext;

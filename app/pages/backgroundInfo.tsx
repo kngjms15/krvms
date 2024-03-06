@@ -1,11 +1,31 @@
-"use client";
-
 import React, { useState } from "react";
+import { z } from "zod";
 
-const BackgroundInfo = () => {
+const backgroundSchema = z.object({
+  employer: z.string().min(1, "Employer is required"),
+  conviction: z.boolean(),
+  convictionDetails: z.string().optional(),
+  bondable: z.boolean(),
+  medicalCondition: z.boolean(),
+  medicalConditionDetails: z.string().optional(),
+  emergencyContactName: z.string().min(1, "Emergency contact name is required"),
+  emergencyContactRelationship: z.string().min(1, "Emergency contact relationship is required"),
+  emergencyContactPhone: z.string().min(1, "Emergency contact phone is required"),
+  otherNotes: z.string().optional(),
+});
+
+type BackgroundInfoProps = {
+  formData: any;
+  setFormData: (formData: any) => void;
+  setCurrentStep: (step: number) => void;
+  onBack: () => void;
+};  
+
+
+
+const BackgroundInfo: React.FC<BackgroundInfoProps> = ({ formData, setFormData, setCurrentStep, onBack }) => {
   const [employer, setEmployer] = useState("");
   const [conviction, setConviction] = useState(false);
-  const [convictionDetails, setConvictionDetails] = useState("");
   const [bondable, setBondable] = useState(true);
   const [medicalCondition, setMedicalCondition] = useState(false);
   const [medicalConditionDetails, setMedicalConditionDetails] = useState("");
@@ -13,11 +33,38 @@ const BackgroundInfo = () => {
   const [emergencyContactRelationship, setEmergencyContactRelationship] = useState("");
   const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
   const [otherNotes, setOtherNotes] = useState(" ");
+  const [validationErrors, setValidationErrors] = useState<z.ZodError | null>(null);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = {
+      employer,
+      conviction,
+      bondable,
+      medicalCondition,
+      medicalConditionDetails,
+      emergencyContactName,
+      emergencyContactRelationship,
+      emergencyContactPhone,
+      otherNotes,
+    };
+
+    try {
+      backgroundSchema.parse(formData);
+      setValidationErrors(null);
+      setCurrentStep(3); // Proceed to the Acknowledgement component
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error);
+      }
+    }
+  };
+
 
   return (
     <div className="flex-grow max-w-[940px] m-auto">
       <title>KidSport Volunteer Background Info</title>
-      <form className="bg-[#F2F2F2] rounded-lg p-8">
+      <form className="bg-[#F2F2F2] rounded-lg p-8" onSubmit={handleSubmit}>
         <div className="block text-center">
           <h1 className="font-bold ">VOLUNTEER BACKGROUND</h1>
         </div>
@@ -70,24 +117,6 @@ const BackgroundInfo = () => {
                 </div>
               </div>
             </fieldset>
-          </div>
-
-          <div className="sm:col-span-3">
-            <label htmlFor="conviction-details" className="block text-sm font-medium leading-6 text-gray-900">
-              If yes, please provide details:
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="conviction-details"
-                name="conviction-details"
-                rows={1}
-                value={convictionDetails}
-                onChange={(e) => setConvictionDetails(e.target.value)}
-                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6 resize-none"
-                placeholder="Please provide details of your conviction."
-                disabled={!conviction}
-              />
-            </div>
           </div>
 
           <div className="sm:col-span-6">
@@ -258,6 +287,7 @@ const BackgroundInfo = () => {
           <button
             type="button"
             id="volunteer-info-back"
+            onClick={onBack}
             className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
           >
             Back

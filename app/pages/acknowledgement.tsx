@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 
-const Acknowledgement = () => {
+const acknowledgement = () => {
   const [agreed,setAgreed] = useState(false);
 
   return (
@@ -144,4 +144,4 @@ const Acknowledgement = () => {
   );
 };
 
-export default Acknowledgement;
+export default acknowledgement;

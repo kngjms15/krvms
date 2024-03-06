@@ -1,14 +1,15 @@
-import React from "react";
-import VolunteerInfo from "./registration/VolunteerRegistration/VolunteerInfo";
-import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
+'use client';
 
+import React from 'react'
+import ApplicationParent from './pages/applicationParent';
 
-export default function Home() {
+const Home = () => {
   return (
     <>
-      <VolunteerInfo />
-      <BackgroundInfo />
+      
+      <ApplicationParent />
     </>
-    
-  );
+  )
 }
+
+export default Home
