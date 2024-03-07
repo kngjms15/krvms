@@ -1,20 +1,15 @@
+'use client';
 
-import Acknowledgement from "./registration/VolunteerRegistration/Acknowledgement";
-import BackgroundInfo from "./registration/VolunteerRegistration/BackgroundInfo";
-import VolunteerInfo from "./registration/VolunteerRegistration/VolunteerInfo";
-import WhatsNext from "./registration/VolunteerRegistration/WhatsNext";
+import React from 'react'
+import ApplicationParent from './pages/applicationParent';
 
-
-export default function Home() {
+const Home = () => {
   return (
     <>
-      <VolunteerInfo />
-      <BackgroundInfo />  
-      <Acknowledgement />
-      <WhatsNext/>
       
-
-      
+      <ApplicationParent />
     </>
-  );
+  )
 }
+
+export default Home
