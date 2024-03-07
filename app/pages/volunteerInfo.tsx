@@ -76,8 +76,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
   );
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [isComponentMounted, setIsComponentMounted] = useState(false);
-
+  
   const resetForm = () => {
     // Reset all the state variables holding form field values
     setPrimaryPhone("");
@@ -92,13 +91,6 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
     setCityInfo("");
     setPostalCode("");
   };
-
-  useEffect(() => {
-    setIsComponentMounted(true);
-    return () => {
-      setIsComponentMounted(false);
-    };
-  }, []);
 
   const getErrorMessage = (fieldName: string): string | undefined => {
     const fieldError = validationErrors?.errors.find((error) =>
@@ -191,13 +183,13 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       secondaryPhone,
       email,
     };
-    console.log(volunteerData);
+    
     try {
       volunteerShcema.parse(volunteerData);
       setValidationErrors(null);
       setIsFormValid(true);
       setIsFormSubmitted(true);
-      resetForm();
+      // resetForm();
       setCurrentStep(2);
     } catch (error) {
       if (error instanceof z.ZodError) {

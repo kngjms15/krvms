@@ -1,8 +1,6 @@
-"use client";
-
 import React from "react";
 
-const whatsNext = () => {
+const WhatsNext = () => {
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport What's Next</title>
@@ -40,4 +38,4 @@ const whatsNext = () => {
   );
 };
 
-export default whatsNext;
+export default WhatsNext;

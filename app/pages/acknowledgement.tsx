@@ -1,14 +1,22 @@
-"use client";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const acknowledgement = () => {
+type AcknowledgementProps = {
+  setCurrentStep: (step: number) => void;
+  onBack: () => void;
+};
+
+const Acknowledgement: React.FC<AcknowledgementProps> = ({ setCurrentStep, onBack}) => {
   const [agreed,setAgreed] = useState(false);
+  const handleFinish = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCurrentStep(4);
+
+  };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-6">
       <title>KidSport Acknowledgement</title>
-      <form action="" className="bg-[#F2F2F2] rounded-lg p-8">
+      <form action="" className="bg-[#F2F2F2] rounded-lg p-8" onSubmit={handleFinish}>
         <div className="block text-center">
           <h1 className="font-bold ">ACKNOWLEDGEMENT</h1>
         </div>
@@ -122,6 +130,7 @@ const acknowledgement = () => {
             <button
               type="submit"
               id="acknowledgement-back"
+              onClick={onBack}
               className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
             >
               Back
@@ -144,4 +153,4 @@ const acknowledgement = () => {
   );
 };
 
-export default acknowledgement;
+export default Acknowledgement;

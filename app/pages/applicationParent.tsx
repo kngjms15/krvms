@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import VolunteerInfo from "./volunteerInfo";
 import BackgroundInfo from "./backgroundInfo";
+import Acknowledgement from "./acknowledgement";
+import WhatsNext from "./whatsNext";
 
 const ApplicationParent = () => {
     const [currentStep, setCurrentStep] = useState<number>(1);
@@ -50,6 +52,16 @@ const ApplicationParent = () => {
             setCurrentStep={setCurrentStep}
             onBack={handleBack}
           />
+        )}
+        {currentStep === 3 && (
+          <Acknowledgement
+            setCurrentStep={setCurrentStep}
+            onBack={handleBack}
+          />
+        )}
+        {currentStep === 4 && (
+          <WhatsNext />
+
         )}
       </div>
     );
