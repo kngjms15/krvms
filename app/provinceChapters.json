@@ -106,11 +106,11 @@
         ]},
         {
         "province": "NL",
-        "chapters": []
+        "chapters": ["No Chapters in this province"]
         },
         {
         "province": "NT",
-        "chapters": []
+        "chapters": ["No Chapters in this province"]
         },
         {
         "province": "NS",
@@ -155,7 +155,7 @@
         },
         {
             "province": "PE",
-            "chapters": []
+            "chapters": ["No Chapters in this province"]
         },
         {
             "province": "QC",

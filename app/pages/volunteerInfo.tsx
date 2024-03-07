@@ -17,25 +17,25 @@ interface FormErrors {
   email?: string;
 }
 
-const volunteerShcema = z.object({
+const volunteerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  dob: z.string().min(1, "Date of birth is required"),
+  dob: z.string().min(1, "Date of birth is required").refine((dob) => {const maxDate = new Date(); maxDate.setFullYear(maxDate.getFullYear() - 100); return new Date(dob) >= maxDate;}, "Age must be less than 100 years old"),
   address: z.string().min(1, "Address is required"),
-  cityInfo: z.string().min(1, "City is required"),
+  cityInfo: z.string().min(1, "City is required").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
   province: z
     .string()
     .min(2, "Province is required")
     .max(2, "Province must be 2 characters"),
   postalCode: z
     .string()
-    .regex(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/, "Invalid postal code"),
+    .regex(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/, "Invalid postal code. example: A1B 2C3"),
   chapter: z.string().min(1, "Chapter is required"),
   primaryPhone: z
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-      "Invalid phone number"
+      "Invalid phone number. Example: 123-456-7890"
     ),
   secondaryPhone: z
     .string()
@@ -62,8 +62,12 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
   const [maxDate] = useState(getFormattedDate(14)); // max dob for someone to volunteer
   const [primaryPhone, setPrimaryPhone] = useState("");
   const [secondaryPhone, setSecondaryPhone] = useState("");
-  const [selectedProvince, setSelectedProvince] = useState("AB");
-  const [selectedChapter, setSelectedChapter] = useState("Calgary & Area");
+  const [selectedProvince, setSelectedProvince] = useState(
+    provinceChapters[0].province
+  );
+  const [selectedChapter, setSelectedChapter] = useState(
+    provinceChapters[0].chapters[0]
+  );
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -76,21 +80,30 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
   );
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  
-  const resetForm = () => {
-    // Reset all the state variables holding form field values
-    setPrimaryPhone("");
-    setSecondaryPhone("");
-    setSelectedProvince("AB");
-    setSelectedChapter("Calgary & Area");
-    setEmail("");
-    setFirstName("");
-    setLastName("");
-    setDob("");
-    setAddress("");
-    setCityInfo("");
-    setPostalCode("");
-  };
+
+  useEffect(() => {
+    if (isFormSubmitted && isFormValid) {
+      setCurrentStep(2);
+    }
+  }, [isFormSubmitted, isFormValid, setCurrentStep]);
+
+  useEffect(() => {
+    setPrimaryPhone(formData.primaryPhone);
+    setSecondaryPhone(formData.secondaryPhone);
+    setEmail(formData.email);
+    setFirstName(formData.firstName);
+    setLastName(formData.lastName);
+    setDob(formData.dob);
+    setAddress(formData.address);
+    setCityInfo(formData.cityInfo);
+    setPostalCode(formData.postalCode);
+    if (formData.province) {
+      setSelectedProvince(formData.province);
+    }
+    if (formData.chapter) {
+      setSelectedChapter(formData.chapter);
+    }
+  }, [formData]);
 
   const getErrorMessage = (fieldName: string): string | undefined => {
     const fieldError = validationErrors?.errors.find((error) =>
@@ -107,6 +120,19 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
     return `${year}-${month}-${day}`;
   }
 
+  const calculateAge = (dob: string): number => {
+    if (!dob) return 0;
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+  
+
   const handleProvinceChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -117,52 +143,57 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
     setFormData({ ...formData, chapter: event.target.value });
     setSelectedChapter(event.target.value);
   };
-  
-  const handlePrimaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handlePrimaryPhoneChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({ ...formData, primaryPhone: event.target.value });
     setPrimaryPhone(event.target.value);
   };
-  
-  const handleSecondaryPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleSecondaryPhoneChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({ ...formData, secondaryPhone: event.target.value });
     setSecondaryPhone(event.target.value);
   };
-  
-  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({ ...formData, firstName: event.target.value });
     setFirstName(event.target.value);
   };
-  
+
   const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, lastName: event.target.value });
     setLastName(event.target.value);
   };
-  
+
   const handleDobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, dob: event.target.value });
     setDob(event.target.value);
   };
-  
+
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, address: event.target.value });
     setAddress(event.target.value);
   };
-  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, email: event.target.value });
     setEmail(event.target.value);
   };
-  
+
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, cityInfo: event.target.value });
     setCityInfo(event.target.value);
   };
-  
+
   const handlePostalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, postalCode: event.target.value });
     setPostalCode(event.target.value);
   };
-  
 
   const chaptersForSelectedProvince = (provinceChapters.find(
     (province) => province.province === selectedProvince
@@ -175,7 +206,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       lastName,
       dob,
       address,
-      cityInfo: cityInfo,
+      cityInfo,
       province: selectedProvince,
       postalCode,
       chapter: selectedChapter,
@@ -183,9 +214,9 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       secondaryPhone,
       email,
     };
-    
+
     try {
-      volunteerShcema.parse(volunteerData);
+      volunteerSchema.parse(volunteerData);
       setValidationErrors(null);
       setIsFormValid(true);
       setIsFormSubmitted(true);
@@ -276,7 +307,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="dob"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Date of Birth
+              Date of Birth {dob && `(Age: ${calculateAge(dob)})`}
             </label>
             <div className="mt-2">
               <input
@@ -355,7 +386,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               <select
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 id="province"
-                value={formData.selectedProvince}
+                value={selectedProvince}
                 onChange={handleProvinceChange}
               >
                 {provinceChapters.map((province) => (
@@ -402,26 +433,14 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               <select
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 id="chapter"
-                value={formData.selectedChapter}
+                value={selectedChapter}
                 onChange={handleChapterChange}
               >
-                {chaptersForSelectedProvince.length > 0 ? (
-                  typeof chaptersForSelectedProvince[0] === "string" ? (
-                    chaptersForSelectedProvince.map((chapter, index) => (
-                      <option key={index} value={chapter}>
-                        {chapter}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="No Chapters Available">
-                      No Chapters Available
-                    </option>
-                  )
-                ) : (
-                  <option value="No Chapters Available">
-                    No Chapters Available
+                {chaptersForSelectedProvince.map((chapter, index) => (
+                  <option key={index} value={chapter}>
+                    {chapter}
                   </option>
-                )}
+                ))}
               </select>
             </div>
           </div>
@@ -470,7 +489,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
                 className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
                   getErrorMessage("secondaryPhone") ? "border-red-500" : ""
                 }`}
-                placeholder="10-digit phone number"
+                placeholder="optional"
               />
             </div>
           </div>
