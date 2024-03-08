@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { set, z } from "zod";
 import provinceChapters from "../provinceChapters.json";
@@ -18,8 +18,8 @@ interface FormErrors {
 }
 
 const volunteerSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  firstName: z.string().min(1, "First name is required").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
+  lastName: z.string().min(1, "Last name is required").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
   dob: z.string().min(1, "Date of birth is required").refine((dob) => {const maxDate = new Date(); maxDate.setFullYear(maxDate.getFullYear() - 100); return new Date(dob) >= maxDate;}, "Age must be less than 100 years old"),
   address: z.string().min(1, "Address is required"),
   cityInfo: z.string().min(1, "City is required").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
@@ -214,6 +214,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       secondaryPhone,
       email,
     };
+    console.log(volunteerData);
 
     try {
       volunteerSchema.parse(volunteerData);
@@ -255,7 +256,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="first-name"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              First name
+              First name <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -281,7 +282,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="last-name"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Last name
+              Last name <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -307,7 +308,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="dob"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Date of Birth {dob && `(Age: ${calculateAge(dob)})`}
+              Date of Birth {dob && `(Age: ${calculateAge(dob)})`} <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -332,7 +333,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="street-address"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Address
+              Address <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -356,7 +357,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="cityInfo"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              City
+              City <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -380,7 +381,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="province"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Province
+              Province <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <select
@@ -403,7 +404,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="postal-code"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Postal Code
+              Postal Code <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -427,7 +428,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="chapter"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Chapter
+              Chapter <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <select
@@ -450,7 +451,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="primary-phone"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Primary Phone Number
+              Primary Phone Number <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -489,7 +490,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
                 className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6 ${
                   getErrorMessage("secondaryPhone") ? "border-red-500" : ""
                 }`}
-                placeholder="optional"
+                placeholder="10-digit phone number"
               />
             </div>
           </div>
@@ -499,7 +500,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Email
+              Email <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -523,6 +524,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
           <button
             type="button"
             id="volunteer-info-cancel"
+            onClick={() => window.location.href = 'https://kidsportcanada.ca/'}
             className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
           >
             Cancel

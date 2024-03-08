@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { set, z } from "zod";
 
 const backgroundSchema = z.object({
@@ -7,15 +7,19 @@ const backgroundSchema = z.object({
   bondable: z.boolean(),
   medicalCondition: z.boolean(),
   medicalConditionDetails: z.string().optional(),
-  emergencyContactName: z.string().min(1, "Emergency contact name is required"),
+  emergencyContactName: z
+  .string()
+  .min(1, "Emergency contact name is required")
+  .regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
+
   emergencyContactRelationship: z
     .string()
-    .min(1, "Emergency contact relationship is required"),
+    .min(1, "Emergency contact relationship is required").regex(/^[a-zA-Z\s]*$/, "Invalid name, cannot contain numbers or special characters."),
   emergencyContactPhone: z
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-      "Invalid phone number"
+      "Invalid phone number. Exmaple: 123-456-7890"
     ),
   otherNotes: z.string().optional(),
 });
@@ -46,6 +50,26 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
   const [validationErrors, setValidationErrors] = useState<z.ZodError | null>(
     null
   );
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (isFormSubmitted && isFormValid) {
+      setCurrentStep(2);
+    }
+  }, [isFormSubmitted, isFormValid, setCurrentStep]);
+
+  useEffect(() => {
+    setEmployer(formData.employer);
+    setConviction(formData.conviction);
+    setBondable(formData.bondable);
+    setMedicalCondition(formData.medicalCondition);
+    setMedicalConditionDetails(formData.medicalConditionDetails);
+    setEmergencyContactName(formData.emergencyContactName);
+    setEmergencyContactRelationship(formData.emergencyContactRelationship);
+    setEmergencyContactPhone(formData.emergencyContactPhone);
+    setOtherNotes(formData.otherNotes);
+  }, [formData]);
 
   const getErrorMessage = (fieldName: string): string | undefined => {
     const fieldError = validationErrors?.errors.find((error) => error.path.includes(fieldName));
@@ -56,6 +80,25 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
     setFormData({ ...formData, employer: event.target.value });
     setEmployer(event.target.value);
   };
+
+  const handleConvictionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isConvicted = event.target.value === "true" ? true : false;
+    setConviction(isConvicted);
+    setFormData({ ...formData, conviction: isConvicted });
+  };
+  
+  const handleBondableChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isBondable = event.target.value === "true" ? true : false;
+    setBondable(isBondable);
+    setFormData({ ...formData, bondable: isBondable });
+  };
+
+  const handleMedicalConditionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const hasMedicalCondition = event.target.value === "true" ? true : false;
+    setMedicalCondition(hasMedicalCondition);
+    setFormData({ ...formData, medicalCondition: hasMedicalCondition });
+  };
+
   const handleEmergencyContactRelationshipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, emergencyContactRelationship: event.target.value });
     setEmergencyContactRelationship(event.target.value);
@@ -74,12 +117,12 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
   const handleMedicalConditionDetailsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, medicalConditionDetails: event.target.value});
     setMedicalConditionDetails(event.target.value);
-  }
+  };
 
   const handleOtherNotesChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, otherNotes: event.target.value });
     setOtherNotes(event.target.value);
-  }
+  };
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -95,14 +138,19 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
       emergencyContactPhone,
       otherNotes,
     };
+    console.log(formData);
 
     try {
       backgroundSchema.parse(formData);
       setValidationErrors(null);
       setCurrentStep(3); // Proceed to the Acknowledgement component
+      setIsFormValid(true);
+      setIsFormSubmitted(true);
     } catch (error) {
       if (error instanceof z.ZodError) {
         setValidationErrors(error);
+        setIsFormValid(false);
+        setIsFormSubmitted(false);
       }
     }
   };
@@ -121,7 +169,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
               htmlFor="employer"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Employer
+              Employer <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -134,6 +182,25 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                 placeholder="Employer"
               />
               {validationErrors?.formErrors.fieldErrors.employer && (<p className="text-red-500">{getErrorMessage('employer')}</p>)}
+            </div>
+          </div>
+          <div className="sm:col-span-6">
+            <label
+              htmlFor="other-notes"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Please list previous volunteer experience (who you volunteered with and what your tasks were)
+            </label>
+            <div className="mt-2">
+              <textarea
+                id="other-notes"
+                name="other-notes"
+                rows={3}
+                value={otherNotes}
+                onChange={handleOtherNotesChange}
+                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
+                placeholder="Please provide any additional notes or information you would like to disclose."
+              />
             </div>
           </div>
 
@@ -149,9 +216,10 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     id="conviction-yes"
                     name="conviction"
                     type="radio"
+                    value="true"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={conviction}
-                    onChange={() => setConviction(true)}
+                    checked={conviction === true}
+                    onChange={handleConvictionChange}
                   />
                   <label htmlFor="conviction-yes">Yes</label>
                 </div>
@@ -160,14 +228,25 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     id="conviction-no"
                     name="conviction"
                     type="radio"
+                    value="false"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={!conviction}
-                    onChange={() => setConviction(false)}
+                    checked={conviction === false}
+                    onChange={handleConvictionChange}
                   />
                   <label htmlFor="conviction-no">No</label>
                 </div>
               </div>
             </fieldset>
+          </div>
+          
+          <div className="sm:col-span-6">
+            <p className="text-sm font-medium text-gray-900 dark:text-white text-left italic">
+              (Please note, a criminal record check might be required for some
+              opportunities.
+              <br />
+              If you are selected for a position that requires a criminal record
+              check, you will be asked to provide one.)
+            </p>
           </div>
 
           <div className="sm:col-span-6">
@@ -181,9 +260,10 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     id="bondable-yes"
                     name="bondable"
                     type="radio"
+                    value="true"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={bondable}
-                    onChange={() => setBondable(true)}
+                    checked={bondable === true}
+                    onChange={handleBondableChange}
                   />
                   <label htmlFor="bondable-yes">Yes</label>
                 </div>
@@ -192,9 +272,10 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     id="bondable-no"
                     name="bondable"
                     type="radio"
+                    value="false"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={!bondable}
-                    onChange={() => setBondable(false)}
+                    checked={bondable === false}
+                    onChange={handleBondableChange}
                   />
                   <label htmlFor="bondable-no">No</label>
                 </div>
@@ -214,9 +295,10 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     id="medicalCondition-yes"
                     name="medicalCondition"
                     type="radio"
+                    value="true"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={medicalCondition}
-                    onChange={() => setMedicalCondition(true)}
+                    checked={medicalCondition === true}
+                    onChange={handleMedicalConditionChange}
                   />
                   <label htmlFor="medicalCondition-yes">Yes</label>
                 </div>
@@ -226,8 +308,8 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                     name="medicalCondition"
                     type="radio"
                     className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
-                    checked={!medicalCondition}
-                    onChange={() => setMedicalCondition(false)}
+                    checked={medicalCondition === false}
+                    onChange={handleMedicalConditionChange}
                   />
                   <label htmlFor="medicalCondition-no">No</label>
                 </div>
@@ -267,7 +349,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
               htmlFor="emergency-full-name"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Full name
+              Full name <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -279,6 +361,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                 className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Full Name"
               />
+              {validationErrors?.formErrors.fieldErrors.emergencyContactName && (<p className="text-red-500">{getErrorMessage('emergencyContactName')}</p>)}
             </div>
           </div>
 
@@ -287,7 +370,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
               htmlFor="relationship"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Relationship
+              Relationship <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -299,6 +382,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                 className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Relationship"
               />
+              {validationErrors?.formErrors.fieldErrors.emergencyContactRelationship && (<p className="text-red-500">{getErrorMessage('emergencyContactRelationship')}</p>)}
             </div>
           </div>
 
@@ -307,7 +391,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
               htmlFor="emergency-phone"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Emergency Phone
+              Emergency Phone <span className="text-red-500">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -319,39 +403,12 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                 className="block w-full rounded-md border-gray-300 p-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Primary Phone"
               />
-            </div>
-          </div>
-
-          <div className="sm:col-span-6">
-            <label
-              htmlFor="other-notes"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Notes
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="other-notes"
-                name="other-notes"
-                rows={3}
-                value={otherNotes}
-                onChange={handleOtherNotesChange}
-                className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
-                placeholder="Please provide any additional notes or information you would like to disclose."
-              />
+              {validationErrors?.formErrors.fieldErrors.emergencyContactPhone && (<p className="text-red-500">{getErrorMessage('emergencyContactPhone')}</p>)}
             </div>
           </div>
         </div>
 
-        <div className="max-w-full mt-10 px-10">
-          <p className="text-sm font-medium text-gray-900 dark:text-white text-center">
-            Please note, a criminal record check might be required for some
-            opportunities.
-            <br />
-            If you are selected for a position that requires a criminal record
-            check, you will be asked to provide one.
-          </p>
-        </div>
+
 
         <div className="flex justify-between mt-20">
           <button

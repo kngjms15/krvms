@@ -23,13 +23,14 @@ const WhatsNext = () => {
         <div className="flex justify-between mt-12">
           <div></div>
           <div>
-            <button
+            <button              
               type="submit"
               id="volunteer-what-next-submit"
               className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
               role="button"
+              onClick={() => window.location.href = 'https://kidsportcanada.ca/'}
             >
-              Close
+              Home
             </button>
           </div>
         </div>
