@@ -18,11 +18,11 @@ interface FormErrors {
 }
 
 const volunteerSchema = z.object({
-  firstName: z.string().min(1, "First name is required").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
-  lastName: z.string().min(1, "Last name is required").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
+  firstName: z.string().min(1, "First name is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
+  lastName: z.string().min(1, "Last name is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
   dob: z.string().min(1, "Date of birth is required").refine((dob) => {const maxDate = new Date(); maxDate.setFullYear(maxDate.getFullYear() - 100); return new Date(dob) >= maxDate;}, "Age must be less than 100 years old"),
-  address: z.string().min(1, "Address is required"),
-  cityInfo: z.string().min(1, "City is required").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
+  address: z.string().min(1, "Address is required").max(40,"Maximum 20 Characters"),
+  cityInfo: z.string().min(1, "City is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
   province: z
     .string()
     .min(2, "Province is required")
@@ -221,7 +221,6 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       setValidationErrors(null);
       setIsFormValid(true);
       setIsFormSubmitted(true);
-      // resetForm();
       setCurrentStep(2);
     } catch (error) {
       if (error instanceof z.ZodError) {

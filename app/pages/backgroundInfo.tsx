@@ -2,26 +2,29 @@ import React, { useState, useEffect } from "react";
 import { set, z } from "zod";
 
 const backgroundSchema = z.object({
-  employer: z.string().min(1, "Employer is required"),
+  employer: z.string().min(1, "Employer is required").max(20,"Maximum 20 Characters"),
   conviction: z.boolean(),
   bondable: z.boolean(),
   medicalCondition: z.boolean(),
-  medicalConditionDetails: z.string().optional(),
+  medicalConditionDetails: z.string().max(200,"Maximum 200 Characters").optional(),
   emergencyContactName: z
   .string()
   .min(1, "Emergency contact name is required")
+  .max(40,"Maximum 20 Characters")
   .regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
 
   emergencyContactRelationship: z
     .string()
-    .min(1, "Emergency contact relationship is required").regex(/^[a-zA-Z\s]*$/, "Invalid name, cannot contain numbers or special characters."),
+    .min(1, "Emergency contact relationship is required")
+    .max(20,"Maximum 20 Characters")
+    .regex(/^[a-zA-Z\s]*$/, "Invalid name, cannot contain numbers or special characters."),
   emergencyContactPhone: z
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
       "Invalid phone number. Exmaple: 123-456-7890"
     ),
-  otherNotes: z.string().optional(),
+  volunteerExperienceDetails: z.string().max(200,"Maximum 200 Characters").optional(),
 });
 
 type BackgroundInfoProps = {
@@ -46,7 +49,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
   const [emergencyContactRelationship, setEmergencyContactRelationship] =
     useState("");
   const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
-  const [otherNotes, setOtherNotes] = useState(" ");
+  const [volunteerExperienceDetails, setOtherNotes] = useState(" ");
   const [validationErrors, setValidationErrors] = useState<z.ZodError | null>(
     null
   );
@@ -55,7 +58,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
 
   useEffect(() => {
     if (isFormSubmitted && isFormValid) {
-      setCurrentStep(2);
+      setCurrentStep(3);
     }
   }, [isFormSubmitted, isFormValid, setCurrentStep]);
 
@@ -68,7 +71,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
     setEmergencyContactName(formData.emergencyContactName);
     setEmergencyContactRelationship(formData.emergencyContactRelationship);
     setEmergencyContactPhone(formData.emergencyContactPhone);
-    setOtherNotes(formData.otherNotes);
+    setOtherNotes(formData.volunteerExperienceDetails);
   }, [formData]);
 
   const getErrorMessage = (fieldName: string): string | undefined => {
@@ -120,7 +123,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
   };
 
   const handleOtherNotesChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData({ ...formData, otherNotes: event.target.value });
+    setFormData({ ...formData, volunteerExperienceDetails: event.target.value });
     setOtherNotes(event.target.value);
   };
 
@@ -136,7 +139,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
       emergencyContactName,
       emergencyContactRelationship,
       emergencyContactPhone,
-      otherNotes,
+      volunteerExperienceDetails,
     };
     console.log(formData);
 
@@ -186,21 +189,22 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
           </div>
           <div className="sm:col-span-6">
             <label
-              htmlFor="other-notes"
+              htmlFor="volunteerExperienceDetails"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               Please list previous volunteer experience (who you volunteered with and what your tasks were)
             </label>
             <div className="mt-2">
               <textarea
-                id="other-notes"
-                name="other-notes"
+                id="volunteerExperienceDetails"
+                name="volunteerExperienceDetails"
                 rows={3}
-                value={otherNotes}
+                value={volunteerExperienceDetails}
                 onChange={handleOtherNotesChange}
                 className="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="Please provide any additional notes or information you would like to disclose."
               />
+              {validationErrors?.formErrors.fieldErrors.volunteerExperienceDetails && (<p className="text-red-500">{getErrorMessage('volunteerExperienceDetails')}</p>)}
             </div>
           </div>
 
@@ -335,6 +339,7 @@ const BackgroundInfo: React.FC<BackgroundInfoProps> = ({
                 placeholder="Please provide details of your medical condition or disability."
                 disabled={!medicalCondition}
               />
+              {validationErrors?.formErrors.fieldErrors.medicalConditionDetails && (<p className="text-red-500">{getErrorMessage('medicalConditionDetails')}</p>)}
             </div>
           </div>
         </div>

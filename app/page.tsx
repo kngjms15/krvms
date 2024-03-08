@@ -3,11 +3,14 @@
 import React from 'react'
 import ApplicationParent from './pages/applicationParent';
 
+
 const Home = () => {
   return (
     <>
       
       <ApplicationParent />
+      
+      
     </>
   )
 }

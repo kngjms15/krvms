@@ -9,7 +9,7 @@ const Acknowledgement: React.FC<AcknowledgementProps> = ({ setCurrentStep, onBac
   const [agreed,setAgreed] = useState(false);
   const handleFinish = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setCurrentStep(4);
+    setCurrentStep(5);
 
   };
 
