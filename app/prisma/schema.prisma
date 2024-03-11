@@ -1,0 +1,135 @@
+datasource db {
+    provider = "postgresql"
+    url      = " env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Roles {
+    id              Int
+    name            @db.VarChar(20)
+    description?    @db.VarChar(50)
+    permission      Int
+    active?         Int
+    created?        DateTime
+    lastModified?   DateTime 
+}
+
+model Chapter {
+    id              Int
+    name            @db.VarChar(20)
+    address         @db.VarChar(50)
+    city            @db.VarChar(50)
+    province        @db.VarChar(2)
+    postalCode      @db.VarChar(6)
+}
+
+model Applicant {
+    id                      Int
+    firstName               @db.VarChar(50)
+    lastName                @db.VarChar(50)
+    DOB                     DateTime
+    address                 @db.VarChar(50)
+    city                    @db.VarChar(50)
+    province                @db.VarChar(2)
+    postalCode              @db.VarChar(6)
+    chapter                 @db.VarChar(20)
+    phoneNumber             @db.VarChar(10)
+    secondaryPhoneNumber?   @db.VarChar(10)
+    email                   @db.VarChar(50)
+    employer?               @db.VarChar(50)
+    conviction?             Int
+    convictionDetails?      @db.VarChar(100)
+    bondable?               Int
+    medConditions?          Int
+    medConditionsDetails?   @db.VarChar(100)
+    emergName               @db.VarChar(50)
+    emergRelationship?      @db.VarChar(50)
+    emergPhoneNumber        @db.VarChar(10)
+    interviewStatus         @db.VarChar(1)
+    chapterId               Int?
+    chapter                 Chapter     @relation(fields: [chapterId], references: [id])
+}
+
+model Event {
+    id              Int
+    name            @db.VarChar(50)
+    description     @db.VarChar(100)
+    date            DateTime
+    location        @db.VarChar(50)
+    chapterId       Int
+}
+
+model Volunteer {
+    id                      Int
+    firstName               @db.VarChar(50)
+    lastName                @db.VarChar(50)
+    DOB                     DateTime
+    address                 @db.VarChar(50)
+    city                    @db.VarChar(50)
+    province                @db.VarChar(2)
+    postalCode              @db.VarChar(6)
+    chapter                 @db.VarChar(20)
+    phoneNumber             @db.VarChar(10)
+    secondaryPhoneNumber?   @db.VarChar(10)
+    email                   @db.VarChar(50)
+    employer?               @db.VarChar(50)
+    conviction?             Int
+    convictionDetails?      @db.VarChar(100)
+    bondable?               Int
+    medConditions?          Int
+    medConditionsDetails?   @db.VarChar(100)
+    emergName               @db.VarChar(50)
+    emergRelationship?      @db.VarChar(50)
+    emergPhoneNumber        @db.VarChar(10)
+    chapterId               Int
+    chapter                 Chapter     @relation(fields: [chapterId], references: [id])
+} 
+
+model Administrator{
+    id              Int
+    firstName       @db.VarChar(50)
+    lastName        @db.VarChar(50)
+    email           @db.VarChar(50)
+    password        @db.VarChar(100)
+    permission      Int
+    chapterId       Int
+    chapter         Chapter     @relation(fields: [chapterId], references: [id])
+}
+
+model Job {
+    adminId         Int
+    admin           Administrator   @relation(fields: [adminId], references: [id])
+    roleId          Int
+    role            Roles           @relation(fields: [roleId], references: [id])
+}
+
+model Speciality {
+    volunteerId     Int
+    volunteer       Volunteer      @relation(fields: [volunteerId], references: [id])
+    roleId          Int
+    role            Roles          @relation(fields: [roleId], references: [id])
+}
+
+model Application {
+    applicantId     Int
+    applicant       Applicant      @relation(fields: [applicantId], references: [id])
+    eventId         Int
+    event           Event          @relation(fields: [eventId], references: [id])
+}
+
+model VolunteerEvent {
+    volunteerId     Int
+    volunteer       Volunteer      @relation(fields: [roleId], references: [id])
+    eventId         Int
+    event           Event          @relation(fields: [eventId], references: [id])
+}
+
+model AdminEvent{
+    adminId         Int
+    admin           Administrator @relation(fields: [adminId], references: [id])
+    eventId         Int
+    event           Event         @relation(fields: [eventId], references: [id])
+}
