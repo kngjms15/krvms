@@ -21,6 +21,8 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import Post from "./dashboard/post";
+import volunteers from "./pages/api/volunteers";
+import VolunteersList from "./dashboard/applicantsList";
 
 async function getPosts() {
   const posts = await prisma.post.findMany({
@@ -30,8 +32,14 @@ async function getPosts() {
   return posts;
 }
 
+async function getVolunteers() {
+  const volunteers = await prisma.volunteerApplicant.findMany();
+  return volunteers;
+}
+
 async function Home() {
   const posts = await getPosts();
+  const volunteers = await getVolunteers();
   
   return (
     <>
@@ -45,6 +53,21 @@ async function Home() {
           content={post.content ?? ""}
           authorName={post.author?.name ?? ""}/>);
       })}
+
+      <h1>Volunteers</h1>
+      {volunteers.map((volunteer) => {
+        return(
+          <VolunteersList 
+          
+            firstName={volunteer.firstName}
+            lastName={volunteer.lastName}
+            createdAt={volunteer.createdAt}
+            chapter={volunteer.chapter}
+
+
+          />);
+      })}
+      
     </>
   );
 }

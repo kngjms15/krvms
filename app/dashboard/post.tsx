@@ -14,4 +14,3 @@ export default function Post({ id, title, content, authorName }: PostProps) {
         </div>
     );
 }
-  

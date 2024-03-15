@@ -10,7 +10,7 @@ async function main() {
       lastName: "Johnson",
       dob: "1995-12-12",
       address: "123 Main St",
-      cityInfo: "Calgary",
+      city: "Calgary",
       province: "AB",
       postalCode: "T2T 2T2",
       chapter: "Calgary & Area",

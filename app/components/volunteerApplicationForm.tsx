@@ -937,9 +937,11 @@ function VolunteerApplicationForm() {
       
 
       {/* Navigation buttons */}
-      <div className="flex justify-between mt-20 flex-grow max-w-[940px] m-auto my-6 px-6 ">
+      <div className="flex justify-between flex-grow max-w-[940px]">
         {currentStep === 0 && (
-          <div className="flex justify-between mt-20">
+          <div className="flex justify-between mt-12">
+            <div>Another button</div>
+            <div>
             <button
               type="button"
               onClick={next}
@@ -947,6 +949,7 @@ function VolunteerApplicationForm() {
             >
               Next
             </button>
+            </div>
           </div>
         )}
         {currentStep === 1 && (
@@ -977,11 +980,41 @@ function VolunteerApplicationForm() {
               Back
             </button>
             <button
-              type="submit"
-              onClick={handleSubmit(processForm)}
+              type="button"
+              onClick={next}
               className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
             >
-              Submit
+              Next
+            </button>
+          </div>
+        )}
+        {currentStep === 3 && (
+          <div>
+            <button
+              type="button"
+              onClick={prev}
+              className="rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+            >
+              Next
+            </button>
+          </div>
+        )}
+        {currentStep === 4 && (
+          <div>
+            
+            <button
+              type="submit"
+              onClick={() => window.location.href = "https://kidsportcanada.ca/"}
+              className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+            >
+              Home
             </button>
           </div>
         )}
