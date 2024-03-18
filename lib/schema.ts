@@ -17,19 +17,17 @@ export const volunteerApplicationSchema = z.object({
       /^[a-zA-Z\s-.]*$/,
       "Invalid name, can only contain letters, spaces, hyphens, or periods."
     ),
-  dob: z
+    dob: z
     .string()
     .min(1, "Date of birth is required")
+    .regex(/^[0-9]{4}[-][0-1][0-9][-][0-3][0-9]$/, "Invalid date format. Example: 2000-01-01")
     .refine((dob) => {
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() - 100);
-      return new Date(dob) >= maxDate;
-    }, "Age must be less than 100 years old")
-    .refine((dob) => {
-      const minDate = new Date();
-      minDate.setFullYear(minDate.getFullYear() + 14);
-      return new Date(dob) <= minDate;
-    }, "Age must be greater than 14 years old"),
+      const currentDate = new Date();
+      const minDate = new Date(currentDate.getFullYear() - 14, currentDate.getMonth(), currentDate.getDate());
+      const maxDate = new Date(currentDate.getFullYear() - 100, currentDate.getMonth(), currentDate.getDate());
+      const dobDate = new Date(dob);
+      return dobDate <= minDate && dobDate >= maxDate;
+    }, "Age must be less than 100 but more than 14 years of age."),
   address: z
     .string()
     .min(1, "Address is required")
