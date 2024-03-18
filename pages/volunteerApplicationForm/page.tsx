@@ -9,6 +9,7 @@ import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
 import Image from "next/image";
 import provinceChapters from "./provinceChapters.json";
+import { get } from "http";
 
 
 
@@ -75,6 +76,7 @@ function VolunteerApplicationForm() {
     watch,
     reset,
     trigger,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>({ resolver: zodResolver(volunteerApplicationSchema) });
 
@@ -91,18 +93,19 @@ function VolunteerApplicationForm() {
     register("secondaryPhone");
     register("email");
     register("employer");
-    register("conviction", { setValueAs: (value) => value === "false" });
+    register("conviction", { setValueAs: (value) => value === "true" });
     register("bondable", { setValueAs: (value) => value === "true" });
-    register("medicalCondition", { setValueAs: (value) => value === "false" });
+    register("medicalCondition", { setValueAs: (value) => value === "true" });
     register("medicalConditionDetails");
     register("emergencyContactName");
     register("emergencyContactRelationship");
     register("emergencyContactPhone");
     register("volunteerExperienceDetails");
-    register("agreedToTerms");
+    register("agreedToTerms", { setValueAs: (value) => value === "true"});
   }, [register]);
 
   const processForm: SubmitHandler<Inputs> = async (data) => {
+    console.log("Date of birth", data.dob)// checks the format of the dob
     try {
       const response = await fetch("/api/submitVolunteerApplication", {
         method: "POST",
@@ -140,9 +143,10 @@ function VolunteerApplicationForm() {
       console.log("Proceeding to next step...");
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
-    } else if (currentStep === steps.length - 1) {
+    } else if (currentStep === steps.length - 2) {
       console.log("Submitting form...");
-      handleSubmit(processForm);
+      const formData = await getValues();
+      processForm(formData);
     }
   };
 

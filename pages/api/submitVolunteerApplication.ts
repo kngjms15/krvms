@@ -11,9 +11,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Insert the form data into the database
       const application = await prisma.volunteerApplicant.create({
         data: {
-          ...formData,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          dob: new Date(formData.dob), // Convert string to Date object
+          address: formData.address,
+          city: formData.city,
+          province: formData.province,
+          postalCode: formData.postalCode,
+          chapter: formData.chapter,
+          primaryPhone: formData.primaryPhone,
+          secondaryPhone: formData.secondaryPhone,
+          email: formData.email,
+          employer: formData.employer,
+          conviction: formData.conviction === 'true', // Convert string to boolean
+          bondable: formData.bondable === 'true', // Convert string to boolean
+          medicalCondition: formData.medicalCondition === 'true', // Convert string to boolean
+          medicalConditionDetails: formData.medicalConditionDetails,
+          emergencyContactName: formData.emergencyContactName,
+          emergencyContactRelationship: formData.emergencyContactRelationship,
+          emergencyContactPhone: formData.emergencyContactPhone,
+          volunteerExperienceDetails: formData.volunteerExperienceDetails,
           // Set the application status to 'Pending'
-          status: 'Pending',
+          interviewStatus: 'Pending', // Assuming 'interviewStatus' is the correct field name
         },
       });
 
