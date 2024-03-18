@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
-import provinceChapters from "../provinceChapters.json";
+import provinceChapters from "./provinceChapters.json";
 import Image from "next/image";
-import { Span } from "next/dist/trace";
+
 
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
@@ -72,6 +72,7 @@ function VolunteerApplicationForm() {
     watch,
     reset,
     trigger,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>({ resolver: zodResolver(volunteerApplicationSchema) });
 
@@ -88,9 +89,9 @@ function VolunteerApplicationForm() {
     register("secondaryPhone");
     register("email");
     register("employer");
-    register("conviction", { setValueAs: (value) => value === "false" });
-    register("bondable", { setValueAs: (value) => value === "true" });
-    register("medicalCondition", { setValueAs: (value) => value === "false" });
+    register("conviction", { setValueAs: (value) => value === "true"});
+    register("bondable", { setValueAs: (value) => value === "true"});
+    register("medicalCondition", { setValueAs: (value) => value === "true"});
     register("medicalConditionDetails");
     register("emergencyContactName");
     register("emergencyContactRelationship");
@@ -109,8 +110,8 @@ function VolunteerApplicationForm() {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        alert("Form submitted successfully!");
         console.log("Form submitted successfully!");
+        alert("Form submitted successfully!");
       } else {
         console.error("Failed to submit form.");
       }
@@ -118,7 +119,6 @@ function VolunteerApplicationForm() {
       console.error("Failed to submit form:", error);
     }
     console.log(data);
-    // send data to the server
     reset();
   };
 
@@ -128,25 +128,21 @@ function VolunteerApplicationForm() {
     const fields = steps[currentStep]?.fields || [];
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
     window.scrollTo(0, 0);
-  
+
     if (!output) {
       console.log("Validation failed, not proceeding to next step.", errors);
       return;
     }
-  
+
     if (currentStep < steps.length - 1) {
-      setPreviousStep(currentStep);
-  
-      if (currentStep === 3) {
-        console.log("Submitting form...");
-        handleSubmit(processForm)();
-      }
-  
       console.log("Proceeding to next step...");
+      setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
+    } else if (currentStep === steps.length - 2) {
+      console.log("Submitting form...");
+      handleSubmit(processForm);
     }
   };
-  
 
   const prev = () => {
     if (currentStep > 0) {
@@ -155,14 +151,6 @@ function VolunteerApplicationForm() {
       window.scrollTo(0, 0);
     }
   };
-
-  // function getFormattedDate(ageLimit: number = 14) {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear() - ageLimit;
-  //   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-  //   const day = ("0" + currentDate.getDate()).slice(-2);
-  //   return `${year}-${month}-${day}`;
-  // }
 
   const calculateAge = (dob: string): number => {
     if (!dob) return 0;
@@ -175,18 +163,6 @@ function VolunteerApplicationForm() {
     }
     return age;
   };
-
-  const getMinimumDOB = (): string => {
-    const expectedDate = new Date();
-    expectedDate.setFullYear(expectedDate.getFullYear()-13)
-    return expectedDate.toDateString();
-  }
-
-  const getMaximumDOB = (): string => {
-    const expectedDate = new Date();
-    expectedDate.setFullYear(expectedDate.getFullYear()+99)
-    return expectedDate.toDateString();
-  }
 
   const dob = watch("dob");
   const selectedProvince = watch("province");
@@ -276,8 +252,6 @@ function VolunteerApplicationForm() {
                     placeholder="yyyy-mm-dd"
                     {...register("dob")}
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
-                    max={getMaximumDOB()}
-                    min={getMinimumDOB()}
                   />
                   {errors.dob && (
                     <span className="text-red-500 text-xs">
@@ -973,6 +947,7 @@ function VolunteerApplicationForm() {
 
         {/* Navigation buttons */}
         <div className="flex justify-between flex-grow max-w-[940px]">
+          {/* volunteer info */}
           {currentStep === 0 && (
             <div className="flex mt-12 ml-auto">
               <div>
@@ -986,6 +961,7 @@ function VolunteerApplicationForm() {
               </div>
             </div>
           )}
+          {/* background info */}
           {currentStep === 1 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -1004,6 +980,7 @@ function VolunteerApplicationForm() {
               </button>
             </div>
           )}
+          {/* Summary */}
           {currentStep === 2 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -1022,6 +999,7 @@ function VolunteerApplicationForm() {
               </button>
             </div>
           )}
+          {/* acknowledgement */}
           {currentStep === 3 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -1033,15 +1011,14 @@ function VolunteerApplicationForm() {
               </button>
               <button
                 type="submit"
-                onClick={() => {
-                  next();
-                }}
+                onClick={next}
                 className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
               >
                 Next
               </button>
             </div>
           )}
+          {/* what's next */}
           {currentStep === 4 && (
             <div className="flex mt-12 ml-auto">
               <div></div>
