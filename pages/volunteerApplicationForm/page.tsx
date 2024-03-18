@@ -11,9 +11,6 @@ import Image from "next/image";
 import provinceChapters from "./provinceChapters.json";
 import { get } from "http";
 
-
-
-
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
 const steps = [
@@ -101,11 +98,10 @@ function VolunteerApplicationForm() {
     register("emergencyContactRelationship");
     register("emergencyContactPhone");
     register("volunteerExperienceDetails");
-    register("agreedToTerms", { setValueAs: (value) => value === "true"});
+    register("agreedToTerms", { setValueAs: (value) => value === "true" });
   }, [register]);
 
   const processForm: SubmitHandler<Inputs> = async (data) => {
-    console.log("Date of birth", data.dob)// checks the format of the dob
     try {
       const response = await fetch("/api/submitVolunteerApplication", {
         method: "POST",
@@ -116,15 +112,16 @@ function VolunteerApplicationForm() {
       });
       if (response.ok) {
         console.log("Form submitted successfully!");
+        reset();
+        return true;
       } else {
         console.error("Failed to submit form.");
+        return false;
       }
     } catch (error) {
       console.error("Failed to submit form:", error);
+      return false;
     }
-    console.log(data);
-    // send data to the server
-    reset();
   };
 
   type FieldName = keyof Inputs;
@@ -135,18 +132,31 @@ function VolunteerApplicationForm() {
     window.scrollTo(0, 0);
 
     if (!output) {
-      console.log("Validation failed, not proceeding to next step.", errors);
+      console.log("Validation failed, cannot proceed to next step.", errors);
       return;
+    }
+
+    if (currentStep === steps.length - 2) {
+      console.log("Acknowledgement step completed, submitting form...");
+      const formData = await getValues();
+      const formSubmissionResult = await processForm(formData);
+      if (formSubmissionResult) {
+        alert("Form submitted successfully!");
+        console.log("Form submitted successfully!");
+      } else {
+        alert("Failed to submit form.");
+        console.error("Failed to submit form.");
+      }
+      // Proceed to the next step after form submission
+      setPreviousStep(currentStep);
+      setCurrentStep((step) => step + 1);
+      return; // Prevent further execution after form submission
     }
 
     if (currentStep < steps.length - 1) {
       console.log("Proceeding to next step...");
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
-    } else if (currentStep === steps.length - 2) {
-      console.log("Submitting form...");
-      const formData = await getValues();
-      processForm(formData);
     }
   };
 
@@ -157,14 +167,6 @@ function VolunteerApplicationForm() {
       window.scrollTo(0, 0);
     }
   };
-
-  // function getFormattedDate(ageLimit: number = 14) {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear() - ageLimit;
-  //   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-  //   const day = ("0" + currentDate.getDate()).slice(-2);
-  //   return `${year}-${month}-${day}`;
-  // }
 
   const calculateAge = (dob: string): number => {
     if (!dob) return 0;
@@ -1041,7 +1043,6 @@ function VolunteerApplicationForm() {
                 Home
               </button>
             </div>
-            
           )}
         </div>
       </form>
