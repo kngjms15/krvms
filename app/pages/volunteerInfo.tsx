@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { set, z } from "zod";
+import { z } from "zod";
 import provinceChapters from "../provinceChapters.json";
 
 interface FormErrors {
@@ -8,7 +8,7 @@ interface FormErrors {
   lastName?: string;
   dob?: string;
   address?: string;
-  cityInfo?: string;
+  city?: string;
   province?: string;
   postalCode?: string;
   chapter?: string;
@@ -22,7 +22,7 @@ const volunteerSchema = z.object({
   lastName: z.string().min(1, "Last name is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s-.]*$/, "Invalid name, can only contain letters, spaces, hyphens, or periods."),
   dob: z.string().min(1, "Date of birth is required").refine((dob) => {const maxDate = new Date(); maxDate.setFullYear(maxDate.getFullYear() - 100); return new Date(dob) >= maxDate;}, "Age must be less than 100 years old"),
   address: z.string().min(1, "Address is required").max(40,"Maximum 20 Characters"),
-  cityInfo: z.string().min(1, "City is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
+  city: z.string().min(1, "City is required").max(20,"Maximum 20 Characters").regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
   province: z
     .string()
     .min(2, "Province is required")
@@ -73,7 +73,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
   const [lastName, setLastName] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
-  const [cityInfo, setCityInfo] = useState("");
+  const [city, setCityInfo] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [validationErrors, setValidationErrors] = useState<z.ZodError | null>(
     null
@@ -95,7 +95,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
     setLastName(formData.lastName);
     setDob(formData.dob);
     setAddress(formData.address);
-    setCityInfo(formData.cityInfo);
+    setCityInfo(formData.city);
     setPostalCode(formData.postalCode);
     if (formData.province) {
       setSelectedProvince(formData.province);
@@ -186,7 +186,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
   };
 
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, cityInfo: event.target.value });
+    setFormData({ ...formData, city: event.target.value });
     setCityInfo(event.target.value);
   };
 
@@ -206,7 +206,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
       lastName,
       dob,
       address,
-      cityInfo,
+      city,
       province: selectedProvince,
       postalCode,
       chapter: selectedChapter,
@@ -353,7 +353,7 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
 
           <div className="sm:col-span-3">
             <label
-              htmlFor="cityInfo"
+              htmlFor="city"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               City <span className="text-red-500">*</span>
@@ -361,16 +361,16 @@ const VolunteerInfo: React.FC<VolunteerInfoProps> = ({
             <div className="mt-2">
               <input
                 type="text"
-                name="cityInfo"
-                id="cityInfo"
+                name="city"
+                id="city"
                 autoComplete="address-level2"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
                 placeholder="City"
-                value={formData.cityInfo}
+                value={formData.city}
                 onChange={handleCityChange}
               />
-              {getErrorMessage("cityInfo") && (
-                <p className="text-red-500">{getErrorMessage("cityInfo")}</p>
+              {getErrorMessage("city") && (
+                <p className="text-red-500">{getErrorMessage("city")}</p>
               )}
             </div>
           </div>
