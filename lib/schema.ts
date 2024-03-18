@@ -24,7 +24,12 @@ export const volunteerApplicationSchema = z.object({
       const maxDate = new Date();
       maxDate.setFullYear(maxDate.getFullYear() - 100);
       return new Date(dob) >= maxDate;
-    }, "Age must be less than 100 years old"),
+    }, "Age must be less than 100 years old")
+    .refine((dob) => {
+      const minDate = new Date();
+      minDate.setFullYear(minDate.getFullYear() + 14);
+      return new Date(dob) <= minDate;
+    }, "Age must be greater than 14 years old"),
   address: z
     .string()
     .min(1, "Address is required")
