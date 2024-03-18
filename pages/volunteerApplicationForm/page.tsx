@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+// import { motion } from 'framer-motion'
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
-import provinceChapters from "../provinceChapters.json";
 import Image from "next/image";
-import { Span } from "next/dist/trace";
+import provinceChapters from "./provinceChapters.json";
+
+
+
 
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
