@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
 
-
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
+  onDelete?: (id: number) => void;
 }
 
 const calculateAge = (dob: Date) => {
@@ -17,28 +17,33 @@ const calculateAge = (dob: Date) => {
   return age;
 };
 
-const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant }) => {
+const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant, onDelete }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  // const handleDelete = async () => {
-  //   try {
-  //     const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
-  //       method: "DELETE",
-  //     });
-  //     if (response.ok) {
-  //       // Handle successful deletion (e.g., update state or notify user)
-  //     } else {
-  //       // Handle deletion failure (e.g., show error message)
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting applicant:", error);
-  //     // Handle deletion failure (e.g., show error message)
-  //   }
-  // };
+  const handleDelete = async () => {
+    
+
+    try {
+      const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        onDelete?.(applicant.applicantId);
+        // Handle successful deletion (e.g., update state or notify user)
+      } else {
+        console.error("Failed to delete applicant:", response.status);
+        alert("Failed to delete applicant. Please try again.");
+        // Handle deletion failure (e.g., show error message)
+      }
+    } catch (error) {
+      console.error("Error deleting applicant:", error);
+      alert("Error deleting applicant. Please try again later.");
+    }    
+  };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
@@ -49,10 +54,10 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant }) => {
         <h4 className="text-lg font-semibold">Status: {applicant.interviewStatus}</h4>
         <h4 className="text-lg font-semibold">ApplicantID: {applicant.applicantId}</h4>
         <div className="flex justify-end ">
-          <button className="text-blue-500 m-2" onClick={toggleDetails}>
+          <button className="text-blue-500 m-2" onClick={toggleDetails} aria-label="Toggle Details">
             {showDetails ? "Hide Details" : "Show Details"}
           </button>
-          <button className="text-red-500 m-2">
+          <button className="text-red-500 m-2" onClick={handleDelete} aria-label="Toggle Details">
             Delete
           </button>
         </div>

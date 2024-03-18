@@ -17,7 +17,6 @@ const ApplicantsListPage: React.FC = () => {
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Fetched applicats data: ",  data); // log the data here
         setApplicants(data);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
