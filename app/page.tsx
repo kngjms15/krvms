@@ -12,7 +12,7 @@ const Page = () => {
   return (
     <>
       {/* pages */}
-      <VolunteerApplicationForm /> 
+      {/* <VolunteerApplicationForm />  */}
     
       <ApplicantsListPage /> {/* This will render the list of applicants */}
     </>
