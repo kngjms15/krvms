@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import React from "react";
@@ -109,6 +109,7 @@ function VolunteerApplicationForm() {
         body: JSON.stringify(data),
       });
       if (response.ok) {
+        alert("Form submitted successfully!");
         console.log("Form submitted successfully!");
       } else {
         console.error("Failed to submit form.");
@@ -127,21 +128,25 @@ function VolunteerApplicationForm() {
     const fields = steps[currentStep]?.fields || [];
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
     window.scrollTo(0, 0);
-
+  
     if (!output) {
       console.log("Validation failed, not proceeding to next step.", errors);
       return;
     }
-
+  
     if (currentStep < steps.length - 1) {
-      console.log("Proceeding to next step...");
       setPreviousStep(currentStep);
+  
+      if (currentStep === 3) {
+        console.log("Submitting form...");
+        handleSubmit(processForm)();
+      }
+  
+      console.log("Proceeding to next step...");
       setCurrentStep((step) => step + 1);
-    } else if (currentStep === steps.length - 1) {
-      console.log("Submitting form...");
-      handleSubmit(processForm);
     }
   };
+  
 
   const prev = () => {
     if (currentStep > 0) {
@@ -1013,8 +1018,10 @@ function VolunteerApplicationForm() {
                 Back
               </button>
               <button
-                type="button"
-                onClick={next}
+                type="submit"
+                onClick={() => {
+                  next();
+                }}
                 className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
               >
                 Next
@@ -1025,7 +1032,7 @@ function VolunteerApplicationForm() {
             <div className="flex mt-12 ml-auto">
               <div></div>
               <button
-                type="submit"
+                type="button"
                 onClick={() =>
                   (window.location.href = "https://kidsportcanada.ca/")
                 }
@@ -1034,7 +1041,6 @@ function VolunteerApplicationForm() {
                 Home
               </button>
             </div>
-            
           )}
         </div>
       </form>

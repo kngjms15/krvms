@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { motion } from 'framer-motion'
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
-import Image from "next/image";
 import provinceChapters from "./provinceChapters.json";
-import { get } from "http";
+import Image from "next/image";
+
 
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
@@ -90,15 +89,15 @@ function VolunteerApplicationForm() {
     register("secondaryPhone");
     register("email");
     register("employer");
-    register("conviction", { setValueAs: (value) => value === "true" });
-    register("bondable", { setValueAs: (value) => value === "true" });
-    register("medicalCondition", { setValueAs: (value) => value === "true" });
+    register("conviction", { setValueAs: (value) => value === "true"});
+    register("bondable", { setValueAs: (value) => value === "true"});
+    register("medicalCondition", { setValueAs: (value) => value === "true"});
     register("medicalConditionDetails");
     register("emergencyContactName");
     register("emergencyContactRelationship");
     register("emergencyContactPhone");
     register("volunteerExperienceDetails");
-    register("agreedToTerms", { setValueAs: (value) => value === "true" });
+    register("agreedToTerms");
   }, [register]);
 
   const processForm: SubmitHandler<Inputs> = async (data) => {
@@ -112,16 +111,15 @@ function VolunteerApplicationForm() {
       });
       if (response.ok) {
         console.log("Form submitted successfully!");
-        reset();
-        return true;
+        alert("Form submitted successfully!");
       } else {
         console.error("Failed to submit form.");
-        return false;
       }
     } catch (error) {
       console.error("Failed to submit form:", error);
-      return false;
     }
+    console.log(data);
+    reset();
   };
 
   type FieldName = keyof Inputs;
@@ -132,31 +130,17 @@ function VolunteerApplicationForm() {
     window.scrollTo(0, 0);
 
     if (!output) {
-      console.log("Validation failed, cannot proceed to next step.", errors);
+      console.log("Validation failed, not proceeding to next step.", errors);
       return;
-    }
-
-    if (currentStep === steps.length - 2) {
-      console.log("Acknowledgement step completed, submitting form...");
-      const formData = await getValues();
-      const formSubmissionResult = await processForm(formData);
-      if (formSubmissionResult) {
-        alert("Form submitted successfully!");
-        console.log("Form submitted successfully!");
-      } else {
-        alert("Failed to submit form.");
-        console.error("Failed to submit form.");
-      }
-      // Proceed to the next step after form submission
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step + 1);
-      return; // Prevent further execution after form submission
     }
 
     if (currentStep < steps.length - 1) {
       console.log("Proceeding to next step...");
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
+    } else if (currentStep === steps.length - 2) {
+      console.log("Submitting form...");
+      handleSubmit(processForm);
     }
   };
 
@@ -963,6 +947,7 @@ function VolunteerApplicationForm() {
 
         {/* Navigation buttons */}
         <div className="flex justify-between flex-grow max-w-[940px]">
+          {/* volunteer info */}
           {currentStep === 0 && (
             <div className="flex mt-12 ml-auto">
               <div>
@@ -976,6 +961,7 @@ function VolunteerApplicationForm() {
               </div>
             </div>
           )}
+          {/* background info */}
           {currentStep === 1 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -994,6 +980,7 @@ function VolunteerApplicationForm() {
               </button>
             </div>
           )}
+          {/* Summary */}
           {currentStep === 2 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -1012,6 +999,7 @@ function VolunteerApplicationForm() {
               </button>
             </div>
           )}
+          {/* acknowledgement */}
           {currentStep === 3 && (
             <div className="flex justify-between flex-grow mt-12">
               <button
@@ -1022,7 +1010,7 @@ function VolunteerApplicationForm() {
                 Back
               </button>
               <button
-                type="button"
+                type="submit"
                 onClick={next}
                 className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
               >
@@ -1030,11 +1018,12 @@ function VolunteerApplicationForm() {
               </button>
             </div>
           )}
+          {/* what's next */}
           {currentStep === 4 && (
             <div className="flex mt-12 ml-auto">
               <div></div>
               <button
-                type="submit"
+                type="button"
                 onClick={() =>
                   (window.location.href = "https://kidsportcanada.ca/")
                 }

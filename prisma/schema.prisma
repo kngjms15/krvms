@@ -51,6 +51,5 @@ model VolunteerApplicant {
   emergencyContactRelationship String   @db.VarChar(50)
   emergencyContactPhone        String   @db.VarChar(10)
   volunteerExperienceDetails   String?  @db.VarChar(500)
-  agreedToTerms                Boolean
   interviewStatus              String   @db.VarChar(20)
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react';
+// import VolunteerApplicationForm from '@/pages/volunteerApplicationForm/page';
 import VolunteerApplicationForm from './components/volunteerApplicationForm';
 import ApplicantsListPage from '@/pages/applicantsList/page';
 
@@ -10,7 +11,9 @@ import ApplicantsListPage from '@/pages/applicantsList/page';
 const Page = () => {
   return (
     <>
-      <VolunteerApplicationForm />
+      {/* pages */}
+      <VolunteerApplicationForm /> 
+    
       <ApplicantsListPage /> {/* This will render the list of applicants */}
     </>
   );

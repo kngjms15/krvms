@@ -159,7 +159,7 @@
         },
         {
             "province": "QC",
-            "chapters": []
+            "chapters": ["No Chapters in this province"]
         },
         {
             "province": "SK",
