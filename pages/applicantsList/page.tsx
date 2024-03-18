@@ -17,6 +17,7 @@ const ApplicantsListPage: React.FC = () => {
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
+        console.log("Fetched applicats data: ",  data); // log the data here
         setApplicants(data);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
@@ -27,10 +28,12 @@ const ApplicantsListPage: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex-grow max-w-[940px] m-auto ">
       <h1>Applicants</h1>
       {applicants.map((applicant) => (
+        applicant && applicant.firstName && (
         <ApplicantsList key={applicant.applicantId} applicant={applicant} />
+        )
       ))}
     </div>
   );

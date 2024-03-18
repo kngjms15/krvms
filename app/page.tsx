@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react';
-// import VolunteerApplicationForm from '@/pages/volunteerApplicationForm/page';
-import VolunteerApplicationForm from './components/volunteerApplicationForm';
+import VolunteerApplicationForm from '@/pages/volunteerApplicationForm/page';
+// import VolunteerApplicationForm from './components/volunteerApplicationForm';
 import ApplicantsListPage from '@/pages/applicantsList/page';
 
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
 
+
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
 }
@@ -23,21 +24,21 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant }) => {
     setShowDetails(!showDetails);
   };
 
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        // Handle successful deletion (e.g., update state or notify user)
-      } else {
-        // Handle deletion failure (e.g., show error message)
-      }
-    } catch (error) {
-      console.error("Error deleting applicant:", error);
-      // Handle deletion failure (e.g., show error message)
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
+  //       method: "DELETE",
+  //     });
+  //     if (response.ok) {
+  //       // Handle successful deletion (e.g., update state or notify user)
+  //     } else {
+  //       // Handle deletion failure (e.g., show error message)
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting applicant:", error);
+  //     // Handle deletion failure (e.g., show error message)
+  //   }
+  // };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
@@ -51,7 +52,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant }) => {
           <button className="text-blue-500 m-2" onClick={toggleDetails}>
             {showDetails ? "Hide Details" : "Show Details"}
           </button>
-          <button className="text-red-500 m-2" onClick={handleDelete}>
+          <button className="text-red-500 m-2">
             Delete
           </button>
         </div>
