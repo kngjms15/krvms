@@ -179,17 +179,22 @@ function VolunteerApplicationForm() {
   const getMinimumDOB = (): string => {
     const expectedDate = new Date();
     expectedDate.setFullYear(expectedDate.getFullYear()-13)
-    return expectedDate.toDateString();
+    const year = expectedDate.getFullYear();
+    return `${year}-01-01`;
   }
 
   const getMaximumDOB = (): string => {
     const expectedDate = new Date();
     expectedDate.setFullYear(expectedDate.getFullYear()+99)
-    return expectedDate.toDateString();
+    const year = expectedDate.getFullYear();
+    return `${year}-12-31`;
   }
 
   const dob = watch("dob");
   const selectedProvince = watch("province");
+
+  console.log(`Minimum: ${getMinimumDOB()}`)
+  console.log(`Maximum: ${getMaximumDOB()}`)
 
   return (
     <>
@@ -758,72 +763,72 @@ function VolunteerApplicationForm() {
             <div className="grid grid-cols-2 gap-4">
               {/* Display each form field */}
               <div>
-                <strong>First Name:</strong> {watch("firstName")}
+                <strong>First Name: </strong> {watch("firstName")}
               </div>
               <div>
-                <strong>Last Name:</strong> {watch("lastName")}
+                <strong>Last Name: </strong> {watch("lastName")}
               </div>
               <div>
-                <strong>Date of Birth:</strong> {watch("dob")}
+                <strong>Date of Birth: </strong> {watch("dob")}
               </div>
               <div>
-                <strong>Address:</strong> {watch("address")}
+                <strong>Address: </strong> {watch("address")}
               </div>
               <div>
-                <strong>City:</strong> {watch("city")}
+                <strong>City: </strong> {watch("city")}
               </div>
               <div>
-                <strong>Province:</strong> {watch("province")}
+                <strong>Province: </strong> {watch("province")}
               </div>
               <div>
-                <strong>Postal Code:</strong> {watch("postalCode")}
+                <strong>Postal Code: </strong> {watch("postalCode")}
               </div>
               <div>
-                <strong>Chapter:</strong> {watch("chapter")}
+                <strong>Chapter: </strong> {watch("chapter")}
               </div>
               <div>
-                <strong>Primary Phone:</strong> {watch("primaryPhone")}
+                <strong>Primary Phone: </strong> {watch("primaryPhone")}
               </div>
               <div>
-                <strong>Secondary Phone:</strong> {watch("secondaryPhone")}
+                <strong>Secondary Phone: </strong> {watch("secondaryPhone")}
               </div>
               <div>
-                <strong>Email:</strong> {watch("email")}
+                <strong>Email: </strong> {watch("email")}
               </div>
               <div>
-                <strong>Employer:</strong> {watch("employer")}
+                <strong>Employer: </strong> {watch("employer")}
               </div>
               <div>
-                <strong>Volunteer Experience Details</strong>
+                <strong>Volunteer Experience Details: </strong>
                 {watch("volunteerExperienceDetails")}
               </div>
               <div>
-                <strong>Conviction:</strong>
+                <strong>Conviction: </strong>
                 {""}
                 {watch("conviction") ? "Yes" : "No"}
               </div>
               <div>
-                <strong>Bondable:</strong> {""}
+                <strong>Bondable: </strong> {""}
                 {watch("bondable") ? "Yes" : "No"}
               </div>
               <div>
-                <strong>Medical Condition:</strong>{" "}
+                <strong>Medical Condition: </strong>{" "}
                 {watch("medicalCondition") ? "Yes" : "No"}
               </div>
               <div>
-                <strong>Medical Condition Details:</strong>
+                <strong>Medical Condition Details: </strong>
                 {watch("medicalConditionDetails")}
               </div>
               <div>
-                <strong>Emergency Contact Name:</strong>
+                <strong>Emergency Contact Name: </strong>
                 {watch("emergencyContactName")}
               </div>
               <div>
-                <strong>Emergency Contact Relationship:</strong>
+                <strong>Emergency Contact Relationship: </strong>
                 {watch("emergencyContactRelationship")}
               </div>
               <div>
-                <strong>Emergency Contact Phone:</strong>
+                <strong>Emergency Contact Phone: </strong>
                 {watch("emergencyContactPhone")}
               </div>
             </div>
