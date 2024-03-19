@@ -17,7 +17,10 @@ const calculateAge = (dob: Date) => {
   return age;
 };
 
-const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant, onDelete }) => {
+const ApplicantsList: React.FC<ApplicantsListProps> = ({
+  applicant,
+  onDelete,
+}) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
@@ -25,8 +28,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant, onDelete }) 
   };
 
   const handleDelete = async () => {
-    
-
     try {
       const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
         method: "DELETE",
@@ -42,31 +43,51 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant, onDelete }) 
     } catch (error) {
       console.error("Error deleting applicant:", error);
       alert("Error deleting applicant. Please try again later.");
-    }    
+    }
   };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
-        <h3 className="text-xl font-bold">
-          {applicant.firstName} {applicant.lastName}
-        </h3>
-        <h4 className="text-lg font-semibold">Status: {applicant.interviewStatus}</h4>
-        <h4 className="text-lg font-semibold">ApplicantID: {applicant.applicantId}</h4>
+        {applicant && (
+          <>
+            <h3 className="text-xl font-bold">
+              {applicant.firstName} {applicant.lastName}
+            </h3>
+            <h4 className="text-lg font-semibold">
+              Status: {applicant.interviewStatus}
+            </h4>
+            <h4 className="text-lg font-semibold">
+              ApplicantID: {applicant.applicantId}
+            </h4>
+          </>
+        )}
         <div className="flex justify-end ">
-          <button className="text-blue-500 m-2" onClick={toggleDetails} aria-label="Toggle Details">
+          <button
+            className="text-blue-500 m-2"
+            onClick={toggleDetails}
+            aria-label="Toggle Details"
+          >
             {showDetails ? "Hide Details" : "Show Details"}
           </button>
-          <button className="text-red-500 m-2" onClick={handleDelete} aria-label="Toggle Details">
+          <button
+            className="text-red-500 m-2"
+            onClick={handleDelete}
+            aria-label="Toggle Details"
+          >
             Delete
           </button>
         </div>
       </div>
+      {applicant && applicant.chapter && (
       <h4 className="text-lg font-semibold">Chapter: {applicant.chapter}</h4>
+      )}
       <div className="grid grid-cols-2 gap-1">
+        {applicant && applicant.createdAt && (
         <p className="text-gray-700 mt-2">
           Application Date: {new Date(applicant.createdAt).toDateString()}
         </p>
+        )}
         {showDetails && (
           <>
             <p className="text-gray-700 mt-2">Address: {applicant.address}</p>
