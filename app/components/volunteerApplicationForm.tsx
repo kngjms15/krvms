@@ -8,7 +8,6 @@ import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
 import provinceChapters from "../provinceChapters.json";
 import Image from "next/image";
-import { Span } from "next/dist/trace";
 
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
