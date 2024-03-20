@@ -176,25 +176,8 @@ function VolunteerApplicationForm() {
     return age;
   };
 
-  const getMinimumDOB = (): string => {
-    const expectedDate = new Date();
-    expectedDate.setFullYear(expectedDate.getFullYear()-13)
-    const year = expectedDate.getFullYear();
-    return `${year}-01-01`;
-  }
-
-  const getMaximumDOB = (): string => {
-    const expectedDate = new Date();
-    expectedDate.setFullYear(expectedDate.getFullYear()+99)
-    const year = expectedDate.getFullYear();
-    return `${year}-12-31`;
-  }
-
   const dob = watch("dob");
   const selectedProvince = watch("province");
-
-  console.log(`Minimum: ${getMinimumDOB()}`)
-  console.log(`Maximum: ${getMaximumDOB()}`)
 
   return (
     <>
@@ -281,8 +264,7 @@ function VolunteerApplicationForm() {
                     placeholder="yyyy-mm-dd"
                     {...register("dob")}
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
-                    max={getMaximumDOB()}
-                    min={getMinimumDOB()}
+                    max="9999-12-31"
                   />
                   {errors.dob && (
                     <span className="text-red-500 text-xs">
