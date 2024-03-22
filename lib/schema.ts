@@ -45,7 +45,7 @@ export const volunteerApplicationSchema = z.object({
   postalCode: z
     .string()
     .regex(
-      /^[A-Za-z][0-9][A-Za-z]\s?[0-9][A-Za-z][0-9]$/,
+      /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
       "Invalid postal code. example: A1B 2C3"
     ),
   chapter: z.string().min(1, "Chapter is required"),

@@ -39,8 +39,8 @@ model VolunteerApplicant {
   province                     String   @db.VarChar(2)
   postalCode                   String   @db.VarChar(6)
   chapter                      String   @db.VarChar(20)
-  primaryPhone                 String   @db.VarChar(10)
-  secondaryPhone               String?
+  primaryPhone                 String   @db.VarChar(12)
+  secondaryPhone               String?  @db.VarChar(12)
   email                        String   @db.VarChar(50)
   employer                     String   @db.VarChar(50)
   conviction                   Boolean
@@ -49,7 +49,7 @@ model VolunteerApplicant {
   medicalConditionDetails      String?  @db.VarChar(500)
   emergencyContactName         String   @db.VarChar(50)
   emergencyContactRelationship String   @db.VarChar(50)
-  emergencyContactPhone        String   @db.VarChar(10)
+  emergencyContactPhone        String   @db.VarChar(12)
   volunteerExperienceDetails   String?  @db.VarChar(500)
   interviewStatus              String   @db.VarChar(20)
 }

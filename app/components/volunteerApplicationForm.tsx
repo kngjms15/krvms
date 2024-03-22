@@ -218,6 +218,7 @@ function VolunteerApplicationForm() {
                     placeholder="First Name"
                     {...register("firstName")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.firstName && (
                     <span className="text-red-500 text-xs">
@@ -240,6 +241,7 @@ function VolunteerApplicationForm() {
                     placeholder="Last Name"
                     {...register("lastName")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.lastName && (
                     <span className="text-red-500 text-xs">
@@ -288,6 +290,7 @@ function VolunteerApplicationForm() {
                     placeholder="Street Address"
                     {...register("address")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.address && (
                     <span className="text-red-500 text-xs">
@@ -311,6 +314,7 @@ function VolunteerApplicationForm() {
                     placeholder="City"
                     {...register("city")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.city && (
                     <span className="text-red-500 text-xs">
@@ -367,6 +371,7 @@ function VolunteerApplicationForm() {
                     placeholder="A1B 2C3"
                     {...register("postalCode")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={6}
                   />
                   {errors.postalCode && (
                     <span className="text-red-500 text-xs">
@@ -424,6 +429,7 @@ function VolunteerApplicationForm() {
                     placeholder="123-456-7890"
                     {...register("primaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={12}
                   />
                   {errors.primaryPhone && (
                     <span className="text-red-500 text-xs">
@@ -447,6 +453,7 @@ function VolunteerApplicationForm() {
                     placeholder="123-456-7890"
                     {...register("secondaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={12}
                   />
                   {errors.secondaryPhone && (
                     <span className="text-red-500 text-xs">
@@ -470,6 +477,7 @@ function VolunteerApplicationForm() {
                     placeholder="Email"
                     {...register("email")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.email && (
                     <span className="text-red-500 text-xs">
@@ -504,6 +512,7 @@ function VolunteerApplicationForm() {
                     placeholder="Employer"
                     {...register("employer")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.employer && (
                     <span className="text-red-500 text-xs">
@@ -526,6 +535,7 @@ function VolunteerApplicationForm() {
                   placeholder="Volunteer Experience"
                   {...register("volunteerExperienceDetails")}
                   className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                  maxLength={500}
                 />
                 {errors.volunteerExperienceDetails && (
                   <span className="text-red-500 text-xs">
@@ -652,6 +662,7 @@ function VolunteerApplicationForm() {
                   placeholder="Medical Condition Details"
                   {...register("medicalConditionDetails")}
                   className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                  maxLength={500}
                 />
                 {errors.medicalConditionDetails && (
                   <span className="text-red-500 text-xs">
@@ -680,6 +691,7 @@ function VolunteerApplicationForm() {
                     placeholder="Please provide full name"
                     {...register("emergencyContactName")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.emergencyContactName && (
                     <span className="text-red-500 text-xs">
@@ -703,6 +715,7 @@ function VolunteerApplicationForm() {
                     placeholder="Relationship"
                     {...register("emergencyContactRelationship")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={50}
                   />
                   {errors.emergencyContactRelationship && (
                     <span className="text-red-500 text-xs">
@@ -726,6 +739,7 @@ function VolunteerApplicationForm() {
                     placeholder="123-456-7890"
                     {...register("emergencyContactPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    maxLength={12}
                   />
                   {errors.emergencyContactPhone && (
                     <span className="text-red-500 text-xs">
