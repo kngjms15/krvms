@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react';
-import VolunteerApplicationForm from '@/pages/volunteerApplicationForm/page';
-// import VolunteerApplicationForm from './components/volunteerApplicationForm';
+import Link from 'next/link';
 import ApplicantsListPage from '@/pages/applicantsList/page';
 
 
@@ -10,72 +9,15 @@ import ApplicantsListPage from '@/pages/applicantsList/page';
 
 const Page = () => {
   return (
-    <>
-      {/* pages */}
-      <VolunteerApplicationForm /> 
-    
-      <ApplicantsListPage /> {/* This will render the list of applicants */}
-    </>
+    <div>
+      <Link href="/VolunteerApplicationForm">
+          <button>Volunteer Now!</button>
+      </Link>
+
+      <ApplicantsListPage />
+    </div>
   );
 };
 
 export default Page;
 
-//-------------------------------------
-// "use client";
-
-// import React from "react";
-// import prisma from "@/lib/prisma";
-// import Post from "./dashboard/post";
-// import volunteers from "./pages/api/volunteers";
-// import VolunteersList from "./dashboard/applicantsList";
-
-// async function getPosts() {
-//   const posts = await prisma.post.findMany({
-//     where: { published: true },
-//     include: { author: { select: { name: true } } },
-//   });
-//   return posts;
-// }
-
-// async function getVolunteers() {
-//   const volunteers = await prisma.volunteerApplicant.findMany();
-//   return volunteers;
-// }
-
-// async function Home() {
-//   const posts = await getPosts();
-//   const volunteers = await getVolunteers();
-  
-//   return (
-//     <>
-//       <h1>Feed</h1>
-//       {posts.map((post) => {
-//         return( 
-//           <Post 
-//           key={post.id} 
-//           id={post.id} 
-//           title={post.title}
-//           content={post.content ?? ""}
-//           authorName={post.author?.name ?? ""}/>);
-//       })}
-
-//       <h1>Volunteers</h1>
-//       {volunteers.map((volunteer) => {
-//         return(
-//           <VolunteersList 
-          
-//             firstName={volunteer.firstName}
-//             lastName={volunteer.lastName}
-//             createdAt={volunteer.createdAt}
-//             chapter={volunteer.chapter}
-
-
-//           />);
-//       })}
-      
-//     </>
-//   );
-// }
-
-// export default Home;

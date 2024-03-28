@@ -51,15 +51,20 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       <div className=" flex justify-between flex-grow ">
         {applicant && (
           <>
-            <h3 className="text-xl font-bold">
-              {applicant.firstName} {applicant.lastName}
-            </h3>
-            <h4 className="text-lg font-semibold">
-              Status: {applicant.interviewStatus}
-            </h4>
-            <h4 className="text-lg font-semibold">
-              ApplicantID: {applicant.applicantId}
-            </h4>
+            <div className=" flex-col ">
+              <h3 className="text-xl font-bold">
+                {applicant.firstName} {applicant.lastName}
+              </h3>
+              <h4 className="text-md font-semibold">
+                {applicant && applicant.chapter && (
+                  <h4 className="text-lg font-semibold">
+                    Chapter: {applicant.chapter}
+                  </h4>
+                )}
+              </h4>
+              <h4 className="text-md">Status: {applicant.interviewStatus}</h4>
+              <h4 className="text-md">ApplicantID: {applicant.applicantId}</h4>
+            </div>
           </>
         )}
         <div className="flex justify-end ">
@@ -79,14 +84,12 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           </button>
         </div>
       </div>
-      {applicant && applicant.chapter && (
-      <h4 className="text-lg font-semibold">Chapter: {applicant.chapter}</h4>
-      )}
+
       <div className="grid grid-cols-2 gap-1">
         {applicant && applicant.createdAt && (
-        <p className="text-gray-700 mt-2">
-          Application Date: {new Date(applicant.createdAt).toDateString()}
-        </p>
+          <p className="text-gray-700 mt-2">
+            Application Date: {new Date(applicant.createdAt).toDateString()}
+          </p>
         )}
         {showDetails && (
           <>
@@ -122,11 +125,11 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
               VolunteerExperience(s): {applicant.volunteerExperienceDetails}
             </p>
             <p className="text-gray-700 mt-2">
-              Convict? {applicant.conviction}
+              Convict? {applicant.conviction ? "Yes" : "No"}
             </p>
-            <p className="text-gray-700 mt-2">Bondable? {applicant.bondable}</p>
+            <p className="text-gray-700 mt-2">Bondable? {applicant.bondable ? "Yes" : "No"}</p>
             <p className="text-gray-700 mt-2">
-              Medical Condition? {applicant.medicalCondition}
+              Medical Condition? {applicant.medicalCondition ? "Yes" : "No"}
             </p>
             <p className="text-gray-700 mt-2">
               Applicant Status: {applicant.interviewStatus}
