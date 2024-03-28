@@ -176,8 +176,6 @@ function VolunteerApplicationForm() {
     return age;
   };
 
-  const emptyVar = "";
-
   const dob = watch("dob");
   const selectedProvince = watch("province");
 
