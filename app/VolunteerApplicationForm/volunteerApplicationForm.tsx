@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { set, z } from "zod";
+import { boolean, set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import React from "react";
@@ -87,9 +87,9 @@ function VolunteerApplicationForm() {
     register("secondaryPhone");
     register("email");
     register("employer");
-    register("conviction", { setValueAs: (value) => value === "false" });
-    register("bondable", { setValueAs: (value) => value === "true" });
-    register("medicalCondition", { setValueAs: (value) => value === "false" });
+    register("conviction", { setValueAs: boolean });
+    register("bondable", { setValueAs: boolean});
+    register("medicalCondition", { setValueAs: boolean});
     register("medicalConditionDetails");
     register("emergencyContactName");
     register("emergencyContactRelationship");
@@ -127,25 +127,24 @@ function VolunteerApplicationForm() {
     const fields = steps[currentStep]?.fields || [];
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
     window.scrollTo(0, 0);
-  
+
     if (!output) {
       console.log("Validation failed, not proceeding to next step.", errors);
       return;
     }
-  
+
     if (currentStep < steps.length - 1) {
       setPreviousStep(currentStep);
-  
+
       if (currentStep === 3) {
         console.log("Submitting form...");
         handleSubmit(processForm)();
       }
-  
+
       console.log("Proceeding to next step...");
       setCurrentStep((step) => step + 1);
     }
   };
-  
 
   const prev = () => {
     if (currentStep > 0) {
@@ -586,6 +585,7 @@ function VolunteerApplicationForm() {
                         type="radio"
                         id="bondable-yes"
                         {...register("bondable")}
+                        value="true"
                         defaultChecked
                         className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                       />
@@ -617,6 +617,7 @@ function VolunteerApplicationForm() {
                       <input
                         type="radio"
                         id="medicalCondition-yes"
+                        value="true"
                         {...register("medicalCondition")}
                         className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
                       />
@@ -743,72 +744,71 @@ function VolunteerApplicationForm() {
             <div className="grid grid-cols-2 gap-4">
               {/* Display each form field */}
               <div>
-                <strong>First Name:</strong> {watch("firstName")}
+                <strong>First Name: </strong> {watch("firstName")}
               </div>
               <div>
-                <strong>Last Name:</strong> {watch("lastName")}
+                <strong>Last Name: </strong> {watch("lastName")}
               </div>
               <div>
-                <strong>Date of Birth:</strong> {watch("dob")}
+                <strong>Date of Birth: </strong> {watch("dob")}
               </div>
               <div>
-                <strong>Address:</strong> {watch("address")}
+                <strong>Address: </strong> {watch("address")}
               </div>
               <div>
-                <strong>City:</strong> {watch("city")}
+                <strong>City: </strong> {watch("city")}
               </div>
               <div>
-                <strong>Province:</strong> {watch("province")}
+                <strong>Province: </strong> {watch("province")}
               </div>
               <div>
-                <strong>Postal Code:</strong> {watch("postalCode")}
+                <strong>Postal Code: </strong> {watch("postalCode")}
               </div>
               <div>
-                <strong>Chapter:</strong> {watch("chapter")}
+                <strong>Chapter: </strong> {watch("chapter")}
               </div>
               <div>
-                <strong>Primary Phone:</strong> {watch("primaryPhone")}
+                <strong>Primary Phone: </strong> {watch("primaryPhone")}
               </div>
               <div>
-                <strong>Secondary Phone:</strong> {watch("secondaryPhone")}
+                <strong>Secondary Phone: </strong> {watch("secondaryPhone")}
               </div>
               <div>
-                <strong>Email:</strong> {watch("email")}
+                <strong>Email: </strong> {watch("email")}
               </div>
               <div>
-                <strong>Employer:</strong> {watch("employer")}
+                <strong>Employer: </strong> {watch("employer")}
               </div>
               <div>
-                <strong>Volunteer Experience Details</strong>
+                <strong>Volunteer Experience Details </strong>
                 {watch("volunteerExperienceDetails")}
               </div>
               <div>
-                <strong>Conviction:</strong>
-                {""}
-                {watch("conviction") ? "Yes" : "No"}
+                <strong>Conviction: </strong>
+                {watch("conviction")}
               </div>
               <div>
-                <strong>Bondable:</strong> {""}
-                {watch("bondable") ? "Yes" : "No"}
+                <strong>Bondable: </strong>
+                {watch("bondable")}
               </div>
               <div>
-                <strong>Medical Condition:</strong>{" "}
-                {watch("medicalCondition") ? "Yes" : "No"}
+                <strong>Medical Condition: </strong>
+                {watch("medicalCondition")}
               </div>
               <div>
-                <strong>Medical Condition Details:</strong>
+                <strong>Medical Condition Details: </strong>
                 {watch("medicalConditionDetails")}
               </div>
               <div>
-                <strong>Emergency Contact Name:</strong>
+                <strong>Emergency Contact Name: </strong>
                 {watch("emergencyContactName")}
               </div>
               <div>
-                <strong>Emergency Contact Relationship:</strong>
+                <strong>Emergency Contact Relationship: </strong>
                 {watch("emergencyContactRelationship")}
               </div>
               <div>
-                <strong>Emergency Contact Phone:</strong>
+                <strong>Emergency Contact Phone: </strong>
                 {watch("emergencyContactPhone")}
               </div>
             </div>

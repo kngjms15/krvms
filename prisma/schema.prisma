@@ -8,28 +8,28 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model Post {
-  id        String  @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  String?
-  author    User?   @relation(fields: [authorId], references: [id])
-}
+// model Post {
+//   id        String  @id @default(cuid())
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   authorId  String?
+//   author    User?   @relation(fields: [authorId], references: [id])
+// }
 
-model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String?  @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  posts     Post[]
+// model User {
+//   id        String   @id @default(cuid())
+//   name      String?
+//   email     String?  @unique
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @updatedAt @map("updated_at")
+//   posts     Post[]
 
-  @@map("users")
-}
+//   @@map("users")
+// }
 
 model VolunteerApplicant {
-  applicantId                  Int      @id @default(autoincrement())
+  applicantId                  String   @id @default(uuid())
   createdAt                    DateTime @default(now())
   firstName                    String   @db.VarChar(50)
   lastName                     String   @db.VarChar(50)
