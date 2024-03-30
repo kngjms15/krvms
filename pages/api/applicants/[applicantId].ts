@@ -15,7 +15,7 @@ export default async function handler(
     try {
       const deleteResponse = await prisma.volunteerApplicant.delete({
         where: {
-          applicantId: Number(applicantId),
+          applicantId: String(applicantId),
         },
       });
       res.status(204).json(deleteResponse);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
+import ConfirmationModal from "@/app/components/confirmationModal";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -22,33 +23,51 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   onDelete,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
   const handleDelete = async () => {
-    try {
-      const response = await fetch(`/api/applicants/${applicant.applicantId}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        onDelete?.(applicant.applicantId);
-        // Handle successful deletion (e.g., update state or notify user)
-      } else {
-        console.error("Failed to delete applicant:", response.status);
-        alert("Failed to delete applicant. Please try again.");
-        // Handle deletion failure (e.g., show error message)
+    toggleModal();
+    if (applicant) {
+      try {
+        const response = await fetch(
+          `/api/applicants/${applicant.applicantId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (response.ok) {
+          onDelete?.(parseInt(applicant.applicantId, 10));
+          // Handle successful deletion (e.g., update state or notify user)
+          alert("Applicant deleted successfully!");
+        } else {
+          console.error("Failed to delete applicant:", response.status);
+          alert("Failed to delete applicant. Please try again.");
+          // Handle deletion failure (e.g., show error message)
+        }
+      } catch (error) {
+        console.error("Error deleting applicant:", error);
+        alert("Error deleting applicant. Please try again later.");
       }
-    } catch (error) {
-      console.error("Error deleting applicant:", error);
-      alert("Error deleting applicant. Please try again later.");
     }
   };
 
   return (
     <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
+        {showModal && (
+          <ConfirmationModal
+            message="Are you sure you want to delete this applicant?"
+            onConfirm={handleDelete}
+            onCancel={toggleModal}
+          />
+        )}
         {applicant && (
           <>
             <div className=" flex-col ">
@@ -77,7 +96,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           </button>
           <button
             className="text-red-500 m-2"
-            onClick={handleDelete}
+            onClick={toggleModal}
             aria-label="Toggle Details"
           >
             Delete
@@ -127,7 +146,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             <p className="text-gray-700 mt-2">
               Convict? {applicant.conviction ? "Yes" : "No"}
             </p>
-            <p className="text-gray-700 mt-2">Bondable? {applicant.bondable ? "Yes" : "No"}</p>
+            <p className="text-gray-700 mt-2">
+              Bondable? {applicant.bondable ? "Yes" : "No"}
+            </p>
             <p className="text-gray-700 mt-2">
               Medical Condition? {applicant.medicalCondition ? "Yes" : "No"}
             </p>
