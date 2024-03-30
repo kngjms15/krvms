@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
 
@@ -24,6 +24,11 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [status, setStatus] = useState(applicant.interviewStatus);
+
+  useEffect(() => {
+    setStatus(applicant.interviewStatus);
+  }, [applicant]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -58,6 +63,31 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
     }
   };
 
+  const handleStatusChange = async (newStatus: string, applicantId: string) => {
+    try {
+      const response = await fetch(`/api/applicants/${applicantId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          interviewStatus: newStatus,
+        }),
+      });
+
+      if (response.ok) {
+        setStatus(newStatus);
+        alert("Status updated successfully!");
+      } else {
+        console.error("Failed to update status:", response.status);
+        alert("Failed to update status. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Error updating status. Please try again later.");
+    }
+  };
+
   return (
     <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
@@ -75,13 +105,23 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                 {applicant.firstName} {applicant.lastName}
               </h3>
               <h4 className="text-md font-semibold">
-                {applicant && applicant.chapter && (
-                  <h4 className="text-lg font-semibold">
-                    Chapter: {applicant.chapter}
-                  </h4>
-                )}
+                {applicant.chapter && <span>Chapter: {applicant.chapter}</span>}
               </h4>
-              <h4 className="text-md">Status: {applicant.interviewStatus}</h4>
+              <h4 className="text-md my-2">
+                Status:
+                <select
+                  className="border border-gray-300 rounded p-1"
+                  value={status}
+                  onChange={(e) =>
+                    handleStatusChange(e.target.value, applicant.applicantId)
+                  }
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Accepted">Accepted</option>
+                </select>
+              </h4>
+
               <h4 className="text-md">ApplicantID: {applicant.applicantId}</h4>
             </div>
           </>
