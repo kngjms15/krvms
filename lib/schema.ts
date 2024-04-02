@@ -37,7 +37,7 @@ export const volunteerApplicationSchema = z.object({
     .string()
     .min(1, "City is required")
     .max(20, "Maximum 20 Characters")
-    .regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers"),
+    .regex(/^[a-zA-Z\s]*$/, "City cannot contain numbers or symbols"),
   province: z
     .string()
     .min(2, "Province is required")

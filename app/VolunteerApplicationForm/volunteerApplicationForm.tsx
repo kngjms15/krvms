@@ -409,11 +409,17 @@ function VolunteerApplicationForm() {
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="tel"
                     id="primaryPhone"
                     placeholder="1234567890"
+                    pattern="[0-9]{10}"
                     {...register("primaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    required
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '$1$2$3');
+                    }}
+                    maxLength={10}
                   />
                   {errors.primaryPhone && (
                     <span className="text-red-500 text-xs">
@@ -432,11 +438,16 @@ function VolunteerApplicationForm() {
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="tel"
                     id="secondaryPhone"
+                    pattern="[0-9]{10}"
                     placeholder="1234567890"
                     {...register("secondaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '$1$2$3');
+                    }}
+                    maxLength={10}
                   />
                   {errors.secondaryPhone && (
                     <span className="text-red-500 text-xs">
@@ -713,11 +724,15 @@ function VolunteerApplicationForm() {
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
+                    type="tel"
                     id="emergencyContactPhone"
                     placeholder="1234567890"
                     {...register("emergencyContactPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '$1$2$3');
+                    }}
+                    maxLength={10}
                   />
                   {errors.emergencyContactPhone && (
                     <span className="text-red-500 text-xs">
@@ -764,7 +779,7 @@ function VolunteerApplicationForm() {
                 <strong>Primary Phone: </strong> {watch("primaryPhone")}
               </div>
               <div>
-                <strong>Secondary Phone: </strong> {watch("secondaryPhone")}
+                <strong>Secondary Phone: </strong> {watch("secondaryPhone")??"N/A"}
               </div>
               <div>
                 <strong>Email: </strong> {watch("email")}
@@ -774,7 +789,7 @@ function VolunteerApplicationForm() {
               </div>
               <div>
                 <strong>Volunteer Experience Details: </strong>
-                {watch("volunteerExperienceDetails")}
+                {watch("volunteerExperienceDetails")??"N/A"}
               </div>
               <div>
                 <strong>Conviction: </strong>
@@ -790,7 +805,7 @@ function VolunteerApplicationForm() {
               </div>
               <div>
                 <strong>Medical Condition Details: </strong>
-                {watch("medicalConditionDetails")}
+                {watch("medicalConditionDetails")??"N/A"}
               </div>
               <div>
                 <strong>Emergency Contact Name: </strong>
