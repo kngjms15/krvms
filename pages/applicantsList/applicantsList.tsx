@@ -89,7 +89,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   };
 
   return (
-    <div className="flex-grow max-w-[940px] m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
+    <div className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
         {showModal && (
           <ConfirmationModal

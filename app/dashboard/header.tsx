@@ -16,7 +16,7 @@ const Header = () => {
           width={100}
           height={100}
           alt="Company Logo"
-          className="h-100 w-100  "
+          className="h-100 w-100 rounded-md"
         />
       </div>
       <div className="flex items-center space-x-4 ml-auto">
