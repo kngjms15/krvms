@@ -46,14 +46,14 @@ export const volunteerApplicationSchema = z.object({
     .string()
     .regex(
       /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
-      "Invalid postal code. example: A1B 2C3"
+      "Invalid postal code. example: A1B2C3"
     ),
   chapter: z.string().min(1, "Chapter is required"),
   primaryPhone: z
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-      "Invalid phone number. Example: 123-456-7890"
+      "Invalid phone number. Example: 1234567890"
     ),
   secondaryPhone: z
     .string()

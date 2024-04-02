@@ -154,14 +154,6 @@ function VolunteerApplicationForm() {
     }
   };
 
-  // function getFormattedDate(ageLimit: number = 14) {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear() - ageLimit;
-  //   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-  //   const day = ("0" + currentDate.getDate()).slice(-2);
-  //   return `${year}-${month}-${day}`;
-  // }
-
   const calculateAge = (dob: string): number => {
     if (!dob) return 0;
     const today = new Date();
@@ -262,6 +254,7 @@ function VolunteerApplicationForm() {
                     placeholder="yyyy-mm-dd"
                     {...register("dob")}
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6"
+                    max={"9999-12-31"}
                   />
                   {errors.dob && (
                     <span className="text-red-500 text-xs">
@@ -361,7 +354,7 @@ function VolunteerApplicationForm() {
                   <input
                     type="text"
                     id="postalCode"
-                    placeholder="A1B 2C3"
+                    placeholder="A1B2C3"
                     {...register("postalCode")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                   />
@@ -418,7 +411,7 @@ function VolunteerApplicationForm() {
                   <input
                     type="text"
                     id="primaryPhone"
-                    placeholder="123-456-7890"
+                    placeholder="1234567890"
                     {...register("primaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                   />
@@ -441,7 +434,7 @@ function VolunteerApplicationForm() {
                   <input
                     type="text"
                     id="secondaryPhone"
-                    placeholder="123-456-7890"
+                    placeholder="1234567890"
                     {...register("secondaryPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                   />
@@ -722,7 +715,7 @@ function VolunteerApplicationForm() {
                   <input
                     type="text"
                     id="emergencyContactPhone"
-                    placeholder="123-456-7890"
+                    placeholder="1234567890"
                     {...register("emergencyContactPhone")}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
                   />
@@ -780,7 +773,7 @@ function VolunteerApplicationForm() {
                 <strong>Employer: </strong> {watch("employer")}
               </div>
               <div>
-                <strong>Volunteer Experience Details </strong>
+                <strong>Volunteer Experience Details: </strong>
                 {watch("volunteerExperienceDetails")}
               </div>
               <div>
