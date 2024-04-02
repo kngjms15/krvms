@@ -28,7 +28,6 @@ const ApplicantsListPage: React.FC = () => {
 
   return (
     <div className="flex-grow m-auto ">
-      <h1>Applicants</h1>
       {applicants.map((applicant) => (
         applicant && applicant.firstName && (
         <ApplicantsList key={applicant.applicantId} applicant={applicant} />

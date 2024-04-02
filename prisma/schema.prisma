@@ -35,10 +35,11 @@ model VolunteerApplicant {
 }
 
 model Volunteer {
-  id                           String   @id @default(uuid())
+  volunteerId                  String   @id @default(uuid())
   createdAt                    DateTime @default(now())
   firstName                    String   @db.VarChar(50)
   lastName                     String   @db.VarChar(50)
+  role                         String   @db.VarChar(20)
   dob                          DateTime
   address                      String   @db.VarChar(50)
   city                         String   @db.VarChar(50)
@@ -59,5 +60,4 @@ model Volunteer {
   volunteerExperienceDetails   String?  @db.VarChar(500)
   interviewStatus              String   @db.VarChar(20)
   status                       String   @db.VarChar(20)
-  role                         String   @db.VarChar(20)
 }

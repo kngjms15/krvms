@@ -3,10 +3,13 @@ import React from "react";
 const LoginPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-lg">
-        <div>
-          <h2 className="text-3xl font-bold text-center text-gray-900">
-            Login
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+        <div className="flex justify-between ">
+          <h2 className="text-xl text-left text-gray-900">
+            Portal Login
+          </h2>
+          <h2 className="text-2xl text-right text-gray-900">
+            KidSport &#8482; Canada
           </h2>
         </div>
         <form className="mt-8 space-y-6" action="#" method="POST">
@@ -23,7 +26,7 @@ const LoginPage = () => {
                 autoComplete="email"
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-[#6CC24A] focus:border-[#6CC24A] focus:z-10 sm:text-sm"
-                placeholder="Username"
+                placeholder="Email"
               />
             </div>
             <div>
