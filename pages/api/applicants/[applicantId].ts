@@ -1,5 +1,3 @@
-// pages/api/applicants/[applicantId].ts
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
@@ -23,7 +21,7 @@ export default async function handler(
       await prisma.volunteerApplicant.update({
         where: { applicantId: String(applicantId) },
         data: { interviewStatus },
-      });
+      });3
 
       res.status(200).json({ message: "Status updated successfully" });
     } catch (error) {

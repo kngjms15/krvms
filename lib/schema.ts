@@ -96,7 +96,7 @@ export const volunteerApplicationSchema = z.object({
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-      "Invalid phone number. Exmaple: 123-456-7890"
+      "Invalid phone number. Example: 123-456-7890"
     ),
   volunteerExperienceDetails: z
     .string()

@@ -25,6 +25,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(applicant.interviewStatus);
+  const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
 
   useEffect(() => {
     setStatus(applicant.interviewStatus);
@@ -49,12 +50,16 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
         );
         if (response.ok) {
           onDelete?.(parseInt(applicant.applicantId, 10));
-          // Handle successful deletion (e.g., update state or notify user)
+          // Remove the deleted applicant from the state
+          setApplicants((prevApplicants) =>
+            prevApplicants.filter(
+              (a) => a.applicantId !== applicant.applicantId
+            )
+          );
           alert("Applicant deleted successfully!");
         } else {
           console.error("Failed to delete applicant:", response.status);
           alert("Failed to delete applicant. Please try again.");
-          // Handle deletion failure (e.g., show error message)
         }
       } catch (error) {
         console.error("Error deleting applicant:", error);
@@ -110,15 +115,15 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
               <h4 className="text-md my-2">
                 Status:
                 <select
-                  className="border border-gray-300 rounded p-1"
+                  className="border border-gray-300 rounded p-1 focus:outline-none focus:ring-2 focus:ring-[#6CC24A] focus:border-transparent"
                   value={status}
                   onChange={(e) =>
                     handleStatusChange(e.target.value, applicant.applicantId)
                   }
                 >
-                  <option value="Pending">Pending</option>
-                  <option value="Rejected">Rejected</option>
-                  <option value="Accepted">Accepted</option>
+                  <option value="Pending" className="hover:bg-[#6CC24A]">Pending</option>
+                  <option value="Rejected" className="hover:bg-[#6CC24A]">Rejected</option>
+                  <option value="Accepted" className="hover:bg-[#6CC24A]">Accepted</option>
                 </select>
               </h4>
 

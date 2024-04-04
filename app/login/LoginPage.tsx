@@ -20,13 +20,13 @@ const LoginPage = () => {
                 Email address
               </label>
               <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="username"
+                name="username"
+                type="username"
+                autoComplete="username"
                 required
                 className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-[#6CC24A] focus:border-[#6CC24A] focus:z-10 sm:text-sm"
-                placeholder="Email"
+                placeholder="Username"
               />
             </div>
             <div>
