@@ -48,7 +48,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           }
         );
         if (response.ok) {
-          onDelete?.(parseInt(applicant.applicantId, 10));
+          onDelete?.(parseInt(`${applicant.applicantId}`, 10));
           // Handle successful deletion (e.g., update state or notify user)
           alert("Applicant deleted successfully!");
         } else {
@@ -113,7 +113,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                   className="border border-gray-300 rounded p-1"
                   value={status}
                   onChange={(e) =>
-                    handleStatusChange(e.target.value, applicant.applicantId)
+                    handleStatusChange(e.target.value, `${applicant.applicantId}`)
                   }
                 >
                   <option value="Pending">Pending</option>

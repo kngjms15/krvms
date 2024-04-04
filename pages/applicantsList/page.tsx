@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import ApplicantsList from "./applicantsList";
-
+import { SearchBar } from "@appbaseio/reactivesearch-native";
 
 import { VolunteerApplicant } from "@prisma/client"; // Or the correct type for an applicant
 
 const ApplicantsListPage: React.FC = () => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
+  const [filteredApplicants, setFilteredApplicants] = useState<VolunteerApplicant[]>([]);
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -28,6 +29,7 @@ const ApplicantsListPage: React.FC = () => {
 
   return (
     <div className="flex-grow m-auto ">
+      <SearchBar/>
       {applicants.map((applicant) => (
         applicant && applicant.firstName && (
         <ApplicantsList key={applicant.applicantId} applicant={applicant} />
