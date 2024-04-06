@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { VolunteerApplicant } from "@prisma/client";
+import { PrismaClient, VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
+import { set } from "zod";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
   onDelete?: (id: number) => void;
 }
+
+const prisma = new PrismaClient();
 
 const calculateAge = (dob: Date) => {
   const today = new Date();
@@ -81,8 +84,69 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       });
 
       if (response.ok) {
-        setStatus(newStatus);
-        alert("Status updated successfully!");
+        if (newStatus === "Accepted") {
+          // Fetch the updated applicant data
+          const updatedApplicantResponse = await fetch(
+            `/api/applicants/${applicantId}`
+          );
+          const updatedApplicant = await updatedApplicantResponse.json();
+
+          // Create a new volunteer based on the accepted applicant
+          const newVolunteerResponse = await fetch(`/api/volunteers`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName: updatedApplicant.firstName,
+              lastName: updatedApplicant.lastName,
+              role: "Event Volunteer",
+              dob: new Date(), // Set the dob to a default value or retrieve it from the applicant
+              address: updatedApplicant.address,
+              city: updatedApplicant.city,
+              province: updatedApplicant.province,
+              postalCode: updatedApplicant.postalCode,
+              chapter: updatedApplicant.chapter,
+              primaryPhone: updatedApplicant.primaryPhone,
+              secondaryPhone: updatedApplicant.secondaryPhone,
+              email: updatedApplicant.email,
+              employer: updatedApplicant.employer,
+              conviction: updatedApplicant.conviction,
+              bondable: updatedApplicant.bondable,
+              medicalCondition: updatedApplicant.medicalCondition,
+              medicalConditionDetails: updatedApplicant.medicalConditionDetails,
+              emergencyContactName: updatedApplicant.emergencyContactName,
+              emergencyContactRelationship:
+                updatedApplicant.emergencyContactRelationship,
+              emergencyContactPhone: updatedApplicant.emergencyContactPhone,
+              volunteerExperienceDetails:
+                updatedApplicant.volunteerExperienceDetails,
+              interviewStatus: updatedApplicant.interviewStatus,
+              status: "Active", // Set the status to Active for a new volunteer
+            }),
+          });
+
+          // Delete the applicant from the list
+          await fetch(`/api/applicants/${applicantId}`, {
+            method: "DELETE",
+          });
+
+          // Update the status in the UI
+          setStatus(newStatus);
+          alert("Status updated successfully!");
+
+          if (newVolunteerResponse.ok) {
+            alert("Applicant added as a volunteer successfully!");
+          } else {
+            console.error(
+              "Failed to add applicant as a volunteer:",
+              newVolunteerResponse.status
+            );
+            alert("Failed to add applicant as a volunteer. Please try again.");
+          }
+        } else {
+          alert("Status updated successfully!");
+        }
       } else {
         console.error("Failed to update status:", response.status);
         alert("Failed to update status. Please try again.");
@@ -121,9 +185,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                     handleStatusChange(e.target.value, applicant.applicantId)
                   }
                 >
-                  <option value="Pending" className="hover:bg-[#6CC24A]">Pending</option>
-                  <option value="Rejected" className="hover:bg-[#6CC24A]">Rejected</option>
-                  <option value="Accepted" className="hover:bg-[#6CC24A]">Accepted</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Accepted">Accepted</option>
                 </select>
               </h4>
 

@@ -65,13 +65,6 @@ const ApplicantsListPage: React.FC = () => {
   }, []);
 
   return (
-    // <div className="flex-grow m-auto ">
-    //   {applicants.map((applicant) => (
-    //     applicant && applicant.firstName && (
-    //     <ApplicantsList key={applicant.applicantId} applicant={applicant} />
-    //     )
-    //   ))}
-    // </div>
     <div className="flex-grow m-auto">
       <FilterComponent onSort={handleSort} />
       {filteredApplicants.map((applicant) => (

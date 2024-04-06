@@ -3,10 +3,11 @@ import { Volunteer } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
 import { volunteerApplicationSchema } from "@/lib/schema";
 import { z } from "zod";
+import { on } from "events";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
-  onDelete?: (id: string) => void;
+  onDelete?: (id: number) => void;
 }
 
 const VolunteersList: React.FC<VolunteersListProps> = ({
@@ -18,7 +19,10 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   const [status, setStatus] = useState(volunteer.status);
   const [editableFields, setEditableFields] = useState<Volunteer>(volunteer);
   const [editing, setEditing] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
 
   useEffect(() => {
     setStatus(volunteer.status);
@@ -28,7 +32,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-  
+
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -43,8 +47,13 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             method: "DELETE",
           }
         );
+
         if (response.ok) {
-          onDelete?.(volunteer.volunteerId);
+          onDelete?.(parseInt(volunteer.volunteerId, 10));
+          // Remove deleted volunteer from the state
+          setVolunteers((prevVolunteers) => 
+            prevVolunteers.filter((v) => v.volunteerId !== volunteer.volunteerId)
+          );
           alert("Volunteer deleted successfully!");
         } else {
           console.error("Failed to delete volunteer:", response.status);
@@ -89,16 +98,13 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   const handleSave = async () => {
     try {
       volunteerApplicationSchema.parse(editableFields);
-      const response = await fetch(
-        `/api/volunteers/${volunteer.volunteerId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editableFields),
-        }
-      );
+      const response = await fetch(`/api/volunteers/${volunteer.volunteerId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editableFields),
+      });
 
       if (response.ok) {
         setEditing(false);
@@ -110,12 +116,14 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setValidationErrors(error.errors.reduce((acc, err) => {
-          if (err.path) {
-            acc[err.path[0]] = err.message;
-          }
-          return acc;
-        }, {} as Record<string, string>));
+        setValidationErrors(
+          error.errors.reduce((acc, err) => {
+            if (err.path) {
+              acc[err.path[0]] = err.message;
+            }
+            return acc;
+          }, {} as Record<string, string>)
+        );
       } else {
         console.error("Error updating volunteer:", error);
         alert("Error updating volunteer. Please try again later.");
@@ -148,7 +156,8 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             />
             {/* Repeat this pattern for other fields */}
           </div>
-        ) : ( // Render non-editable fields when editing is false
+        ) : (
+          // Render non-editable fields when editing is false
           <div className="flex-col">
             <h3 className="text-xl font-bold">
               {editableFields.firstName} {editableFields.lastName}
@@ -156,20 +165,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             <h4 className="text-md font-semibold">
               {volunteer.chapter && <span>Chapter: {volunteer.chapter}</span>}
             </h4>
-            <h4 className="text-md my-2">
-              Status:
-              <select
-                className="border border-gray-300 rounded p-1"
-                value={status}
-                onChange={(e) =>
-                  handleStatusChange(e.target.value, volunteer.volunteerId)
-                }
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Suspended">Suspended</option>
-              </select>
-            </h4>
+            <h4 className="text-md my-2">Status: {volunteer.status}</h4>
             <h4 className="text-md">VolunteerID: {volunteer.volunteerId}</h4>
           </div>
         )}
@@ -178,7 +174,8 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             <button className="text-green-500 m-2" onClick={handleSave}>
               Save
             </button>
-          ) : ( // Render edit button when editing is false
+          ) : (
+            // Render edit button when editing is false
             <>
               <button
                 className="text-blue-500 m-2"
@@ -201,7 +198,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
           )}
         </div>
       </div>
-  
+
       <div className="grid grid-cols-2 gap-1">
         {volunteer && volunteer.createdAt && (
           <p className="text-gray-700 mt-2">
@@ -210,24 +207,66 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
         )}
         {showDetails && (
           <>
-            <p className="text-gray-700 mt-2">Address: {editableFields.address}</p>
+            <p className="text-gray-700 mt-2">
+              Address: {editableFields.address}
+            </p>
             <p className="text-gray-700 mt-2">City: {editableFields.city}</p>
-            <p className="text-gray-700 mt-2">Province: {editableFields.province}</p>
-            <p className="text-gray-700 mt-2">Postal Code: {editableFields.postalCode}</p>
+            <p className="text-gray-700 mt-2">
+              Province: {editableFields.province}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Postal Code: {editableFields.postalCode}
+            </p>
             <p className="text-gray-700 mt-2">Email: {editableFields.email}</p>
-            <p className="text-gray-700 mt-2">Primary Phone: {editableFields.primaryPhone}</p>
-            {editableFields.secondaryPhone && <p className="text-gray-700 mt-2">Secondary Phone: {editableFields.secondaryPhone}</p>}
-            <p className="text-gray-700 mt-2">Employer: {editableFields.employer}</p>
-            <p className="text-gray-700 mt-2">Convict? {editableFields.conviction ? "Yes" : "No"}</p>
-            <p className="text-gray-700 mt-2">Bondable? {editableFields.bondable ? "Yes" : "No"}</p>
-            <p className="text-gray-700 mt-2">Medical Condition? {editableFields.medicalCondition ? "Yes" : "No"}</p>
-            {editableFields.medicalConditionDetails && <p className="text-gray-700 mt-2 text-wrap">Medical Condition Details: {editableFields.medicalConditionDetails}</p>}
-            <p className="text-gray-700 mt-2">Emergency Contact Name: {editableFields.emergencyContactName}</p>
-            <p className="text-gray-700 mt-2">Emergency Contact Relationship: {editableFields.emergencyContactRelationship}</p>
-            <p className="text-gray-700 mt-2">Emergency Contact Phone: {editableFields.emergencyContactPhone}</p>
-            {editableFields.volunteerExperienceDetails && <p className="text-gray-700 mt-2 text-wrap">Volunteer Experience Details: {editableFields.volunteerExperienceDetails}</p>}
-            <p className="text-gray-700 mt-2">Interview Status: {editableFields.interviewStatus}</p>
-            <p className="text-gray-700 mt-2">Status: {editableFields.status}</p>
+            <p className="text-gray-700 mt-2">
+              Primary Phone: {editableFields.primaryPhone}
+            </p>
+            {editableFields.secondaryPhone && (
+              <p className="text-gray-700 mt-2">
+                Secondary Phone: {editableFields.secondaryPhone}
+              </p>
+            )}
+            <p className="text-gray-700 mt-2">
+              Employer: {editableFields.employer}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Convict? {editableFields.conviction ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Bondable? {editableFields.bondable ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Medical Condition?{" "}
+              {editableFields.medicalCondition ? "Yes" : "No"}
+            </p>
+            {editableFields.medicalConditionDetails && (
+              <p className="text-gray-700 mt-2 text-wrap">
+                Medical Condition Details:{" "}
+                {editableFields.medicalConditionDetails}
+              </p>
+            )}
+            <p className="text-gray-700 mt-2">
+              Emergency Contact Name: {editableFields.emergencyContactName}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Emergency Contact Relationship:{" "}
+              {editableFields.emergencyContactRelationship}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Emergency Contact Phone: {editableFields.emergencyContactPhone}
+            </p>
+            {editableFields.volunteerExperienceDetails && (
+              <p className="text-gray-700 mt-2 text-wrap">
+                Volunteer Experience Details:{" "}
+                {editableFields.volunteerExperienceDetails}
+              </p>
+            )}
+            <p className="text-gray-700 mt-2">
+              Interview Status: {editableFields.interviewStatus}
+            </p>
+            <p className="text-gray-700 mt-2">
+              Status: {editableFields.status}
+            </p>
             <p className="text-gray-700 mt-2">Role: {editableFields.role}</p>
           </>
         )}

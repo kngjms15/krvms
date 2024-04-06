@@ -1,5 +1,3 @@
-// pages/volunteersList/page.tsx
-
 import React, { useEffect, useState } from "react";
 import VolunteersList from "./volunteersList";
 import { Volunteer } from "@prisma/client";
