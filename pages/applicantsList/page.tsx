@@ -38,7 +38,7 @@ const ApplicantsListPage: React.FC = () => {
   }
 
   useEffect(() => {
-
+    fetchNumberOfApplicants();
     const fetchApplicants = async () => {
       try {
         const response = await fetch("/api/applicants");
