@@ -101,16 +101,16 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
         {applicant && (
           <>
             <div className=" flex-col ">
-              <h3 className="text-xl font-bold">
+              <h3 className="text-xl font-extrabold">
                 {applicant.firstName} {applicant.lastName}
               </h3>
               <h4 className="text-md font-semibold">
-                {applicant.chapter && <span>Chapter: {applicant.chapter}</span>}
+                {applicant.chapter && <span className="font-normal flex flex-row"><p className="font-bold">Chapter:&nbsp;</p> {applicant.chapter}</span>}
               </h4>
-              <h4 className="text-md my-2">
-                Status:
+              <h4 className="text-md my-2 font-bold">
+                Status:&nbsp;
                 <select
-                  className="border border-gray-300 rounded p-1"
+                  className="border border-gray-300 rounded p-1 font-normal"
                   value={status}
                   onChange={(e) =>
                     handleStatusChange(e.target.value, `${applicant.applicantId}`)
@@ -122,20 +122,20 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                 </select>
               </h4>
 
-              <h4 className="text-md">ApplicantID: {applicant.applicantId}</h4>
+              <h4 className="text-md font-normal"><strong>ApplicantID:&nbsp;</strong>{applicant.applicantId}</h4>
             </div>
           </>
         )}
         <div className="flex justify-end ">
           <button
-            className="text-blue-500 m-2"
+            className="m-2 bg-blue-500 rounded-lg text-white mt-10 mb-10 pr-1 pl-1 hover:bg-blue-400 text-center"
             onClick={toggleDetails}
             aria-label="Toggle Details"
           >
             {showDetails ? "Hide Details" : "Show Details"}
           </button>
           <button
-            className="text-red-500 m-2"
+            className="m-2 bg-red-500 rounded-lg text-white mt-10 mb-10 pr-4 pl-4 hover:bg-red-400 text-center"
             onClick={toggleModal}
             aria-label="Toggle Details"
           >
@@ -146,54 +146,54 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
       <div className="grid grid-cols-2 gap-1">
         {applicant && applicant.createdAt && (
-          <p className="text-gray-700 mt-2">
-            Application Date: {new Date(applicant.createdAt).toDateString()}
+          <p className="text-gray-700 mt-2 font-normal">
+            <strong>Application Date:&nbsp;</strong>{new Date(applicant.createdAt).toDateString()}
           </p>
         )}
         {showDetails && (
           <>
-            <p className="text-gray-700 mt-2">Address: {applicant.address}</p>
-            <p className="text-gray-700 mt-2">Email: {applicant.email}</p>
+            <p className="text-gray-700 mt-2"><strong>Address:&nbsp;</strong>{applicant.address}</p>
+            <p className="text-gray-700 mt-2"><strong>Email:&nbsp;</strong>{applicant.email}</p>
             <p className="text-gray-700 mt-2">
-              Phone: {applicant.primaryPhone}
+              <strong>Primary Phone:&nbsp;</strong>{applicant.primaryPhone}
             </p>
             <p className="text-gray-700 mt-2">
-              Secondary Phone: {applicant.secondaryPhone}
+              <strong>Secondary Phone:&nbsp;</strong>{applicant.secondaryPhone}
             </p>
             <p className="text-gray-700 mt-2">
-              Emergency Contact Name: {applicant.emergencyContactName}
+              <strong>Emergency Contact Name:&nbsp;</strong>{applicant.emergencyContactName}
             </p>
             <p className="text-gray-700 mt-2">
-              Emergency Contact Phone: {applicant.emergencyContactPhone}
+              <strong>Emergency Contact Phone:&nbsp;</strong>{applicant.emergencyContactPhone}
             </p>
             <p className="text-gray-700 mt-2">
-              Emergency Contact Relationship:{" "}
+              <strong>Emergency Contact Relationship:&nbsp;</strong>
               {applicant.emergencyContactRelationship}
             </p>
             <p className="text-gray-700 mt-2">
-              Date of Birth: {new Date(applicant.dob).toDateString()}
+            <strong>Date of Birth:&nbsp;</strong>{new Date(applicant.dob).toDateString()}
               <span>
-                {" "}
+                &nbsp;
                 (<strong>{calculateAge(applicant.dob)}</strong>, years old)
               </span>
             </p>
             <p className="text-gray-700 mt-2 text-wrap ">
-              Medical condition details: {applicant.medicalConditionDetails}
+              <strong>Medical Condition Details:&nbsp;</strong>{applicant.medicalConditionDetails}
             </p>
             <p className="text-gray-700 mt-2 text-wrap">
-              VolunteerExperience(s): {applicant.volunteerExperienceDetails}
+              <strong>Volunteer Experience:&nbsp;</strong>{applicant.volunteerExperienceDetails}
             </p>
             <p className="text-gray-700 mt-2">
-              Convict? {applicant.conviction ? "Yes" : "No"}
+              <strong>Conviction:&nbsp;</strong>{applicant.conviction ? "Yes" : "No"}
             </p>
             <p className="text-gray-700 mt-2">
-              Bondable? {applicant.bondable ? "Yes" : "No"}
+              <strong>Bondable:&nbsp;</strong>{applicant.bondable ? "Yes" : "No"}
             </p>
             <p className="text-gray-700 mt-2">
-              Medical Condition? {applicant.medicalCondition ? "Yes" : "No"}
+              <strong>Medical Condition:&nbsp;</strong>{applicant.medicalCondition ? "Yes" : "No"}
             </p>
             <p className="text-gray-700 mt-2">
-              Applicant Status: {applicant.interviewStatus}
+              <strong>Applicant Status:&nbsp;</strong>{applicant.interviewStatus}
             </p>
           </>
         )}

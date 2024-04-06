@@ -6,6 +6,7 @@ import ApplicantsList from "./applicantsList";
 import { VolunteerApplicant } from "@prisma/client"; // Or the correct type for an applicant
 import SearchQuery from "@/app/components/searchQuery";
 import { Filtering } from "@/app/components/filtering";
+import FilterModal from "@/app/components/filterModal";
 
 const ApplicantsListPage: React.FC = () => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
@@ -14,6 +15,27 @@ const ApplicantsListPage: React.FC = () => {
   const [searchedValue, setSearchedValue] = useState(" ");
   const [innerTexting, setInnerTexting] = useState("Enter Applicant's info:");
   const errorTexting = "Please enter Applicant's info!";
+  const [foundResults, setFoundResults] = useState(false);
+  const [numberOfApplicants, setNumberOfApplicants] = useState(0);
+  const [numberQueried, setNumberQueried] = useState(0);
+  const [failedOrMissingQuery, setFailedOrMissingQuery] = useState("Please wait a moment!")
+  const [filterShown, setFilterShown] = useState(false);
+
+  const fetchNumberOfApplicants = async () => {
+    let gatheredApplicants: VolunteerApplicant[] = []
+    try {
+      const response = await fetch("/api/applicants");
+      if(!response.ok){
+        setNumberOfApplicants(0);
+      }
+      const data = await response.json();
+      gatheredApplicants = data;
+      setNumberOfApplicants(gatheredApplicants.length);
+    } catch (error) {
+      console.error("Failed to fetch applicants:",error);
+      setNumberOfApplicants(0);
+    }
+  }
 
   useEffect(() => {
 
@@ -40,6 +62,7 @@ const ApplicantsListPage: React.FC = () => {
       }
       const data = await response.json();
       setApplicants(data);
+      setFoundResults(false);
     } catch (error) {
       console.error("Failed to fetch applicants:", error);
     }
@@ -58,16 +81,11 @@ const calculateAge = (value:Date): number => {
 
  const dropdownOptions: Filtering = {filterBy: filterByArr, orderBy: orderByArr}
 
- const handlingFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setChosenFilter(e.target.value);
-  }
- const handlingOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  setChosenOrder(e.target.value);
-}
-
 const submitSearch = () => {
+  let updatedFilteredApplicants: VolunteerApplicant[] = [];
+  setFailedOrMissingQuery("There is nothing that matches!")
   if(searchedValue!==" "){
-      const updatedFilteredApplicants = applicants.filter(applicant => {
+      updatedFilteredApplicants = applicants.filter(applicant => {
           if (chosenFilter === "By Name") {
               return applicant.firstName === searchedValue.split(' ')[0] || applicant.lastName === searchedValue.split(' ')[1];
           } else if (chosenFilter === "By Age") {
@@ -150,11 +168,16 @@ const submitSearch = () => {
     }
       setApplicants(updatedFilteredApplicants);
   }else{
+      setNumberQueried(0);
+      fetchNumberOfApplicants();
       setInnerTexting(`${errorTexting}`);
       setTimeout(()=>{
           setInnerTexting(innerTexting);
       },8000);
   }
+  setNumberQueried(updatedFilteredApplicants.length);
+  fetchNumberOfApplicants();
+  setFoundResults(true);
 }
 
 const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -162,17 +185,55 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
   setSearchedValue(value);
  }
 
+ const cancelFilterToggle = () => {
+  setFilterShown(false);
+ }
+
+ const handlingFilterChoices = () => {
+  const valueA = (document.querySelector('input[id="selectedA"]:checked') as HTMLInputElement)?.value;
+  const valueB = (document.querySelector('input[id="selectedB"]:checked') as HTMLInputElement)?.value;
+  if(valueA!==null && valueB!==null){
+    setChosenFilter(valueA);
+    setChosenOrder(valueB);
+  }else{
+    setChosenFilter(filterByArr[0]);
+    setChosenOrder(orderByArr[0]);    
+  } 
+  cancelFilterToggle();
+ }
+
   return (
     <div className="flex-grow m-auto">
+      <div className="flex flex-row items-center">
+      {filterShown &&
+          <FilterModal
+            message="Filter and Order Options"
+            onSubmit={()=>handlingFilterChoices()}
+            filterOptions={dropdownOptions}
+            defaultFilter={chosenFilter}
+            defaultOrder={chosenOrder}
+          />        
+        }        
         <SearchQuery
           handleSearchValue={handleSearchValue}
-          handlingFilter={handlingFilter}
-          dropdownOptions={dropdownOptions}
-          handlingOrder={handlingOrder}
           submitSearch={submitSearch}
           clearSearch={clearSearch}
           innerTexting={innerTexting}
+          togglefilter={()=>{setFilterShown(true)}}
         />
+        {(chosenFilter && chosenOrder) && 
+                <div className="ml-6 text-cyan-600 text-lg border-r border-gray-400 pr-6">
+                    <strong>Filter: </strong>{chosenFilter} <strong className="ml-2 pl-4 border-l border-gray-400 ">Order: </strong>{chosenOrder}    
+                </div>               
+        }  
+        {foundResults &&
+          <div className="ml-6 text-lg">
+              <p className="text-cyan-600">
+                  <strong>{numberQueried}</strong> Results out of <strong>{numberOfApplicants}</strong> total
+              </p>
+          </div>         
+        } 
+      </div> 
       {applicants.length>0?(applicants.map((applicant) => (
           applicant && applicant.firstName && (
             <ApplicantsList key={applicant.applicantId} applicant={applicant} />
@@ -180,7 +241,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
         ))
       ):(
         <div className="justify-center align-middle">
-          <h2 className="text-center">Sorry! Nothing fits that search query</h2>
+          <h2 className="text-center">{failedOrMissingQuery}</h2>
         </div>
       )}
     </div>
