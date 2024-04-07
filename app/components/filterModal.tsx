@@ -36,14 +36,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
         <div className="flex flex-row">
             <div className="justify-start flex-1 mb-4 mt-3">
                 {filterOptions.filterBy.map((option,index)=> (
-                    <div className={`rounded-lg p-1 pr-4 ${selectedFilterOption===option && 'bg-gray-600 text-white'}`}>
+                    <div key={`A${index}`} className={`rounded-lg p-1 pr-4 ${selectedFilterOption===option && 'bg-gray-600 text-white'}`}>
                         <input type="radio" id={`${selectedFilterOption===option?'selectedA':`unselectedA${index}`}`} value={option} checked={selectedFilterOption===option} onChange={()=>{handleSelectFilter(option)}} className="selected:bg-white"/>&nbsp;&nbsp;{option}
                     </div>
                 ))}
             </div>
             <div className="justify-start flex-2 mb-4 mt-3">
                 {filterOptions.orderBy.map((option,index)=> (
-                    <div className="border-l-2 border-gray-300 ml-4 pl-5">
+                    <div key={`B${index}`} className="border-l-2 border-gray-300 ml-4 pl-5">
                         <div className={`rounded-lg p-1 pr-4 ${selectedFilterOrder===option && 'bg-gray-600 text-white'}`}>
                             <input type="radio" value={option} id={`${selectedFilterOrder===option?'selectedB':`unselectedB${index}`}`} checked={selectedFilterOrder===option} onChange={()=>{handleSelectOlder(option)}}/>&nbsp;&nbsp;{option}
                         </div>

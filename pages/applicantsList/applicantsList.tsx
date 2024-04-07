@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
+import AlertModal from "@/app/components/alertModal";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -25,6 +26,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(applicant.interviewStatus);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("KidsForSport Management");
+  const [alertBody, setAlertBody] = useState("Please wait a moment...");
 
   useEffect(() => {
     setStatus(applicant.interviewStatus);
@@ -50,15 +54,18 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
         if (response.ok) {
           onDelete?.(parseInt(`${applicant.applicantId}`, 10));
           // Handle successful deletion (e.g., update state or notify user)
-          alert("Applicant deleted successfully!");
+          setAlertBody("Applicant deleted successfully!");
+          setShowAlert(true);
         } else {
           console.error("Failed to delete applicant:", response.status);
-          alert("Failed to delete applicant. Please try again.");
+          setAlertBody("Failed to delete applicant. Please try again.");
+          setShowAlert(true);
           // Handle deletion failure (e.g., show error message)
         }
       } catch (error) {
         console.error("Error deleting applicant:", error);
-        alert("Error deleting applicant. Please try again later.");
+        setAlertBody("Error deleting applicant. Please try again later.");
+        setShowAlert(true);
       }
     }
   };
@@ -77,20 +84,26 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
       if (response.ok) {
         setStatus(newStatus);
-        alert("Status updated successfully!");
+        setAlertBody("Status updated successfully!");
+        setShowAlert(true);
       } else {
         console.error("Failed to update status:", response.status);
-        alert("Failed to update status. Please try again.");
+        setAlertBody("Failed to update status. Please try again.");
+        setShowAlert(true);
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("Error updating status. Please try again later.");
+      setAlertBody("Error updating status. Please try again later.");
+      setShowAlert(true);
     }
   };
 
   return (
     <div className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
+        {showAlert &&  
+          <AlertModal title={alertTitle} body={alertBody} onClick={()=>setShowAlert(false)}/>
+        }
         {showModal && (
           <ConfirmationModal
             message="Are you sure you want to delete this applicant?"

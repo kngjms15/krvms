@@ -5,16 +5,17 @@ import ApplicantsList from "./applicantsList";
 
 import { VolunteerApplicant } from "@prisma/client"; // Or the correct type for an applicant
 import SearchQuery from "@/app/components/searchQuery";
-import { Filtering } from "@/app/components/filtering";
 import FilterModal from "@/app/components/filterModal";
+import { filterApplicants, gatherDropdownOptions } from "@/app/assets/scripts/specialFilteration";
 
 const ApplicantsListPage: React.FC = () => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
+  const [defaultApplicants, setDefaultApplicants] = useState<VolunteerApplicant[]>([]);
   const [chosenFilter, setChosenFilter] = useState('By Name');
   const [chosenOrder, setChosenOrder] = useState('First Name A-Z');
   const [searchedValue, setSearchedValue] = useState(" ");
   const [innerTexting, setInnerTexting] = useState("Enter Applicant's info:");
-  const errorTexting = "Please enter Applicant's info!";
+  const errorTexting = "Please enter info!";
   const [foundResults, setFoundResults] = useState(false);
   const [numberOfApplicants, setNumberOfApplicants] = useState(0);
   const [numberQueried, setNumberQueried] = useState(0);
@@ -37,6 +38,8 @@ const ApplicantsListPage: React.FC = () => {
     }
   }
 
+  if(numberOfApplicants===0){fetchNumberOfApplicants();}
+
   useEffect(() => {
     fetchNumberOfApplicants();
     const fetchApplicants = async () => {
@@ -47,6 +50,7 @@ const ApplicantsListPage: React.FC = () => {
         }
         const data = await response.json();
         setApplicants(data);
+        setDefaultApplicants(data);
       } catch (error) {
         console.error("Failed to fetch applicants:", error);
       }
@@ -75,101 +79,17 @@ const calculateAge = (value:Date): number => {
   return currentDate.getFullYear() - valuedDate.getFullYear();
  }
 
- const filterByArr = ["By Name","By Age","By Id","By Chapter","By Minimum Age","By Maximum Age"];
- const orderByArr = ["First Name A-Z","Last Name A-Z","First Name Z-A","Last Name Z-A","Oldest First",
- "Youngest First","Most Recent","Least Recent","Chapter A-Z","Chapter Z-A"]
-
- const dropdownOptions: Filtering = {filterBy: filterByArr, orderBy: orderByArr}
-
 const submitSearch = () => {
   let updatedFilteredApplicants: VolunteerApplicant[] = [];
   setFailedOrMissingQuery("There is nothing that matches!")
   if(searchedValue!==" "){
-      updatedFilteredApplicants = applicants.filter(applicant => {
-          if (chosenFilter === "By Name") {
-              return applicant.firstName === searchedValue.split(' ')[0] || applicant.lastName === searchedValue.split(' ')[1];
-          } else if (chosenFilter === "By Age") {
-              return calculateAge(applicant.dob) === Number(searchedValue);
-          } else if (chosenFilter === "By Id") {
-              return applicant.applicantId === searchedValue;
-          } else if (chosenFilter === "By Chapter") {
-              return applicant.chapter === searchedValue;
-          } else if (chosenFilter === "By Minimum Age"){
-            return calculateAge(applicant.dob) >= Number(searchedValue);
-          } else if (chosenFilter === "By Maximum Age"){
-            return calculateAge(applicant.dob) <= Number(searchedValue);
-          }
-      });
-
-      if (chosenOrder === "First Name A-Z") {
-        updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.firstName.toLowerCase();
-            const nameB = b.firstName.toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
-    } else if (chosenOrder === "Last Name A-Z") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.lastName.toLowerCase();
-            const nameB = b.lastName.toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
-    } else if (chosenOrder === "First Name Z-A") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.firstName.toLowerCase();
-            const nameB = b.firstName.toLowerCase();
-            return nameA.localeCompare(nameB) * -1;
-        });
-    } else if (chosenOrder === "Last Name Z-A") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.lastName.toLowerCase();
-            const nameB = b.lastName.toLowerCase();
-            return nameA.localeCompare(nameB) * -1;
-        });
-    } else if (chosenOrder === "Oldest First") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const ageA = calculateAge(a.dob);
-            const ageB = calculateAge(b.dob);
-            return ageA - ageB;
-        });
-    } else if (chosenOrder === "Youngest First") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const ageA = calculateAge(a.dob);
-            const ageB = calculateAge(b.dob);
-            return ageB - ageA;
-        });
-    } else if (chosenOrder === "Most Recent") {
-      updatedFilteredApplicants.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        const differenceInMilliseconds = dateA.getTime() - dateB.getTime();
-        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24))*-1;
-        return differenceInDays;
-        });
-    } else if (chosenOrder === "Least Recent") {
-      updatedFilteredApplicants.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        const differenceInMilliseconds = dateA.getTime() - dateB.getTime();
-        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-        return differenceInDays;
-      });
-    } else if (chosenOrder === "Chapter A-Z") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.chapter.toLowerCase();
-            const nameB = b.chapter.toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
-    } else if (chosenOrder === "Chapter Z-A") {
-      updatedFilteredApplicants.sort((a, b) => {
-            const nameA = a.chapter.toLowerCase();
-            const nameB = b.chapter.toLowerCase();
-            return nameA.localeCompare(nameB) * -1;
-        });
-    }
+      updatedFilteredApplicants = filterApplicants(chosenFilter,chosenOrder,defaultApplicants,calculateAge,searchedValue);
       setApplicants(updatedFilteredApplicants);
+      setFoundResults(true);
   }else{
       setNumberQueried(0);
       fetchNumberOfApplicants();
+      setFoundResults(false);
       setInnerTexting(`${errorTexting}`);
       setTimeout(()=>{
           setInnerTexting(innerTexting);
@@ -177,7 +97,6 @@ const submitSearch = () => {
   }
   setNumberQueried(updatedFilteredApplicants.length);
   fetchNumberOfApplicants();
-  setFoundResults(true);
 }
 
 const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -196,8 +115,8 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
     setChosenFilter(valueA);
     setChosenOrder(valueB);
   }else{
-    setChosenFilter(filterByArr[0]);
-    setChosenOrder(orderByArr[0]);    
+    setChosenFilter(gatherDropdownOptions().filterBy[0]);
+    setChosenOrder(gatherDropdownOptions().orderBy[0]);    
   } 
   cancelFilterToggle();
  }
@@ -209,7 +128,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
           <FilterModal
             message="Filter and Order Options"
             onSubmit={()=>handlingFilterChoices()}
-            filterOptions={dropdownOptions}
+            filterOptions={gatherDropdownOptions()}
             defaultFilter={chosenFilter}
             defaultOrder={chosenOrder}
           />        
@@ -229,7 +148,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
         {foundResults &&
           <div className="ml-6 text-lg">
               <p className="text-cyan-600">
-                  <strong>{numberQueried}</strong> Results out of <strong>{numberOfApplicants}</strong> total
+                  <strong>{numberQueried}</strong> Result{numberQueried>1?'s':''} out of <strong>{numberOfApplicants}</strong> total
               </p>
           </div>         
         } 
