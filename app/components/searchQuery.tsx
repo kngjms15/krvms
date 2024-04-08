@@ -12,7 +12,7 @@ const SearchQuery:React.FC<iSearchQuery> = ({innerTexting,submitSearch,clearSear
     return (
         <div className="text-gray-600 flex items-center mt-3 mb-3">
             Search:&nbsp;
-            <input type="search" name="search" id="search" placeholder={innerTexting} className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none" onChange={(e)=>{handleSearchValue(e);}}/>
+            <input type="search" name="search" id="search" placeholder={innerTexting} className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none" onChange={(e)=>{handleSearchValue(e); submitSearch();}}/>
             <div className="ml-2">
                 <button className="rounded-lg p-1 pr-4 pl-4 font-bold bg-gray-400 text-white hover:bg-cyan-400" onClick={()=>{togglefilter()}}>+</button>
             </div>
