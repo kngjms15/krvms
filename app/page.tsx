@@ -4,9 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import ApplicantsListPage from '@/pages/applicantsList/page';
 
-
-
-
 const Page = () => {
   return (
     <div>
