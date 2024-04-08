@@ -8,6 +8,7 @@ import React from "react";
 import { volunteerApplicationSchema } from "@/lib/schema";
 import Image from "next/image";
 import provinceChapters from "@/app/provinceChapters.json";
+import AlertModal from "../components/alertModal";
 
 type Inputs = z.infer<typeof volunteerApplicationSchema>;
 
@@ -63,6 +64,10 @@ function VolunteerApplicationForm() {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const delta = currentStep - previousStep;
+  const [disableMedicalMessage, setDisableMedicalMessage] = useState(true);
+  const [alertTitle, setAlertTitle] = useState("KidsForSport Management");
+  const [alertBody, setAlertBody] = useState("Please wait a moment...");
+  const [showAlert, setShowAlert] = useState(false);
 
   const {
     register,
@@ -108,7 +113,8 @@ function VolunteerApplicationForm() {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        alert("Form submitted successfully!");
+        setAlertBody("Form submitted successfully!");
+        setShowAlert(true);
         console.log("Form submitted successfully!");
       } else {
         console.error("Failed to submit form.");
@@ -172,9 +178,12 @@ function VolunteerApplicationForm() {
   return (
     <>
       <form
-        className="flex-grow max-w-[940px] m-auto my-6 mt-0 bg-[#F2F2F2] rounded-lg p-8"
+        className="flex-grow max-w-[940px] m-auto top-4 bg-[#F2F2F2] rounded-lg p-8"
         onSubmit={handleSubmit(processForm)}
       >
+        {showAlert &&  
+          <AlertModal title={alertTitle} body={alertBody} onClick={()=>setShowAlert(false)}/>
+        }
         {/* Volunteer Information Section */}
         {currentStep === 0 && (
           <div className="flex-grow max-w-[940px] m-auto my-6 pt-4 ">
@@ -624,10 +633,10 @@ function VolunteerApplicationForm() {
                         value="true"
                         {...register("medicalCondition")}
                         className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
+                        onChange={()=>{setDisableMedicalMessage(false);}}
                       />
                       <label htmlFor="medicalCondition-yes">Yes</label>
                     </div>
-
                     <div>
                       <input
                         type="radio"
@@ -636,6 +645,7 @@ function VolunteerApplicationForm() {
                         {...register("medicalCondition")}
                         defaultChecked
                         className="h-4 w-4 mr-2 border-gray-300 text-[#6CC24A] focus:ring-[#6CC24A]"
+                        onChange={()=>{setDisableMedicalMessage(true);}}
                       />
                       <label htmlFor="medicalCondition-no">No</label>
                     </div>
@@ -654,7 +664,8 @@ function VolunteerApplicationForm() {
                   id="medicalConditionDetails"
                   placeholder="Medical Condition Details"
                   {...register("medicalConditionDetails")}
-                  className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                  className={`${disableMedicalMessage?'bg-gray-200':''} block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+                  disabled={disableMedicalMessage}
                 />
                 {errors.medicalConditionDetails && (
                   <span className="text-red-500 text-xs">

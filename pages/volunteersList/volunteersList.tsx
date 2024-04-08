@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
+import AlertModal from "@/app/components/alertModal";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
@@ -27,6 +28,9 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(volunteer.status);
+  const [alertTitle, setAlertTitle] = useState("KidsForSport Management");
+  const [alertBody, setAlertBody] = useState("Please wait a moment...");
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     setStatus(volunteer.status);
@@ -52,15 +56,15 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
         if (response.ok) {
           onDelete?.(volunteer.volunteerId);
           // Handle successful deletion (e.g., update state or notify user)
-          alert("Volunteer deleted successfully!");
+          setAlertBody("Volunteer deleted successfully!");
         } else {
           console.error("Failed to delete volunteer:", response.status);
-          alert("Failed to delete volunteer. Please try again.");
+          setAlertBody("Failed to delete volunteer. Please try again.");
           // Handle deletion failure (e.g., show error message)
         }
       } catch (error) {
         console.error("Error deleting volunteer:", error);
-        alert("Error deleting volunteer. Please try again later.");
+        setAlertBody("Error deleting volunteer. Please try again later.");
       }
     }
   };
@@ -79,20 +83,23 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
 
       if (response.ok) {
         setStatus(newStatus);
-        alert("Status updated successfully!");
+        setAlertBody("Status updated successfully!");
       } else {
         console.error("Failed to update status:", response.status);
-        alert("Failed to update status. Please try again.");
+        setAlertBody("Failed to update status. Please try again.");
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("Error updating status. Please try again later.");
+      setAlertBody("Error updating status. Please try again later.");
     }
   };
 
   return (
     <div className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
+        {showAlert &&  
+          <AlertModal title={alertTitle} body={alertBody} onClick={()=>setShowAlert(false)}/>
+        }
         {showModal && (
           <ConfirmationModal
             message="Are you sure you want to delete this volunteer?"
