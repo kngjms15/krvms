@@ -3,7 +3,9 @@ import VolunteerApplicationForm from './volunteerApplicationForm'
 
 const page = () => {
   return (
-    <VolunteerApplicationForm />
+    <div className="bg-cover bg-center min-h-screen" style={{backgroundImage: 'url("/front-page-image.png")'}}>
+      <VolunteerApplicationForm />
+    </div>
   )
 }
 

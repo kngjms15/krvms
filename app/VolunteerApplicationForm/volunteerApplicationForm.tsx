@@ -172,12 +172,12 @@ function VolunteerApplicationForm() {
   return (
     <>
       <form
-        className="flex-grow max-w-[940px] m-auto my-6 bg-[#F2F2F2] rounded-lg p-8"
+        className="flex-grow max-w-[940px] m-auto my-6 mt-0 bg-[#F2F2F2] rounded-lg p-8"
         onSubmit={handleSubmit(processForm)}
       >
         {/* Volunteer Information Section */}
         {currentStep === 0 && (
-          <div className="flex-grow max-w-[940px] m-auto my-6 ">
+          <div className="flex-grow max-w-[940px] m-auto my-6 pt-4 ">
             <div className="flex flex-auto m-auto max-w-40 max-h-40">
               <Image
                 src="/KidSport-Month-Graphic-SS-Website.png"
