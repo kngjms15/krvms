@@ -13,7 +13,7 @@ const ApplicantsListPage: React.FC = () => {
   const [defaultApplicants, setDefaultApplicants] = useState<VolunteerApplicant[]>([]);
   const [chosenFilter, setChosenFilter] = useState('By Name');
   const [chosenOrder, setChosenOrder] = useState('First Name A-Z');
-  const [searchedValue, setSearchedValue] = useState(" ");
+  const [searchedValue, setSearchedValue] = useState("");
   const [innerTexting, setInnerTexting] = useState("Enter Applicant's info:");
   const errorTexting = "Please enter info!";
   const [foundResults, setFoundResults] = useState(false);
@@ -67,6 +67,7 @@ const ApplicantsListPage: React.FC = () => {
       const data = await response.json();
       setApplicants(data);
       setFoundResults(false);
+      setSearchedValue('')
     } catch (error) {
       console.error("Failed to fetch applicants:", error);
     }
@@ -82,26 +83,27 @@ const calculateAge = (value:Date): number => {
 const submitSearch = () => {
   let updatedFilteredApplicants: VolunteerApplicant[] = [];
   setFailedOrMissingQuery("There is nothing that matches!")
-  if(searchedValue!==" "){
+  if(/^(?=.*[a-zA-Z0-9]).*$/.test(searchedValue.trimEnd())){
       updatedFilteredApplicants = filterApplicants(chosenFilter,chosenOrder,defaultApplicants,calculateAge,searchedValue);
       setApplicants(updatedFilteredApplicants);
       setFoundResults(true);
+      setNumberQueried(updatedFilteredApplicants.length);
+      fetchNumberOfApplicants();
   }else{
       setNumberQueried(0);
       fetchNumberOfApplicants();
+      setApplicants(defaultApplicants);
       setFoundResults(false);
       setInnerTexting(`${errorTexting}`);
       setTimeout(()=>{
           setInnerTexting(innerTexting);
       },8000);
   }
-  setNumberQueried(updatedFilteredApplicants.length);
-  fetchNumberOfApplicants();
 }
 
 const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
   const value = event.target.value
-  setSearchedValue(value);
+  setSearchedValue(value.trimEnd());
  }
 
  const cancelFilterToggle = () => {
@@ -139,6 +141,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
           clearSearch={clearSearch}
           innerTexting={innerTexting}
           togglefilter={()=>{setFilterShown(true)}}
+          value={searchedValue}
         />
         {(chosenFilter && chosenOrder) && 
                 <div className="ml-6 text-cyan-600 text-lg border-r border-gray-400 pr-6">
