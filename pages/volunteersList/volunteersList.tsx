@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
 import ConfirmationModal from "@/app/components/ConfirmationModal";
-import EditVolunteer from "../editVolunteer.tsx/EditVolunteer"
 
 interface VolunteersListProps {
   volunteer: Volunteer;
@@ -15,7 +14,6 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(volunteer.status);
-  const [isEditing, setIsEditing] = useState(false);
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
@@ -70,14 +68,6 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
     }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  if (isEditing) {
-    return <EditVolunteer volunteerId={volunteer.volunteerId} />;
-  }
-
   console.log("Rendering VolunteersList component...");
 
   return (
@@ -114,7 +104,6 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             </button>
             <button
               className="text-green-400 m-2"
-              onClick={handleEdit}
               aria-label="Edit Volunteer"
             >
               Edit
