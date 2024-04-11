@@ -73,7 +73,7 @@ export const volunteerApplicationSchema = z.object({
   medicalCondition: z.string(),
   medicalConditionDetails: z
     .string()
-    .max(200, "Maximum 500 Characters")
+    .max(500, "Maximum 500 Characters")
     .optional(),
   emergencyContactName: z
     .string()
@@ -96,11 +96,11 @@ export const volunteerApplicationSchema = z.object({
     .string()
     .regex(
       /^(\+?1[.\-\s]?)?((\(\d{3}\))|\d{3})[.\-\s]?\d{3}[.\-\s]?\d{4}$/,
-      "Invalid phone number. Exmaple: 123-456-7890"
+      "Invalid phone number. Example: 123-456-7890"
     ),
   volunteerExperienceDetails: z
     .string()
-    .max(200, "Maximum 500 Characters")
+    .max(500, "Maximum 500 Characters")
     .optional(),
   agreedToTerms: z
     .boolean().refine((agreed) => agreed, "You must agree to the terms")

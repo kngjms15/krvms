@@ -8,28 +8,8 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model Post {
-  id        String  @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  String?
-  author    User?   @relation(fields: [authorId], references: [id])
-}
-
-model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String?  @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  posts     Post[]
-
-  @@map("users")
-}
-
 model VolunteerApplicant {
-  applicantId                  Int      @id @default(autoincrement())
+  applicantId                  String   @id @default(uuid())
   createdAt                    DateTime @default(now())
   firstName                    String   @db.VarChar(50)
   lastName                     String   @db.VarChar(50)
@@ -52,4 +32,32 @@ model VolunteerApplicant {
   emergencyContactPhone        String   @db.VarChar(10)
   volunteerExperienceDetails   String?  @db.VarChar(500)
   interviewStatus              String   @db.VarChar(20)
+}
+
+model Volunteer {
+  volunteerId                  String   @id @default(uuid())
+  createdAt                    DateTime @default(now())
+  firstName                    String   @db.VarChar(50)
+  lastName                     String   @db.VarChar(50)
+  role                         String   @db.VarChar(20)
+  dob                          DateTime
+  address                      String   @db.VarChar(50)
+  city                         String   @db.VarChar(50)
+  province                     String   @db.VarChar(2)
+  postalCode                   String   @db.VarChar(6)
+  chapter                      String   @db.VarChar(20)
+  primaryPhone                 String   @db.VarChar(10)
+  secondaryPhone               String?
+  email                        String   @db.VarChar(50)
+  employer                     String   @db.VarChar(50)
+  conviction                   Boolean
+  bondable                     Boolean
+  medicalCondition             Boolean
+  medicalConditionDetails      String?  @db.VarChar(500)
+  emergencyContactName         String   @db.VarChar(50)
+  emergencyContactRelationship String   @db.VarChar(50)
+  emergencyContactPhone        String   @db.VarChar(10)
+  volunteerExperienceDetails   String?  @db.VarChar(500)
+  interviewStatus              String   @db.VarChar(20)
+  status                       String   @db.VarChar(20)
 }

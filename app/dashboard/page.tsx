@@ -1,63 +1,77 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import './dashboard.css';
-import App from 'next/app';
-import ApplicantsList from '@/pages/applicantsList/applicantsList';
-import ApplicantsListPage from '@/pages/applicantsList/page';
-
-
+import { useState } from "react";
+import Header from "./header";
+import ApplicantsListPage from "@/pages/applicantsList/page";
+import VolunteersListPage from "@/pages/volunteersList/page";
+import CreateNewVolunteer from "../components/CreateNewVolunteer";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('volunteers');
+  const [activeTab, setActiveTab] = useState("volunteers");
+  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
+    useState(false);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
+  const toggleCreateVolunteerModal = () => {
+    setShowCreateVolunteerModal((prev) => !prev);
+  };
+
   return (
-    <div className="dashboard">
-      <div className="sidebar">
-        <div
-          className={`tab ${activeTab === 'volunteers' ? 'active' : ''}`}
-          onClick={() => handleTabClick('volunteers')}
-        >
-          Volunteers
+    <div className="flex flex-col h-screen">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <div className="sidebar bg-gray-200 w-48 overflow-y-auto">
+          <div
+            className={`tab cursor-pointer py-4 pl-2  ${
+              activeTab === "volunteers" ? "bg-[#6CC24A]" : ""
+            }`}
+            onClick={() => handleTabClick("volunteers")}
+          >
+            Volunteers
+          </div>
+          <div
+            className={`tab cursor-pointer py-4 pl-2  ${
+              activeTab === "applicants" ? "bg-[#6CC24A]" : ""
+            }`}
+            onClick={() => handleTabClick("applicants")}
+          >
+            Applicants
+          </div>
         </div>
-        <div
-          className={`tab ${activeTab === 'applicants' ? 'active' : ''}`}
-          onClick={() => handleTabClick('applicants')}
-        >
-          Applicants
+
+        <div className="content flex-1 p-4 overflow-y-auto bg-[#D9D9D9]">
+          {activeTab === "volunteers" && (
+            <div className="cards">
+              <div className="flex flex-grow justify-between">
+                <h1>Volunteers</h1>
+                <button
+            onClick={toggleCreateVolunteerModal}
+            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 mt-4"
+          >
+            Add New Volunteer
+          </button>
+              </div>
+              <VolunteersListPage />
+            </div>
+          )}
+          {activeTab === "applicants" && (
+            <div className="cards">
+              <h1>Applicants</h1>
+              <ApplicantsListPage />
+            </div>
+          )}
         </div>
       </div>
-      <div className="content">
-        {activeTab === 'volunteers' && (
-          <div className="cards">
-            <div className="card">
-              <h2>Volunteer 1</h2>
-              <p>Details for Volunteer 1</p>
-            </div>
-            <div className="card">
-              <h2>Volunteer 2</h2>
-              <p>Details for Volunteer 2</p>
-            </div>
+      {showCreateVolunteerModal && (
+        <div className="fixed inset-0 items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded">
+            <CreateNewVolunteer />
           </div>
-        )}
-        {activeTab === 'applicants' && (
-          <div className="cards">
-            {/* <div className="card">
-              <h2>Applicant 1</h2>
-              <p>Details for Applicant 1</p>
-            </div>
-            <div className="card">
-              <h2>Applicant 2</h2>
-              <p>Details for Applicant 2</p>
-            </div> */}
-            <ApplicantsListPage />
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
