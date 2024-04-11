@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import provinceChapters from "../provinceChapters.json";
 
 const CreateNewVolunteer: React.FC = () => {
+  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
+    useState(true);
   const [newVolunteer, setNewVolunteer] = useState({
     firstName: "",
     lastName: "",
@@ -79,7 +81,7 @@ const CreateNewVolunteer: React.FC = () => {
   return (
     <>
       <form
-        className="flex-grow max-w-[940px] m-auto my-6 bg-[#F2F2F2] rounded-lg p-8"
+        className="flex-grow max-w-[940px] bg-[#F2F2F2] m-auto my-6 rounded-lg p-8 max-h-[80vh] overflow-y-auto shadow-md"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col">
@@ -325,9 +327,12 @@ const CreateNewVolunteer: React.FC = () => {
             </select>
           </div>
         </div>
-        
+
         <div className="flex justify-between my-5">
-          <button className="rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75">
+          <button
+            className="rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+            onClick={() => setShowCreateVolunteerModal(false)}
+          >
             Cancel
           </button>
           <button
