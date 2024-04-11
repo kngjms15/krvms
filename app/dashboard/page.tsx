@@ -1,14 +1,22 @@
 "use client";
+
 import { useState } from "react";
 import Header from "./header";
 import ApplicantsListPage from "@/pages/applicantsList/page";
 import VolunteersListPage from "@/pages/volunteersList/page";
+import CreateNewVolunteer from "../components/CreateNewVolunteer";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");
+  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
+    useState(false);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
+  };
+
+  const toggleCreateVolunteerModal = () => {
+    setShowCreateVolunteerModal((prev) => !prev);
   };
 
   return (
@@ -37,7 +45,15 @@ const Dashboard = () => {
         <div className="content flex-1 p-4 overflow-y-auto bg-[#D9D9D9]">
           {activeTab === "volunteers" && (
             <div className="cards">
-              <h1>Volunteers</h1>
+              <div className="flex flex-grow justify-between">
+                <h1>Volunteers</h1>
+                <button
+            onClick={toggleCreateVolunteerModal}
+            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 mt-4"
+          >
+            Add New Volunteer
+          </button>
+              </div>
               <VolunteersListPage />
             </div>
           )}
@@ -49,6 +65,13 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+      {showCreateVolunteerModal && (
+        <div className="fixed inset-0 items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded">
+            <CreateNewVolunteer />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

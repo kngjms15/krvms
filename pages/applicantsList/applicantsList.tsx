@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
-import ConfirmationModal from "@/app/components/confirmationModal";
+import ConfirmationModal from "@/app/components/ConfirmationModal";
 import { set } from "zod";
 
 interface ApplicantsListProps {
@@ -29,6 +29,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(applicant.interviewStatus);
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
+  
 
   useEffect(() => {
     setStatus(applicant.interviewStatus);
@@ -190,8 +191,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                   <option value="Accepted">Accepted</option>
                 </select>
               </h4>
-
-              <h4 className="text-md">ApplicantID: {applicant.applicantId}</h4>
             </div>
           </>
         )}
@@ -215,7 +214,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
       <div className="grid grid-cols-2 gap-1">
         {applicant && applicant.createdAt && (
-          <p className="text-gray-700 mt-2">
+          <p className="text-gray-700">
             Application Date: {new Date(applicant.createdAt).toDateString()}
           </p>
         )}

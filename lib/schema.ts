@@ -73,7 +73,7 @@ export const volunteerApplicationSchema = z.object({
   medicalCondition: z.string(),
   medicalConditionDetails: z
     .string()
-    .max(200, "Maximum 500 Characters")
+    .max(500, "Maximum 500 Characters")
     .optional(),
   emergencyContactName: z
     .string()
@@ -100,7 +100,7 @@ export const volunteerApplicationSchema = z.object({
     ),
   volunteerExperienceDetails: z
     .string()
-    .max(200, "Maximum 500 Characters")
+    .max(500, "Maximum 500 Characters")
     .optional(),
   agreedToTerms: z
     .boolean().refine((agreed) => agreed, "You must agree to the terms")

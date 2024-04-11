@@ -153,15 +153,7 @@ function VolunteerApplicationForm() {
       window.scrollTo(0, 0);
     }
   };
-
-  // function getFormattedDate(ageLimit: number = 14) {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear() - ageLimit;
-  //   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-  //   const day = ("0" + currentDate.getDate()).slice(-2);
-  //   return `${year}-${month}-${day}`;
-  // }
-
+  
   const calculateAge = (dob: string): number => {
     if (!dob) return 0;
     const today = new Date();
@@ -918,10 +910,10 @@ function VolunteerApplicationForm() {
                   className="align-middle justify-center w-5 h-5 rounded-sm text-[#6CC24A] focus:ring-[#6CC24A]"
                 />
                 <label htmlFor="acknowledgement" className="ml-3">
-                  I agree to the terms and conditions.
+                  I agree to the terms and conditions. <span className="text-red-500">*</span>
                 </label>
                 {errors.agreedToTerms && (
-                  <span className="text-red-500 text-xs">
+                  <span className="text-red-500 text-md ">
                     {errors.agreedToTerms.message}
                   </span>
                 )}

@@ -2,8 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
+import Dashboard from "./dashboard/page";
 
 const Page = () => {
+
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="max-w-[940px] bg-[#F2F2F2] rounded-lg p-3">
@@ -25,6 +28,7 @@ const Page = () => {
               </button>
             </Link>
           </div>
+          <Dashboard />
         </div>
       </div>
     </div>
