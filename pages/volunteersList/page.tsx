@@ -111,8 +111,8 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
  }
 
  const handlingFilterChoices = () => {
-  const valueA = (document.querySelector('input[id="volunteerSelectedA"]:checked') as HTMLInputElement)?.value;
-  const valueB = (document.querySelector('input[id="volunteerSelectedB"]:checked') as HTMLInputElement)?.value;
+  const valueA = (document.querySelector('input[id="volunteerListSelectedA"]:checked') as HTMLInputElement)?.value;
+  const valueB = (document.querySelector('input[id="volunteerListSelectedB"]:checked') as HTMLInputElement)?.value;
   if(valueA!==null && valueB!==null){
     setChosenFilter(valueA);
     setChosenOrder(valueB);
