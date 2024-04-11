@@ -111,8 +111,8 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
  }
 
  const handlingFilterChoices = () => {
-  const valueA = (document.querySelector('input[id="selectedA"]:checked') as HTMLInputElement)?.value;
-  const valueB = (document.querySelector('input[id="selectedB"]:checked') as HTMLInputElement)?.value;
+  const valueA = (document.querySelector('input[id="applicantListSelectedA"]:checked') as HTMLInputElement)?.value;
+  const valueB = (document.querySelector('input[id="applicantListSelectedB"]:checked') as HTMLInputElement)?.value;
   if(valueA!==null && valueB!==null){
     setChosenFilter(valueA);
     setChosenOrder(valueB);
@@ -133,6 +133,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
             filterOptions={gatherDropdownOptions()}
             defaultFilter={chosenFilter}
             defaultOrder={chosenOrder}
+            filterName="applicantList"
           />        
         }        
         <SearchQuery
