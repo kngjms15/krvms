@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/ConfirmationModal";
-//import { set } from "zod";
+import { set } from "zod";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
   onDelete?: (id: number) => void;
 }
-
 const prisma = new PrismaClient();
-
 const calculateAge = (dob: Date) => {
   const today = new Date();
   const birthDate = new Date(dob);
@@ -20,7 +18,6 @@ const calculateAge = (dob: Date) => {
   }
   return age;
 };
-
 const ApplicantsList: React.FC<ApplicantsListProps> = ({
   applicant,
   onDelete,
@@ -29,19 +26,17 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(applicant.interviewStatus);
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
-  
+
 
   useEffect(() => {
     setStatus(applicant.interviewStatus);
   }, [applicant]);
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
-
   const handleDelete = async () => {
     toggleModal();
     if (applicant) {
@@ -71,7 +66,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       }
     }
   };
-
   const handleStatusChange = async (newStatus: string, applicantId: string) => {
     try {
       const response = await fetch(`/api/applicants/${applicantId}`, {
@@ -83,7 +77,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           interviewStatus: newStatus,
         }),
       });
-
       if (response.ok) {
         if (newStatus === "Accepted") {
           // Fetch the updated applicant data
@@ -91,7 +84,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             `/api/applicants/${applicantId}`
           );
           const updatedApplicant = await updatedApplicantResponse.json();
-
           // Create a new volunteer based on the accepted applicant
           const newVolunteerResponse = await fetch(`/api/volunteers`, {
             method: "POST",
@@ -126,16 +118,13 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
               status: "Active", // Set the status to Active for a new volunteer
             }),
           });
-
           // Delete the applicant from the list
           await fetch(`/api/applicants/${applicantId}`, {
             method: "DELETE",
           });
-
           // Update the status in the UI
           setStatus(newStatus);
           alert("Status updated successfully!");
-
           if (newVolunteerResponse.ok) {
             alert("Applicant added as a volunteer successfully!");
           } else {
@@ -157,7 +146,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       alert("Error updating status. Please try again later.");
     }
   };
-
   return (
     <div className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
@@ -269,5 +257,4 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
     </div>
   );
 };
-
 export default ApplicantsList;

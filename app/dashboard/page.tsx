@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Header from "./header";
+import VolunteersListPage from "../components/volunteersList";
+import ApplicantsList from "../components/applicantsList";
 import ApplicantsListPage from "@/pages/applicantsList/page";
-import VolunteersListPage from "@/pages/volunteersList/page";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");

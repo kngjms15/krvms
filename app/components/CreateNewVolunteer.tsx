@@ -270,6 +270,9 @@ const CreateNewVolunteer: React.FC = () => {
           <div className="flex flex-grow">
             <hr className="flex-grow h-px my-8 bg-gray-300 border-0 dark:bg-gray-700 " />
           </div>
+          <div className="block text-center my-5 ">
+              <h1 className=" font-medium ">Emergency Contact</h1>
+            </div>
           <div className="flex-grow grid grid-cols-2 gap-2">
             <div className="flex flex-col">
               <label htmlFor="fullName">Full Name:</label>

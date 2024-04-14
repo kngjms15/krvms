@@ -14,11 +14,11 @@ model VolunteerApplicant {
   firstName                    String   @db.VarChar(50)
   lastName                     String   @db.VarChar(50)
   dob                          DateTime
-  address                      String   @db.VarChar(50)
+  address                      String   @db.VarChar(60)
   city                         String   @db.VarChar(50)
   province                     String   @db.VarChar(2)
   postalCode                   String   @db.VarChar(6)
-  chapter                      String   @db.VarChar(20)
+  chapter                      String   @db.VarChar(50)
   primaryPhone                 String   @db.VarChar(10)
   secondaryPhone               String?
   email                        String   @db.VarChar(50)
@@ -41,7 +41,7 @@ model Volunteer {
   lastName                     String   @db.VarChar(50)
   role                         String   @db.VarChar(20)
   dob                          DateTime
-  address                      String   @db.VarChar(50)
+  address                      String   @db.VarChar(60)
   city                         String   @db.VarChar(50)
   province                     String   @db.VarChar(2)
   postalCode                   String   @db.VarChar(6)

@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Volunteer" ALTER COLUMN "address" SET DATA TYPE VARCHAR(60);
+
+-- AlterTable
+ALTER TABLE "VolunteerApplicant" ALTER COLUMN "address" SET DATA TYPE VARCHAR(60),
+ALTER COLUMN "chapter" SET DATA TYPE VARCHAR(50);
