@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import Header from "./header";
 import VolunteersListPage from "../components/volunteersList";
-import ApplicantsList from "../components/applicantsList";
-import ApplicantsListPage from "@/pages/applicantsList/page";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
+import ApplicantsListPage from "../components/applicantsList";
 
 
 
