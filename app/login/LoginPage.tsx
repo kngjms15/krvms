@@ -1,18 +1,24 @@
-import React from "react";
+'use client'
+
+import React, { FormEvent } from "react";
 
 const LoginPage = () => {
+
+
+  function handleLogin(event: FormEvent<HTMLFormElement>): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between ">
-          <h2 className="text-xl text-left text-gray-900">
-            Portal Login
-          </h2>
+          <h2 className="text-xl text-left text-gray-900">Portal Login</h2>
           <h2 className="text-2xl text-right text-gray-900">
             KidSport &#8482; Canada
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" action="#" method="POST" onSubmit={handleLogin}>
           <input type="hidden" name="remember" value="true" />
           <div className="space-y-4">
             <div>
