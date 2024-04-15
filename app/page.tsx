@@ -1,23 +1,15 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import LoginPage from "@/pages/login.js";
+import SignIn from "@/pages/register.js";
 
-export default function Page() {
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/signIn');
-    },
-  });
-
+function Page() {
   return (
     <div>
-      <div>{session?.data?.user?.email}</div>
-      <button onClick={() => signOut()}>Sign out</button>
-      
+      <LoginPage/>
+      <SignIn/>
     </div>
   );
 }
 
-Page.requireAuth = true
+export default Page;
