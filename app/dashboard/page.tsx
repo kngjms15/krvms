@@ -1,3 +1,5 @@
+// Dashboard page
+
 'use client'
 
 import React, { useState } from 'react';
@@ -5,6 +7,7 @@ import './dashboard.css';
 import App from 'next/app';
 import ApplicantsList from '@/pages/applicantsList/applicantsList';
 import ApplicantsListPage from '@/pages/applicantsList/page';
+
 
 
 

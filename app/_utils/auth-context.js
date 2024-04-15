@@ -1,33 +1,38 @@
+// auth-context.js
+
 "use client";
 
-import { useContext, createContext, useState, useEffect } from "react";
-import { 
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    EmailAuthProvider,
-} from "firebase/auth";
-import { auth } from "./firebase";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth } from './firebase'; // Ensure this points to your Firebase config file
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 
 const AuthContext = createContext();
 
-export const AuthContextProvider = ({ children }) => {
+export const useAuth = () => {
+    const auth = useContext(AuthContext);
+    if (!auth) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return auth;
+};
+
+export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    const emailSignIn = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    };
-
-    const firebaseSignOut = () => {
-        return signOut(auth);
-    };
-
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            console.log(user); 
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(null);
+            }
         });
         return () => unsubscribe();
-    }, [user]);
+    }, []);
+
+    const emailSignIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+    const firebaseSignOut = () => signOut(auth);
 
     return (
         <AuthContext.Provider value={{ user, emailSignIn, firebaseSignOut }}>
@@ -36,6 +41,3 @@ export const AuthContextProvider = ({ children }) => {
     );
 };
 
-export const useUserAuth = () => {
-    return useContext(AuthContext);
-};
