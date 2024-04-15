@@ -116,8 +116,6 @@ function VolunteerApplicationForm() {
     } catch (error) {
       console.error("Failed to submit form:", error);
     }
-    console.log(data);
-    // send data to the server
     reset();
   };
 

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
-import ConfirmationModal from "@/app/components/ConfirmationModal";
+import { MdDelete, MdExpandLess } from "react-icons/md";
+import { AiOutlineEdit } from "react-icons/ai";
+import { FcExpand } from "react-icons/fc";
+import ConfirmationModal from "./confirmationModal";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
@@ -83,20 +86,20 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
               onClick={toggleDetails}
               aria-label="Toggle Details"
             >
-              {showDetails ? "Hide Details" : "Show Details"}
+              {showDetails ? <MdExpandLess size={20} /> : <FcExpand size={20}/>}
             </button>
             <button
               className="text-green-400 m-2"
               aria-label="Edit Volunteer"
             >
-              Edit
+              <AiOutlineEdit size={20} />
             </button>
             <button
               className="text-red-500 m-2"
               onClick={toggleModal}
               aria-label="Delete Volunteer"
             >
-              Delete
+              <MdDelete size={20}/>
             </button>
           </>
         </div>

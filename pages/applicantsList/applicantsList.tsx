@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
-import ConfirmationModal from "@/app/components/ConfirmationModal";
 import { set } from "zod";
+import ConfirmationModal from "@/app/components/confirmationModal";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -24,7 +24,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState(applicant.interviewStatus);
+  const [status, setStatus] = useState(applicant?.interviewStatus || "");
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
 
 
@@ -39,7 +39,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   };
   const handleDelete = async () => {
     toggleModal();
-    if (applicant) {
+    if (applicant && applicant.applicantId) {
       try {
         const response = await fetch(
           `/api/applicants/${applicant.applicantId}`,

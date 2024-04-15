@@ -5,15 +5,15 @@ import Header from "./header";
 import VolunteersListPage from "../components/volunteersList";
 import ApplicantsList from "../components/applicantsList";
 import ApplicantsListPage from "@/pages/applicantsList/page";
-import CreateNewVolunteer from "../components/createNewVolunteer";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import CreateNewVolunteer from "../components/CreateNewVolunteer";
 
 
 
 const Dashboard = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [activeTab, setActiveTab] = useState("volunteers");
   const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
     useState(false);
@@ -26,15 +26,15 @@ const Dashboard = () => {
     setShowCreateVolunteerModal((prev) => !prev);
   };
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const session = await getSession();
-      if (!session) {
-        router.push("/login");
-      }
-    };
-    checkAuth();
-  }, []);
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const session = await getSession();
+  //     if (!session) {
+  //       router.push("/login");
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -93,21 +93,21 @@ const Dashboard = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps =async (context) => {
-  const session = await getSession(context);
+// export const getServerSideProps: GetServerSideProps =async (context) => {
+//   const session = await getSession(context);
   
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {},
-  };
-};
+//   return {
+//     props: {},
+//   };
+// };
 
 export default Dashboard;

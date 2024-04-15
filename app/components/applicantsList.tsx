@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
-import ConfirmationModal from "@/app/components/ConfirmationModal";
+import ConfirmationModal from "@/app/components/confirmationModal";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -53,7 +53,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({ applicant, onDelete }) 
           onCancel={toggleModal}
         />
       )}
-      {applicant && (
+      {applicant && applicant.lastName && applicant.chapter && applicant.firstName && applicant.lastName &&(
         <>
           <div className=" flex-col ">
             <h3 className="text-xl font-bold">
