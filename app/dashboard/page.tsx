@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./header";
-import ApplicantsListPage from "@/pages/applicantsList/page";
-import VolunteersListPage from "@/pages/volunteersList/page";
+import VolunteersListPage from "../components/volunteersList";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
+import ApplicantsListPage from "../components/applicantsList";
+
+
 
 const Dashboard = () => {
+  // const router = useRouter();
   const [activeTab, setActiveTab] = useState("volunteers");
   const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
     useState(false);
@@ -18,6 +24,16 @@ const Dashboard = () => {
   const toggleCreateVolunteerModal = () => {
     setShowCreateVolunteerModal((prev) => !prev);
   };
+
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const session = await getSession();
+  //     if (!session) {
+  //       router.push("/login");
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -49,7 +65,7 @@ const Dashboard = () => {
                 <h1>Volunteers</h1>
                 <button
             onClick={toggleCreateVolunteerModal}
-            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 mt-4"
+            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
           >
             Add New Volunteer
           </button>
@@ -75,5 +91,22 @@ const Dashboard = () => {
     </div>
   );
 };
+
+// export const getServerSideProps: GetServerSideProps =async (context) => {
+//   const session = await getSession(context);
+  
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   return {
+//     props: {},
+//   };
+// };
 
 export default Dashboard;

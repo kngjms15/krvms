@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
-import ConfirmationModal from "@/app/components/ConfirmationModal";
-//import { set } from "zod";
+import ConfirmationModal from "@/app/components/confirmationModal";
+import FilterComponent from "./applicantsFilter";
+import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
   onDelete?: (id: number) => void;
 }
-
 const prisma = new PrismaClient();
-
 const calculateAge = (dob: Date) => {
   const today = new Date();
   const birthDate = new Date(dob);
@@ -20,31 +19,28 @@ const calculateAge = (dob: Date) => {
   }
   return age;
 };
-
 const ApplicantsList: React.FC<ApplicantsListProps> = ({
   applicant,
   onDelete,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState(applicant.interviewStatus);
+  const [status, setStatus] = useState(applicant?.interviewStatus || "");
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
-  
+
 
   useEffect(() => {
     setStatus(applicant.interviewStatus);
   }, [applicant]);
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
-
   const handleDelete = async () => {
     toggleModal();
-    if (applicant) {
+    if (applicant && applicant.applicantId) {
       try {
         const response = await fetch(
           `/api/applicants/${applicant.applicantId}`,
@@ -71,7 +67,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       }
     }
   };
-
   const handleStatusChange = async (newStatus: string, applicantId: string) => {
     try {
       const response = await fetch(`/api/applicants/${applicantId}`, {
@@ -83,7 +78,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
           interviewStatus: newStatus,
         }),
       });
-
       if (response.ok) {
         if (newStatus === "Accepted") {
           // Fetch the updated applicant data
@@ -91,7 +85,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             `/api/applicants/${applicantId}`
           );
           const updatedApplicant = await updatedApplicantResponse.json();
-
           // Create a new volunteer based on the accepted applicant
           const newVolunteerResponse = await fetch(`/api/volunteers`, {
             method: "POST",
@@ -126,16 +119,13 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
               status: "Active", // Set the status to Active for a new volunteer
             }),
           });
-
           // Delete the applicant from the list
           await fetch(`/api/applicants/${applicantId}`, {
             method: "DELETE",
           });
-
           // Update the status in the UI
           setStatus(newStatus);
           alert("Status updated successfully!");
-
           if (newVolunteerResponse.ok) {
             alert("Applicant added as a volunteer successfully!");
           } else {
@@ -157,7 +147,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       alert("Error updating status. Please try again later.");
     }
   };
-
   return (
     <div className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3">
       <div className=" flex justify-between flex-grow ">
@@ -200,14 +189,14 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             onClick={toggleDetails}
             aria-label="Toggle Details"
           >
-            {showDetails ? "Hide Details" : "Show Details"}
+            {showDetails ? <MdExpandLess size={30} /> : <MdExpandMore size={30} /> }
           </button>
           <button
             className="text-red-500 m-2"
             onClick={toggleModal}
             aria-label="Toggle Details"
           >
-            Delete
+            <MdDelete size={20}/>
           </button>
         </div>
       </div>
@@ -270,4 +259,75 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   );
 };
 
-export default ApplicantsList;
+const ApplicantsListPage: React.FC = () => {
+  const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
+  const [filteredApplicants, setFilteredApplicants] = useState<VolunteerApplicant[]>([]);
+
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const response = await fetch("/api/applicants");
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setApplicants(data);
+        setFilteredApplicants(data); // Set filtered applicants initially
+      } catch (error) {
+        console.error("Failed to fetch applicants:", error);
+      }
+    };
+
+    fetchApplicants();
+  }, []);
+
+  const handleSort = (sortBy: string) => {
+    let sortedApplicants = [...applicants];
+
+    if (sortBy === "name") {
+      sortedApplicants.sort((a, b) => {
+        return a.firstName.localeCompare(b.firstName) || a.lastName.localeCompare(b.lastName);
+      });
+    } else if (sortBy === "date") {
+      sortedApplicants.sort((a, b) => {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      });
+    } else if (sortBy === "chapter"){
+      sortedApplicants.sort((a, b) => {
+        return a.chapter.localeCompare(b.chapter);
+      });
+    }
+
+    setFilteredApplicants(sortedApplicants);
+  };
+
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const response = await fetch("/api/applicants");
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setApplicants(data);
+      } catch (error) {
+        console.error("Failed to fetch applicants:", error);
+      }
+    };
+
+    fetchApplicants();
+  }, []);
+
+  return (
+    <div className="flex-grow m-auto">
+      <FilterComponent onSort={handleSort} />
+      {filteredApplicants.map((applicant) => (
+        applicant && applicant.firstName && (
+        <ApplicantsList key={applicant.applicantId} applicant={applicant} />
+        )
+      ))}
+    </div>
+  );
+};
+
+export default ApplicantsListPage;

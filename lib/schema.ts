@@ -4,7 +4,7 @@ export const volunteerApplicationSchema = z.object({
   firstName: z
     .string()
     .min(1, "First name is required")
-    .max(20, "Maximum 20 Characters")
+    .max(50, "Maximum 50 Characters")
     .regex(
       /^[a-zA-Z\s-.]*$/,
       "Invalid name, can only contain letters, spaces, hyphens, or periods."
@@ -12,7 +12,7 @@ export const volunteerApplicationSchema = z.object({
   lastName: z
     .string()
     .min(1, "Last name is required")
-    .max(20, "Maximum 20 Characters")
+    .max(50, "Maximum 50 Characters")
     .regex(
       /^[a-zA-Z\s-.]*$/,
       "Invalid name, can only contain letters, spaces, hyphens, or periods."
@@ -20,19 +20,30 @@ export const volunteerApplicationSchema = z.object({
   dob: z
     .string()
     .min(1, "Date of birth is required")
-    .regex(/^[0-9]{4}[-][0-1][0-9][-][0-3][0-9]$/, "Invalid date format. Example: 2000-01-01")
+    .regex(
+      /^[0-9]{4}[-][0-1][0-9][-][0-3][0-9]$/,
+      "Invalid date format. Example: 2000-01-01"
+    )
     .refine((dob) => {
       const currentDate = new Date();
-      const minDate = new Date(currentDate.getFullYear() - 14, currentDate.getMonth(), currentDate.getDate());
-      const maxDate = new Date(currentDate.getFullYear() - 100, currentDate.getMonth(), currentDate.getDate());
+      const minDate = new Date(
+        currentDate.getFullYear() - 14,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      const maxDate = new Date(
+        currentDate.getFullYear() - 100,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
       const dobDate = new Date(dob);
       return dobDate <= minDate && dobDate >= maxDate;
     }, "Age must be less than 100 but more than 14 years of age."),
-  
+
   address: z
     .string()
     .min(1, "Address is required")
-    .max(40, "Maximum 20 Characters"),
+    .max(60, "Maximum 60 Characters"),
   city: z
     .string()
     .min(1, "City is required")
@@ -48,7 +59,10 @@ export const volunteerApplicationSchema = z.object({
       /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
       "Invalid postal code. example: A1B 2C3"
     ),
-  chapter: z.string().min(1, "Chapter is required"),
+  chapter: z
+    .string()
+    .min(1, "Chapter is required")
+    .max(50, "Maximum 50 Characters"),
   primaryPhone: z
     .string()
     .regex(
@@ -67,7 +81,7 @@ export const volunteerApplicationSchema = z.object({
   employer: z
     .string()
     .min(1, "Employer is required")
-    .max(20, "Maximum 20 Characters"),
+    .max(50, "Maximum 50 Characters"),
   conviction: z.string(),
   bondable: z.string(),
   medicalCondition: z.string(),
@@ -78,7 +92,7 @@ export const volunteerApplicationSchema = z.object({
   emergencyContactName: z
     .string()
     .min(1, "Emergency contact name is required")
-    .max(40, "Maximum 20 Characters")
+    .max(50, "Maximum 0 Characters")
     .regex(
       /^[a-zA-Z\s-.]*$/,
       "Invalid name, can only contain letters, spaces, hyphens, or periods."
@@ -87,7 +101,7 @@ export const volunteerApplicationSchema = z.object({
   emergencyContactRelationship: z
     .string()
     .min(1, "Emergency contact relationship is required")
-    .max(20, "Maximum 20 Characters")
+    .max(50, "Maximum 50 Characters")
     .regex(
       /^[a-zA-Z\s]*$/,
       "Invalid name, cannot contain numbers or special characters."
@@ -103,5 +117,6 @@ export const volunteerApplicationSchema = z.object({
     .max(500, "Maximum 500 Characters")
     .optional(),
   agreedToTerms: z
-    .boolean().refine((agreed) => agreed, "You must agree to the terms")
+    .boolean()
+    .refine((agreed) => agreed, "You must agree to the terms"),
 });

@@ -21,7 +21,7 @@ const Page = () => {
             </Link>
           </div>
           <div className="m-4">
-            <Link href="/Login">
+            <Link href="/login">
               <button className="bg-[#FFF200] hover:opacity-50 text-black font-medium py-2 px-4 rounded">
                 Login
               </button>

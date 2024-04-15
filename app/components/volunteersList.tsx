@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
-import ConfirmationModal from "@/app/components/ConfirmationModal";
+import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
+import { AiOutlineEdit } from "react-icons/ai";
+import ConfirmationModal from "./confirmationModal";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
-  onDelete?: (id: number) => void;
 }
 
 const VolunteersList: React.FC<VolunteersListProps> = ({
   volunteer,
-  onDelete,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(volunteer.status);
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string>
-  >({});
-  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [reloadComponent, setReloadComponent] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,21 +34,12 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
     toggleModal();
     if (volunteer) {
       try {
-        const response = await fetch(
-          `/api/volunteers/${volunteer.volunteerId}`,
-          {
-            method: "DELETE",
-          }
-        );
+        const response = await fetch(`/api/volunteers/${volunteer.volunteerId}`, {
+          method: "DELETE",
+        });
 
         if (response.ok) {
-          onDelete?.(parseInt(volunteer.volunteerId, 10));
           // Remove deleted volunteer from the state
-          setVolunteers((prevVolunteers) =>
-            prevVolunteers.filter(
-              (v) => v.volunteerId !== volunteer.volunteerId
-            )
-          );
           alert("Volunteer deleted successfully!");
           console.log("Reloading component...");
           setReloadComponent((prev) => !prev);
@@ -67,8 +54,6 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
       }
     }
   };
-
-  console.log("Rendering VolunteersList component...");
 
   return (
     <div
@@ -100,20 +85,20 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
               onClick={toggleDetails}
               aria-label="Toggle Details"
             >
-              {showDetails ? "Hide Details" : "Show Details"}
+              {showDetails ? <MdExpandLess size={30} /> : <MdExpandMore size={30} />}
             </button>
             <button
               className="text-green-400 m-2"
               aria-label="Edit Volunteer"
             >
-              Edit
+              <AiOutlineEdit size={20} />
             </button>
             <button
               className="text-red-500 m-2"
               onClick={toggleModal}
               aria-label="Delete Volunteer"
             >
-              Delete
+              <MdDelete size={20}/>
             </button>
           </>
         </div>
@@ -185,4 +170,35 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   );
 };
 
-export default VolunteersList;
+const VolunteersListPage: React.FC = () => {
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+
+  useEffect(() => {
+    const fetchVolunteers = async () => {
+      try {
+        const response = await fetch("/api/volunteers");
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        setVolunteers(data);
+      } catch (error) {
+        console.error("Failed to fetch volunteers:", error);
+      }
+    };
+
+    fetchVolunteers();
+  }, []);
+
+  return (
+    <div className="flex-grow m-auto">
+      {volunteers.map((volunteer) => (
+        volunteer && volunteer.firstName && (
+        <VolunteersList key={volunteer.volunteerId} volunteer={volunteer} />
+        )
+      ))}
+    </div>
+  );
+};
+
+export default VolunteersListPage;
