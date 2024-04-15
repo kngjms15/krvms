@@ -28,7 +28,6 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   const [status, setStatus] = useState(applicant?.interviewStatus || "");
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
 
-
   useEffect(() => {
     setStatus(applicant.interviewStatus);
   }, [applicant]);
@@ -189,14 +188,18 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             onClick={toggleDetails}
             aria-label="Toggle Details"
           >
-            {showDetails ? <MdExpandLess size={30} /> : <MdExpandMore size={30} /> }
+            {showDetails ? (
+              <MdExpandLess size={30} />
+            ) : (
+              <MdExpandMore size={30} />
+            )}
           </button>
           <button
             className="text-red-500 m-2"
             onClick={toggleModal}
             aria-label="Toggle Details"
           >
-            <MdDelete size={20}/>
+            <MdDelete size={20} />
           </button>
         </div>
       </div>
@@ -261,7 +264,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
 const ApplicantsListPage: React.FC = () => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
-  const [filteredApplicants, setFilteredApplicants] = useState<VolunteerApplicant[]>([]);
+  const [filteredApplicants, setFilteredApplicants] = useState<
+    VolunteerApplicant[]
+  >([]);
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -286,13 +291,18 @@ const ApplicantsListPage: React.FC = () => {
 
     if (sortBy === "name") {
       sortedApplicants.sort((a, b) => {
-        return a.firstName.localeCompare(b.firstName) || a.lastName.localeCompare(b.lastName);
+        return (
+          a.firstName.localeCompare(b.firstName) ||
+          a.lastName.localeCompare(b.lastName)
+        );
       });
     } else if (sortBy === "date") {
       sortedApplicants.sort((a, b) => {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
       });
-    } else if (sortBy === "chapter"){
+    } else if (sortBy === "chapter") {
       sortedApplicants.sort((a, b) => {
         return a.chapter.localeCompare(b.chapter);
       });
@@ -320,12 +330,21 @@ const ApplicantsListPage: React.FC = () => {
 
   return (
     <div className="flex-grow m-auto">
-      <FilterComponent onSort={handleSort} />
-      {filteredApplicants.map((applicant) => (
-        applicant && applicant.firstName && (
-        <ApplicantsList key={applicant.applicantId} applicant={applicant} />
-        )
-      ))}
+      <div className="sticky top-0 z-50">
+        <FilterComponent onSort={handleSort} />
+      </div>
+      <div>
+        {filteredApplicants.map(
+          (applicant) =>
+            applicant &&
+            applicant.firstName && (
+              <ApplicantsList
+                key={applicant.applicantId}
+                applicant={applicant}
+              />
+            )
+        )}
+      </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Volunteer } from "@prisma/client";
 import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import ConfirmationModal from "./confirmationModal";
+import EditVolunteerForm from "./EditVolunteerForm";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
@@ -13,14 +14,12 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState(volunteer.status);
   const [reloadComponent, setReloadComponent] = useState<boolean>(false);
+  const [editVolunteer, setEditVolunteer] = useState<Volunteer | null>(null);
 
-  useEffect(() => {
-    if (!reloadComponent) {
-      setStatus(volunteer.status);
-    }
-  }, [volunteer, reloadComponent]);
+  const handleEdit = (volunteer: Volunteer) => {
+    setEditVolunteer(volunteer);
+  };
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -61,6 +60,9 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
       className="flex-grow m-auto my-2 bg-[#F2F2F2] rounded-lg p-3"
     >
       <div className="flex justify-between flex-grow">
+        {editVolunteer && (
+          <EditVolunteerForm volunteer={editVolunteer} onClose={() => setEditVolunteer(null)}/>
+        )}
         {showModal && (
           <ConfirmationModal
             message="Are you sure you want to delete this volunteer?"
@@ -76,7 +78,6 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             {volunteer.chapter && <span>Chapter: {volunteer.chapter}</span>}
           </h4>
           <h4 className="text-md my-2">Status: {volunteer.status}</h4>
-          <h4 className="text-md">VolunteerID: {volunteer.volunteerId}</h4>
         </div>
         <div className="flex justify-end">
           <>
@@ -90,6 +91,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             <button
               className="text-green-400 m-2"
               aria-label="Edit Volunteer"
+              onClick={() => handleEdit(volunteer)}
             >
               <AiOutlineEdit size={20} />
             </button>

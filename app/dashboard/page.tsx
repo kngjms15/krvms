@@ -8,8 +8,8 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
 import ApplicantsListPage from "../components/applicantsList";
-
-
+import FilterComponent from "../components/applicantsFilter";
+import { VolunteerApplicant } from "@prisma/client";
 
 const Dashboard = () => {
   // const router = useRouter();
@@ -17,9 +17,12 @@ const Dashboard = () => {
   const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
     useState(false);
 
+  
+
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
+
 
   const toggleCreateVolunteerModal = () => {
     setShowCreateVolunteerModal((prev) => !prev);
@@ -58,24 +61,30 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="content flex-1 p-4 overflow-y-auto bg-[#D9D9D9]">
+        <div className="content flex-1 px-2 overflow-y-auto bg-[#D9D9D9]">
           {activeTab === "volunteers" && (
             <div className="cards">
-              <div className="flex flex-grow justify-between">
-                <h1>Volunteers</h1>
-                <button
-            onClick={toggleCreateVolunteerModal}
-            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
-          >
-            Add New Volunteer
-          </button>
+              <div className="sticky top-0 z-50 bg-[#D9D9D9]">
+                <div className="flex justify-between py-4">
+                  <h1>Volunteers</h1>
+                  <button
+                    onClick={toggleCreateVolunteerModal}
+                    className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
+                  >
+                    Add New Volunteer
+                  </button>
+                </div>
               </div>
               <VolunteersListPage />
             </div>
           )}
           {activeTab === "applicants" && (
             <div className="cards">
-              <h1>Applicants</h1>
+              <div className="sticky top-0 z-50 bg-[#D9D9D9]">
+                <div className="flex justify-between py-4">
+                  <h1>Applicants</h1>
+                </div>
+              </div>
               <ApplicantsListPage />
             </div>
           )}
@@ -94,7 +103,7 @@ const Dashboard = () => {
 
 // export const getServerSideProps: GetServerSideProps =async (context) => {
 //   const session = await getSession(context);
-  
+
 //   if (!session) {
 //     return {
 //       redirect: {

@@ -56,7 +56,7 @@ export const volunteerApplicationSchema = z.object({
   postalCode: z
     .string()
     .regex(
-      /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
+      /^[A-Za-z]\d[A-Za-z]([- ]?\d[A-Za-z]\d)?$/,
       "Invalid postal code. example: A1B 2C3"
     ),
   chapter: z
