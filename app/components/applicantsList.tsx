@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
 import FilterComponent from "./applicantsFilter";
@@ -56,6 +56,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             )
           );
           alert("Applicant deleted successfully!");
+            window.location.href = "/dashboard?activeTab=applicants";
         } else {
           console.error("Failed to delete applicant:", response.status);
           alert("Failed to delete applicant. Please try again.");
@@ -166,7 +167,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                 {applicant.chapter && <span>Chapter: {applicant.chapter}</span>}
               </h4>
               <h4 className="text-md my-2">
-                Status:
+                <strong>Status: </strong>
                 <select
                   className="border border-gray-300 rounded p-1 focus:outline-none focus:ring-2 focus:ring-[#6CC24A] focus:border-transparent"
                   value={status}
@@ -207,53 +208,75 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
       <div className="grid grid-cols-2 gap-1">
         {applicant && applicant.createdAt && (
           <p className="text-gray-700">
-            Application Date: {new Date(applicant.createdAt).toDateString()}
+            <strong>Application Date:</strong>{" "}
+            {new Date(applicant.createdAt).toDateString()}
           </p>
         )}
         {showDetails && (
           <>
-            <p className="text-gray-700 mt-2">Address: {applicant.address}</p>
-            <p className="text-gray-700 mt-2">Email: {applicant.email}</p>
             <p className="text-gray-700 mt-2">
-              Phone: {applicant.primaryPhone}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Secondary Phone: {applicant.secondaryPhone}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Emergency Contact Name: {applicant.emergencyContactName}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Emergency Contact Phone: {applicant.emergencyContactPhone}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Emergency Contact Relationship:{" "}
-              {applicant.emergencyContactRelationship}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Date of Birth: {new Date(applicant.dob).toDateString()}
+              <strong>Date of Birth: </strong>{" "}
+              {new Date(applicant.dob).toDateString()}
               <span>
-                {" "}
                 (<strong>{calculateAge(applicant.dob)}</strong>, years old)
               </span>
             </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Address: </strong> {applicant.address}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>City:</strong> {applicant.city}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Province:</strong> {applicant.province}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Postal Code:</strong> {applicant.postalCode}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Email:</strong> {applicant.email}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Phone:</strong> {applicant.primaryPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Secondary Phone:</strong> {applicant.secondaryPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Name: </strong>
+              {applicant.emergencyContactName}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Phone: </strong>
+              {applicant.emergencyContactPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Relationship: </strong>
+              {applicant.emergencyContactRelationship}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Medical Condition?</strong>{" "}
+              {applicant.medicalCondition ? "Yes" : "No"}
+            </p>
             <p className="text-gray-700 mt-2 text-wrap ">
-              Medical condition details: {applicant.medicalConditionDetails}
+              <strong>Medical condition details: </strong>
+              {applicant.medicalConditionDetails}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Convict?</strong> {applicant.conviction ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Bondable?</strong> {applicant.bondable ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Employer:</strong> {applicant.employer}
             </p>
             <p className="text-gray-700 mt-2 text-wrap">
-              VolunteerExperience(s): {applicant.volunteerExperienceDetails}
+              <strong>VolunteerExperience(s):</strong>{" "}
+              {applicant.volunteerExperienceDetails}
             </p>
             <p className="text-gray-700 mt-2">
-              Convict? {applicant.conviction ? "Yes" : "No"}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Bondable? {applicant.bondable ? "Yes" : "No"}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Medical Condition? {applicant.medicalCondition ? "Yes" : "No"}
-            </p>
-            <p className="text-gray-700 mt-2">
-              Applicant Status: {applicant.interviewStatus}
+              <strong>Applicant Status:</strong> {applicant.interviewStatus}
             </p>
           </>
         )}
@@ -267,9 +290,14 @@ interface ApplicantsListPageProps {
   sortOption: string;
 }
 
-const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({ searchQuery, sortOption }) => {
+const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({
+  searchQuery,
+  sortOption,
+}) => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
-  const [sortedApplicants, setSortedApplicants] = useState<VolunteerApplicant[]>([]);
+  const [sortedApplicants, setSortedApplicants] = useState<
+    VolunteerApplicant[]
+  >([]);
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -291,21 +319,13 @@ const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({ searchQuery, so
   useEffect(() => {
     let sorted = [...applicants];
     if (sortOption === "name") {
-      sorted = sorted.sort((a, b) =>
-        a.firstName.localeCompare(b.firstName)
-      );
+      sorted = sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
     } else if (sortOption === "chapter") {
-      sorted = sorted.sort((a, b) =>
-        a.chapter.localeCompare(b.chapter)
-      );
+      sorted = sorted.sort((a, b) => a.chapter.localeCompare(b.chapter));
     } else if (sortOption === "province") {
-      sorted = sorted.sort((a, b) =>
-        a.province.localeCompare(b.province)
-      );
+      sorted = sorted.sort((a, b) => a.province.localeCompare(b.province));
     } else if (sortOption === "city") {
-      sorted = sorted.sort((a, b) =>
-        a.city.localeCompare(b.city)
-      );
+      sorted = sorted.sort((a, b) => a.city.localeCompare(b.city));
     }
 
     setSortedApplicants(sorted);
@@ -314,18 +334,32 @@ const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({ searchQuery, so
   return (
     <div className="flex-grow m-auto">
       {sortedApplicants
-        .filter((applicant) =>
-          applicant.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          applicant.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          applicant.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          applicant.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          applicant.primaryPhone.toLowerCase().includes(searchQuery.toLowerCase())
+        .filter(
+          (applicant) =>
+            applicant.firstName
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            applicant.lastName
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            applicant.chapter
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            applicant.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            applicant.primaryPhone
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
         )
-        .map((applicant) => (
-          applicant && applicant.firstName && (
-            <ApplicantsList key={applicant.applicantId} applicant={applicant} />
-          )
-        ))}
+        .map(
+          (applicant) =>
+            applicant &&
+            applicant.firstName && (
+              <ApplicantsList
+                key={applicant.applicantId}
+                applicant={applicant}
+              />
+            )
+        )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
 import Header from "./header";
@@ -11,11 +11,10 @@ import ApplicantsListPage from "../components/applicantsList";
 import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
 
-
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");
-  const [showCreateVolunteerModal, setShowCreateVolunteerModal] = useState(false);
+  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
+    useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("");
 
@@ -50,10 +49,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="content flex-1 px-2 overflow-y-auto bg-[#D9D9D9]">
+        <div className="content flex-1 overflow-y-auto px-2 bg-[#D9D9D9]">
           {activeTab === "volunteers" && (
             <div className="cards">
-              <div className="sticky top-0 z-50 bg-[#D9D9D9]">
+              <div className=" bg-[#D9D9D9]">
                 <div className="flex justify-between py-4">
                   <h1>Volunteers</h1>
                   <button
@@ -70,12 +69,16 @@ const Dashboard = () => {
                   setSortOption={setSortOption}
                 />
               </div>
-              <VolunteersListPage searchQuery={searchQuery} sortOption={sortOption} />
+
+              <VolunteersListPage
+                searchQuery={searchQuery}
+                sortOption={sortOption}
+              />
             </div>
           )}
           {activeTab === "applicants" && (
             <div className="cards">
-              <div className="sticky top-0 z-50 bg-[#D9D9D9]">
+              <div className="bg-[#D9D9D9]">
                 <div className="flex justify-between py-4">
                   <h1>Applicants</h1>
                 </div>
@@ -86,7 +89,10 @@ const Dashboard = () => {
                   setSortOption={setSortOption}
                 />
               </div>
-              <ApplicantsListPage searchQuery={searchQuery} sortOption={sortOption} />
+              <ApplicantsListPage
+                searchQuery={searchQuery}
+                sortOption={sortOption}
+              />
             </div>
           )}
         </div>

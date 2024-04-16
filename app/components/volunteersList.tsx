@@ -40,9 +40,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
         if (response.ok) {
           // Remove deleted volunteer from the state
           alert("Volunteer deleted successfully!");
-          console.log("Reloading component...");
-          setReloadComponent((prev) => !prev);
-          console.log("Reloaded component!");
+          window.location.reload();
         } else {
           console.error("Failed to delete volunteer:", response.status);
           alert("Failed to delete volunteer. Please try again.");
@@ -52,6 +50,17 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
         alert("Error deleting volunteer. Please try again later.");
       }
     }
+  };
+
+  const calculateAge = (dob: Date) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   };
 
   return (
@@ -109,62 +118,64 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
       <div className="grid grid-cols-2 gap-1">
         {volunteer && volunteer.createdAt && (
           <p className="text-gray-700 mt-2">
-            Registration Date: {new Date(volunteer.createdAt).toDateString()}
+            <strong>Registration Date: </strong>{new Date(volunteer.createdAt).toDateString()}
           </p>
         )}
         {showDetails && (
           <>
-            <p className="text-gray-700 mt-2">Address: {volunteer.address}</p>
-            <p className="text-gray-700 mt-2">City: {volunteer.city}</p>
-            <p className="text-gray-700 mt-2">Province: {volunteer.province}</p>
             <p className="text-gray-700 mt-2">
-              Postal Code: {volunteer.postalCode}
+              <strong>Date of Birth: </strong>{" "}
+              {new Date(volunteer.dob).toDateString()}
+              <span>
+                (<strong>{calculateAge(volunteer.dob)}</strong>, years old)
+              </span>
             </p>
-            <p className="text-gray-700 mt-2">Email: {volunteer.email}</p>
+            <p className="text-gray-700 mt-2"><strong>Address: </strong>{volunteer.address}</p>
+            <p className="text-gray-700 mt-2"><strong>City: </strong>{volunteer.city}</p>
+            <p className="text-gray-700 mt-2"><strong>Province: </strong>{volunteer.province}</p>
             <p className="text-gray-700 mt-2">
-              Primary Phone: {volunteer.primaryPhone}
+              <strong>Postal Code: </strong>{volunteer.postalCode}
             </p>
-            {volunteer.secondaryPhone && (
-              <p className="text-gray-700 mt-2">
-                Secondary Phone: {volunteer.secondaryPhone}
-              </p>
-            )}
-            <p className="text-gray-700 mt-2">Employer: {volunteer.employer}</p>
+            <p className="text-gray-700 mt-2"><strong>Email: </strong>{volunteer.email}</p>
             <p className="text-gray-700 mt-2">
-              Convict? {volunteer.conviction ? "Yes" : "No"}
+              <strong>Primary Phone: </strong>{volunteer.primaryPhone}
             </p>
             <p className="text-gray-700 mt-2">
-              Bondable? {volunteer.bondable ? "Yes" : "No"}
+              <strong>Secondary Phone: </strong>{volunteer.secondaryPhone}
             </p>
             <p className="text-gray-700 mt-2">
-              Medical Condition? {volunteer.medicalCondition ? "Yes" : "No"}
-            </p>
-            {volunteer.medicalConditionDetails && (
-              <p className="text-gray-700 mt-2 text-wrap">
-                Medical Condition Details: {volunteer.medicalConditionDetails}
-              </p>
-            )}
-            <p className="text-gray-700 mt-2">
-              Emergency Contact Name: {volunteer.emergencyContactName}
+              <strong>Emergency Contact Name: </strong>{volunteer.emergencyContactName}
             </p>
             <p className="text-gray-700 mt-2">
-              Emergency Contact Relationship:{" "}
+              <strong>Emergency Contact Phone: </strong>{volunteer.emergencyContactPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Relationship: </strong>
               {volunteer.emergencyContactRelationship}
             </p>
             <p className="text-gray-700 mt-2">
-              Emergency Contact Phone: {volunteer.emergencyContactPhone}
+              <strong>Medical Condition? </strong>{volunteer.medicalCondition ? "Yes" : "No"}
             </p>
-            {volunteer.volunteerExperienceDetails && (
-              <p className="text-gray-700 mt-2 text-wrap">
-                Volunteer Experience Details:{" "}
-                {volunteer.volunteerExperienceDetails}
-              </p>
-            )}
             <p className="text-gray-700 mt-2">
-              Interview Status: {volunteer.interviewStatus}
+              <strong>Medical Condition Details: </strong>
+              {volunteer.medicalConditionDetails}
             </p>
-            <p className="text-gray-700 mt-2">Status: {volunteer.status}</p>
-            <p className="text-gray-700 mt-2">Role: {volunteer.role}</p>
+            <p className="text-gray-700 mt-2">
+              <strong>Convict? </strong>{volunteer.conviction ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Bondable? </strong>{volunteer.bondable ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2"><strong>Employer: </strong>{volunteer.employer}</p>
+            <p className="text-gray-700 mt-2 text-wrap">
+              <strong>VolunteerExperience(s):</strong>{" "}
+              {volunteer.volunteerExperienceDetails}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Interview Status: </strong>{volunteer.interviewStatus}
+            </p>
+            <p className="text-gray-700 mt-2"><strong>Status: </strong>{volunteer.status}</p>
+            <p className="text-gray-700 mt-2"><strong>Role: </strong>{volunteer.role}</p>
           </>
         )}
       </div>
@@ -215,7 +226,7 @@ const VolunteersListPage: React.FC<VolunteersListPageProps> = ({ searchQuery, so
   }, [volunteers, sortOption]);
 
   return (
-    <div className="flex-grow m-auto">
+    <div className="flex-grow m-auto ">
       {sortedVolunteers
         .filter((volunteer) =>
           volunteer.firstName .toLowerCase().includes(searchQuery.toLowerCase()) ||
