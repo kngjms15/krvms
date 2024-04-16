@@ -22,7 +22,7 @@ const SortAndSearchComponent: React.FC<SortAndSearchProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between pb-4">
       <div className="flex items-center">
         <label htmlFor="search" className="mr-2 font-semibold">
           Search:
@@ -48,6 +48,8 @@ const SortAndSearchComponent: React.FC<SortAndSearchProps> = ({
         >
           <option value="">-- Select --</option>
           <option value="name">Name</option>
+          <option value="city">City</option>
+          <option value="province">Province</option>
           <option value="chapter">Chapter</option>
 
         </select>

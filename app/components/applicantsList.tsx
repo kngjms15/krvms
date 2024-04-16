@@ -298,7 +298,15 @@ const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({ searchQuery, so
       sorted = sorted.sort((a, b) =>
         a.chapter.localeCompare(b.chapter)
       );
-    } 
+    } else if (sortOption === "province") {
+      sorted = sorted.sort((a, b) =>
+        a.province.localeCompare(b.province)
+      );
+    } else if (sortOption === "city") {
+      sorted = sorted.sort((a, b) =>
+        a.city.localeCompare(b.city)
+      );
+    }
 
     setSortedApplicants(sorted);
   }, [applicants, sortOption]);

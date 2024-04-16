@@ -205,7 +205,11 @@ const VolunteersListPage: React.FC<VolunteersListPageProps> = ({ searchQuery, so
       sorted = sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
     } else if (sortOption === "chapter") {
       sorted = sorted.sort((a, b) => a.chapter?.localeCompare(b.chapter || ""));
-    } 
+    } else if (sortOption === "city") {
+      sorted = sorted.sort((a, b) => a.city.localeCompare(b.city));
+    } else if (sortOption === "province") {
+      sorted = sorted.sort((a, b) => a.province.localeCompare(b.province));
+    }
 
     setSortedVolunteers(sorted);
   }, [volunteers, sortOption]);
