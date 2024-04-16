@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Filtering } from "./filtering";
 
 interface FilterModalProps {
@@ -22,12 +22,22 @@ const FilterModal: React.FC<FilterModalProps> = ({
     const [selectedFilterOrder, setSelectedFilterOrder] = useState(defaultOrder);
 
     const handleSelectFilter = (value:string) => {
-        setSelectedFilterOption(value);
+        setSelectedFilterOption((typeof value !== 'undefined' || typeof selectedFilterOption !== 'undefined') ? value : defaultFilter);
     }
 
-    const handleSelectOlder = (value:string) => {
-        setSelectedFilterOrder(value);
+    const handleSelectOrder = (value:string) => {
+        setSelectedFilterOrder((typeof value !== 'undefined' || typeof selectedFilterOrder !== 'undefined') ? value : defaultOrder);
     }
+
+    useEffect(()=>{
+      console.log(`SFOp:${selectedFilterOption} SFOr:${selectedFilterOrder}`)
+      if(typeof selectedFilterOption !== 'undefined'){
+        setSelectedFilterOption(defaultFilter);
+      }
+      if(typeof selectedFilterOrder !== 'undefined'){
+        setSelectedFilterOrder(defaultOrder);
+      }
+    },[])
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 z-50">
@@ -50,7 +60,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <div key={`B${index}`} className="border-l-2 border-gray-300 ml-4 pl-5">
                         <div className={`rounded-lg p-1 pr-4 ${selectedFilterOrder===option && 'bg-gray-600 text-white'}`}>
                               <input type="radio" value={option} id={`${selectedFilterOrder===option?`${filterName}SelectedB`:`${filterName}UnselectedB${index}`}`} 
-                              checked={selectedFilterOrder===option} onChange={()=>{handleSelectOlder(option)}}/>&nbsp;&nbsp;{option}
+                              checked={selectedFilterOrder===option} onChange={()=>{handleSelectOrder(option)}}/>&nbsp;&nbsp;{option}
                         </div>
                     </div>
                   </div>

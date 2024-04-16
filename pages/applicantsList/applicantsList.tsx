@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { VolunteerApplicant } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
 import AlertModal from "@/app/components/alertModal";
+import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -141,18 +142,22 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
         )}
         <div className="flex justify-end ">
           <button
-            className="m-2 bg-blue-500 rounded-lg text-white mt-10 mb-10 pr-1 pl-1 hover:bg-blue-400 text-center"
+            className="text-blue-500 m-2"
             onClick={toggleDetails}
             aria-label="Toggle Details"
           >
-            {showDetails ? "Hide Details" : "Show Details"}
+            {showDetails ? (
+              <MdExpandLess size={34} />
+            ) : (
+              <MdExpandMore size={36} />
+            )}
           </button>
           <button
-            className="m-2 bg-red-500 rounded-lg text-white mt-10 mb-10 pr-4 pl-4 hover:bg-red-400 text-center"
+            className="text-red-500 m-2"
             onClick={toggleModal}
             aria-label="Toggle Details"
           >
-            Delete
+            <MdDelete size={36} />
           </button>
         </div>
       </div>

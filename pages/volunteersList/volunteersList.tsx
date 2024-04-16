@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
 import ConfirmationModal from "@/app/components/confirmationModal";
 import AlertModal from "@/app/components/alertModal";
+import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
@@ -114,10 +115,10 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
                 {volunteer.firstName} {volunteer.lastName}
               </h3>
               <h4 className="text-md font-semibold">
-                {volunteer.chapter && <span>Chapter: {volunteer.chapter}</span>}
+                {volunteer.chapter && <span><strong>Chapter</strong>: {volunteer.chapter}</span>}
               </h4>
               <h4 className="text-md my-2">
-                Status:
+                <strong>Status</strong>:
                 <select
                   className="border border-gray-300 rounded p-1"
                   value={status}
@@ -130,7 +131,7 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
                 </select>
               </h4>
 
-              <h4 className="text-md">VolunteerID: {volunteer.volunteerId}</h4>
+              <h4 className="text-md"><strong>VolunteerID</strong>: {volunteer.volunteerId}</h4>
             </div>
           </>
         )}
@@ -140,45 +141,73 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
             onClick={toggleDetails}
             aria-label="Toggle Details"
           >
-            {showDetails ? "Hide Details" : "Show Details"}
+            {showDetails ? (
+              <MdExpandLess size={36} />
+            ) : (
+              <MdExpandMore size={36} />
+            )}
           </button>
           <button
             className="text-red-500 m-2"
             onClick={toggleModal}
             aria-label="Toggle Details"
           >
-            Delete
+            <MdDelete size={36} />
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-1">
-        {volunteer && volunteer.createdAt && (
-          <p className="text-gray-700 mt-2">
-            Registration Date: {new Date(volunteer.createdAt).toDateString()}
+      {volunteer && volunteer.createdAt && (
+          <p className="text-gray-700 mt-2 font-normal">
+            <strong>Application Date:&nbsp;</strong>{new Date(volunteer.createdAt).toDateString()}
           </p>
         )}
         {showDetails && (
           <>
-            <p className="text-gray-700 mt-2">Address: {volunteer.address}</p>
-            <p className="text-gray-700 mt-2">City: {volunteer.city}</p>
-            <p className="text-gray-700 mt-2">Province: {volunteer.province}</p>
-            <p className="text-gray-700 mt-2">Postal Code: {volunteer.postalCode}</p>
-            <p className="text-gray-700 mt-2">Email: {volunteer.email}</p>
-            <p className="text-gray-700 mt-2">Primary Phone: {volunteer.primaryPhone}</p>
-            {volunteer.secondaryPhone && <p className="text-gray-700 mt-2">Secondary Phone: {volunteer.secondaryPhone}</p>}
-            <p className="text-gray-700 mt-2">Employer: {volunteer.employer}</p>
-            <p className="text-gray-700 mt-2">Convict? {volunteer.conviction ? "Yes" : "No"}</p>
-            <p className="text-gray-700 mt-2">Bondable? {volunteer.bondable ? "Yes" : "No"}</p>
-            <p className="text-gray-700 mt-2">Medical Condition? {volunteer.medicalCondition ? "Yes" : "No"}</p>
-            {volunteer.medicalConditionDetails && <p className="text-gray-700 mt-2 text-wrap">Medical Condition Details: {volunteer.medicalConditionDetails}</p>}
-            <p className="text-gray-700 mt-2">Emergency Contact Name: {volunteer.emergencyContactName}</p>
-            <p className="text-gray-700 mt-2">Emergency Contact Relationship: {volunteer.emergencyContactRelationship}</p>
-            <p className="text-gray-700 mt-2">Emergency Contact Phone: {volunteer.emergencyContactPhone}</p>
-            {volunteer.volunteerExperienceDetails && <p className="text-gray-700 mt-2 text-wrap">Volunteer Experience Details: {volunteer.volunteerExperienceDetails}</p>}
-            <p className="text-gray-700 mt-2">Interview Status: {volunteer.interviewStatus}</p>
-            <p className="text-gray-700 mt-2">Status: {volunteer.status}</p>
-            <p className="text-gray-700 mt-2">Role: {volunteer.role}</p>
+            <p className="text-gray-700 mt-2"><strong>Address:&nbsp;</strong>{volunteer.address}</p>
+            <p className="text-gray-700 mt-2"><strong>Email:&nbsp;</strong>{volunteer.email}</p>
+            <p className="text-gray-700 mt-2">
+              <strong>Primary Phone:&nbsp;</strong>{volunteer.primaryPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Secondary Phone:&nbsp;</strong>{volunteer.secondaryPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Name:&nbsp;</strong>{volunteer.emergencyContactName}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Phone:&nbsp;</strong>{volunteer.emergencyContactPhone}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Emergency Contact Relationship:&nbsp;</strong>
+              {volunteer.emergencyContactRelationship}
+            </p>
+            <p className="text-gray-700 mt-2">
+            <strong>Date of Birth:&nbsp;</strong>{new Date(volunteer.dob).toDateString()}
+              <span>
+                &nbsp;
+                (<strong>{calculateAge(volunteer.dob)}</strong>, years old)
+              </span>
+            </p>
+            <p className="text-gray-700 mt-2 text-wrap ">
+              <strong>Medical Condition Details:&nbsp;</strong>{volunteer.medicalConditionDetails}
+            </p>
+            <p className="text-gray-700 mt-2 text-wrap">
+              <strong>Volunteer Experience:&nbsp;</strong>{volunteer.volunteerExperienceDetails}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Conviction:&nbsp;</strong>{volunteer.conviction ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Bondable:&nbsp;</strong>{volunteer.bondable ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Medical Condition:&nbsp;</strong>{volunteer.medicalCondition ? "Yes" : "No"}
+            </p>
+            <p className="text-gray-700 mt-2">
+              <strong>Applicant Status:&nbsp;</strong>{volunteer.interviewStatus}
+            </p>
           </>
         )}
       </div>

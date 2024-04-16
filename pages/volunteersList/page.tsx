@@ -11,40 +11,41 @@ import { filterVolunteers, gatherDropdownOptions } from "@/app/assets/scripts/sp
 const ApplicantsListPage: React.FC = () => {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [defaultVolunteers, setDefaultVolunteers] = useState<Volunteer[]>([]);
-  const [chosenFilter, setChosenFilter] = useState('By Name');
-  const [chosenOrder, setChosenOrder] = useState('First Name A-Z');
+  const [chosenFilter, setChosenFilter] = useState(gatherDropdownOptions().filterBy[0]);
+  const [chosenOrder, setChosenOrder] = useState(gatherDropdownOptions().orderBy[0]);
   const [searchedValue, setSearchedValue] = useState("");
   const [innerTexting, setInnerTexting] = useState("Enter Applicant's info:");
   const errorTexting = "Please enter info!";
+  const filterModalName = "volunteerList";
   const [foundResults, setFoundResults] = useState(false);
   const [numberOfVolunteers, setNumberOfVolunteers] = useState(0);
   const [numberQueried, setNumberQueried] = useState(0);
   const [failedOrMissingQuery, setFailedOrMissingQuery] = useState("Please wait a moment!")
   const [filterShown, setFilterShown] = useState(false);
 
-  const fetchNumberOfApplicants = async () => {
-    let gatheredApplicants: Volunteer[] = []
+  const fetchNumberOfVolunteers = async () => {
+    let gatheredVolunteers: Volunteer[] = []
     try {
-      const response = await fetch("/api/applicants");
+      const response = await fetch("/api/volunteers");
       if(!response.ok){
         setNumberOfVolunteers(0);
       }
       const data = await response.json();
-      gatheredApplicants = data;
-      setNumberOfVolunteers(gatheredApplicants.length);
+      gatheredVolunteers = data;
+      setNumberOfVolunteers(gatheredVolunteers.length);
     } catch (error) {
-      console.error("Failed to fetch applicants:",error);
+      console.error("Failed to fetch volunteers:",error);
       setNumberOfVolunteers(0);
     }
   }
 
-  if(numberOfVolunteers===0){fetchNumberOfApplicants();}
+  if(numberOfVolunteers===0){fetchNumberOfVolunteers();}
 
   useEffect(() => {
-    fetchNumberOfApplicants();
-    const fetchApplicants = async () => {
+    fetchNumberOfVolunteers();
+    const fetchVolunteers = async () => {
       try {
-        const response = await fetch("/api/applicants");
+        const response = await fetch("/api/volunteers");
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
@@ -52,15 +53,15 @@ const ApplicantsListPage: React.FC = () => {
         setVolunteers(data);
         setDefaultVolunteers(data);
       } catch (error) {
-        console.error("Failed to fetch applicants:", error);
+        console.error("Failed to fetch volunteers:", error);
       }
     };
-    fetchApplicants();
+    fetchVolunteers();
   },[]);
 
   const clearSearch = async () =>{
     try {
-      const response = await fetch("/api/applicants");
+      const response = await fetch("/api/volunteers");
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
@@ -69,7 +70,7 @@ const ApplicantsListPage: React.FC = () => {
       setFoundResults(false);
       setSearchedValue('')
     } catch (error) {
-      console.error("Failed to fetch applicants:", error);
+      console.error("Failed to fetch volunteers:", error);
     }
   }
 
@@ -83,15 +84,15 @@ const calculateAge = (value:Date): number => {
 const submitSearch = () => {
   let updatedFilteredApplicants: Volunteer[] = [];
   setFailedOrMissingQuery("There is nothing that matches!")
-  if(/^(?=.*[a-zA-Z0-9]).*$/.test(searchedValue.trimEnd())){
+  if(searchedValue.trim().length>0){
       updatedFilteredApplicants = filterVolunteers(chosenFilter,chosenOrder,defaultVolunteers,calculateAge,searchedValue);
       setVolunteers(updatedFilteredApplicants);
       setFoundResults(true);
       setNumberQueried(updatedFilteredApplicants.length);
-      fetchNumberOfApplicants();
+      fetchNumberOfVolunteers();
   }else{
       setNumberQueried(0);
-      fetchNumberOfApplicants();
+      fetchNumberOfVolunteers();
       setVolunteers(defaultVolunteers);
       setFoundResults(false);
       setInnerTexting(`${errorTexting}`);
@@ -101,19 +102,18 @@ const submitSearch = () => {
   }
 }
 
-const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
-  const value = event.target.value
+const handleSearchValue = (value: string) => {
   setSearchedValue(value.trimEnd());
- }
+};
 
  const cancelFilterToggle = () => {
   setFilterShown(false);
  }
 
  const handlingFilterChoices = () => {
-  const valueA = (document.querySelector('input[id="volunteerSelectedA"]:checked') as HTMLInputElement)?.value;
-  const valueB = (document.querySelector('input[id="volunteerSelectedB"]:checked') as HTMLInputElement)?.value;
-  if(valueA!==null && valueB!==null){
+  const valueA = (document.querySelector(`input[id="${filterModalName}SelectedA"]:checked`) as HTMLInputElement)?.value ?? gatherDropdownOptions().filterBy[0];
+  const valueB = (document.querySelector(`input[id="${filterModalName}SelectedB"]:checked`) as HTMLInputElement)?.value ?? gatherDropdownOptions().orderBy[0];
+  if((valueA!==null && valueB!==null) || (typeof valueA !== 'undefined' && typeof valueB !== 'undefined')){
     setChosenFilter(valueA);
     setChosenOrder(valueB);
   }else{
@@ -133,7 +133,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
             filterOptions={gatherDropdownOptions()}
             defaultFilter={chosenFilter}
             defaultOrder={chosenOrder}
-            filterName="volunteerList"
+            filterName={filterModalName}
           />        
         }        
         <SearchQuery

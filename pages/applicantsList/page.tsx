@@ -11,11 +11,12 @@ import { filterApplicants, gatherDropdownOptions } from "@/app/assets/scripts/sp
 const ApplicantsListPage: React.FC = () => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
   const [defaultApplicants, setDefaultApplicants] = useState<VolunteerApplicant[]>([]);
-  const [chosenFilter, setChosenFilter] = useState('By Name');
-  const [chosenOrder, setChosenOrder] = useState('First Name A-Z');
+  const [chosenFilter, setChosenFilter] = useState(gatherDropdownOptions().filterBy[0]);
+  const [chosenOrder, setChosenOrder] = useState(gatherDropdownOptions().orderBy[0]);
   const [searchedValue, setSearchedValue] = useState("");
   const [innerTexting, setInnerTexting] = useState("Enter Applicant's info:");
   const errorTexting = "Please enter info!";
+  const filterModalName = "applicantList";
   const [foundResults, setFoundResults] = useState(false);
   const [numberOfApplicants, setNumberOfApplicants] = useState(0);
   const [numberQueried, setNumberQueried] = useState(0);
@@ -83,7 +84,7 @@ const calculateAge = (value:Date): number => {
 const submitSearch = () => {
   let updatedFilteredApplicants: VolunteerApplicant[] = [];
   setFailedOrMissingQuery("There is nothing that matches!")
-  if(/^(?=.*[a-zA-Z0-9]).*$/.test(searchedValue.trimEnd())){
+  if(searchedValue.trim().length>0){
       updatedFilteredApplicants = filterApplicants(chosenFilter,chosenOrder,defaultApplicants,calculateAge,searchedValue);
       setApplicants(updatedFilteredApplicants);
       setFoundResults(true);
@@ -101,25 +102,25 @@ const submitSearch = () => {
   }
 }
 
-const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
-  const value = event.target.value
+const handleSearchValue = (value: string) => {
   setSearchedValue(value.trimEnd());
- }
+};
 
  const cancelFilterToggle = () => {
   setFilterShown(false);
  }
 
  const handlingFilterChoices = () => {
-  const valueA = (document.querySelector('input[id="applicantListSelectedA"]:checked') as HTMLInputElement)?.value;
-  const valueB = (document.querySelector('input[id="applicantListSelectedB"]:checked') as HTMLInputElement)?.value;
-  if(valueA!==null && valueB!==null){
+  const valueA = (document.querySelector(`input[id="${filterModalName}SelectedA"]:checked`) as HTMLInputElement)?.value ?? gatherDropdownOptions().filterBy[0];
+  const valueB = (document.querySelector(`input[id="${filterModalName}SelectedB"]:checked`) as HTMLInputElement)?.value ?? gatherDropdownOptions().orderBy[0];
+  if((valueA!==null && valueB!==null) || (typeof valueA !== 'undefined' && typeof valueB !== 'undefined')){
     setChosenFilter(valueA);
     setChosenOrder(valueB);
   }else{
     setChosenFilter(gatherDropdownOptions().filterBy[0]);
     setChosenOrder(gatherDropdownOptions().orderBy[0]);    
   } 
+  console.log(`Filter:${chosenFilter} Order:${chosenOrder}`)
   cancelFilterToggle();
  }
 
@@ -133,7 +134,7 @@ const handleSearchValue = (event:React.ChangeEvent<HTMLInputElement>) => {
             filterOptions={gatherDropdownOptions()}
             defaultFilter={chosenFilter}
             defaultOrder={chosenOrder}
-            filterName="applicantList"
+            filterName={filterModalName}
           />        
         }        
         <SearchQuery

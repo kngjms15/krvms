@@ -22,9 +22,9 @@ const Header = () => {
       <div className="flex items-center space-x-4 ml-auto">
         <div className="text-black">Username</div>
         <Link href="/edit-profile">
-          <span className="text-black cursor-pointer">Edit Profile</span>
+          <span className="text-black cursor-pointer hover:text-cyan-400">Edit Profile</span>
         </Link>
-        <button className="text-black" onClick={handleSignOut}>
+        <button className="text-black hover:text-cyan-400" onClick={handleSignOut}>
           Sign Out
         </button>
       </div>
