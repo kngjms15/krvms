@@ -1,9 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
 import provinceChapters from "../provinceChapters.json";
-import VolunteerApplicationForm from "../VolunteerApplicationForm/volunteerApplicationForm";
-import { volunteerApplicationSchema } from "@/lib/schema";
-import { z } from "zod";
 
 interface EditVolunteerFormProps {
   volunteer: Volunteer;
@@ -378,7 +375,6 @@ const EditVolunteerForm: React.FC<EditVolunteerFormProps> = ({
               <option value="admin">Admin</option>
             </select>
           </div>
-          {/* Add other fields similarly */}
           <div className="flex justify-between mt-4 col-span-2 ">
             <button
               type="button"

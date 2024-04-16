@@ -22,6 +22,10 @@ const Dashboard = () => {
     setActiveTab(tab);
   };
 
+  const closeModal = () => {
+    setShowCreateVolunteerModal(false);
+  };
+
   const toggleCreateVolunteerModal = () => {
     setShowCreateVolunteerModal((prev) => !prev);
   };
@@ -100,7 +104,7 @@ const Dashboard = () => {
       {showCreateVolunteerModal && (
         <div className="fixed inset-0 items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded">
-            <CreateNewVolunteer />
+            <CreateNewVolunteer onClose={closeModal} />
           </div>
         </div>
       )}

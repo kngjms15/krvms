@@ -2,15 +2,20 @@
 
 import React, { useState } from "react";
 import provinceChapters from "../provinceChapters.json";
+import { Volunteer } from "@prisma/client";
 
-const CreateNewVolunteer: React.FC = () => {
+interface CreateNewVolunteerProps {
+  onClose: () => void;
+}
+
+const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
   const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
     useState(true);
   const [newVolunteer, setNewVolunteer] = useState({
     firstName: "",
     lastName: "",
     role: "Event Volunteer",
-    dob: new Date().toISOString().split("T")[0], // Set the dob to a default value or retrieve it from the applicant
+    dob: new Date(),
     address: "",
     city: "",
     province: "",
@@ -28,10 +33,12 @@ const CreateNewVolunteer: React.FC = () => {
     emergencyContactRelationship: "",
     emergencyContactPhone: "",
     volunteerExperienceDetails: "",
-    interviewStatus: "Accepted",
-    status: "Active", // Set the status to Active for a new volunteer
+    interviewStatus: "Pending",
+    status: "Active",
   });
+
   const [selectedProvince, setSelectedProvince] = useState("");
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const selectedProvinceChapters =
     provinceChapters.find(
       (provinceObj) => provinceObj.province === selectedProvince
@@ -55,7 +62,7 @@ const CreateNewVolunteer: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const newVolunteerResponse = await fetch(`/api/volunteers`, {
+      const newVolunteerResponse = await fetch(`/api/createNewVolunteer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,13 +71,16 @@ const CreateNewVolunteer: React.FC = () => {
       });
 
       if (newVolunteerResponse.ok) {
+        const newVolunteerData = await newVolunteerResponse.json();
+        setVolunteers([...volunteers, newVolunteerData]);
         alert("Volunteer created successfully!");
+        onClose();
       } else {
         console.error(
           "Failed to create volunteer:",
           newVolunteerResponse.status
         );
-        alert("Failed to create volunteer. Please try again.");
+        alert("Failed to create volunteer. Please try again later.");
       }
     } catch (error) {
       console.error("Error creating volunteer:", error);
@@ -78,245 +88,256 @@ const CreateNewVolunteer: React.FC = () => {
     }
   };
 
-  return (
-    <>
-      <form
-        className="flex-grow max-w-[940px] bg-[#F2F2F2] m-auto my-6 rounded-lg p-8 max-h-[80vh] overflow-y-auto shadow-md"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex flex-col">
-          <div className="block text-center my-5 ">
-            <h1 className="font-bold ">Create New Volunteer</h1>
-          </div>
+  const calculateAge = (dob: string): number => {
+    if (!dob) return 0;
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
-          <div className="flex-grow grid grid-cols-2 gap-2">
-            <div className="flex flex-col">
-              <label htmlFor="firstName">First Name:</label>
-              <input
-                type="text"
-                id="firstName"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="lastName">Last Name:</label>
-              <input
-                type="text"
-                id="lastName"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="address">Address:</label>
-              <input
-                type="text"
-                id="address"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="city">City:</label>
-              <input
-                type="text"
-                id="city"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="province"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Province <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <select
-                  id="province"
-                  className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-                  onChange={handleProvinceChange}
-                  value={selectedProvince}
-                >
-                  <option value="" hidden>
-                    Select your province
-                  </option>
-                  {provinceChapters.map((provinceObj) => (
-                    <option
-                      key={provinceObj.province}
-                      value={provinceObj.province}
-                    >
-                      {provinceObj.province}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="chapter"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Chapter <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <select
-                  id="chapter"
-                  className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-                >
-                  {selectedProvinceChapters.map((chapter, index) => (
-                    <option key={index} value={chapter}>
-                      {chapter}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="postalCode">Postal Code:</label>
-              <input
-                type="text"
-                id="postalCode"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="primaryPhone">Primary Phone:</label>
-              <input
-                type="tel"
-                id="primaryPhone"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="secondaryPhone">Secondary Phone:</label>
-              <input
-                type="tel"
-                id="secondaryPhone"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="employer">Employer:</label>
-              <input
-                type="text"
-                id="employer"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="volunteerExperienceDetails">
-                Volunteer Experience Details:
-              </label>
-              <input
-                type="text"
-                id="volunteerExperienceDetails"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="conviction">Conviction:</label>
-              <select
-                id="conviction"
-                name="conviction"
-                onChange={handleChange}
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              >
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="bondable">Bondable:</label>
-              <select
-                id="bondable"
-                name="bondable"
-                onChange={handleChange}
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              >
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="medicalCondition">Medical Condition:</label>
-              <select
-                id="medicalCondition"
-                name="medicalCondition"
-                onChange={handleChange}
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              >
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="medicalConditionDetails">
-                Medical Condition Details:
-              </label>
-              <input
-                type="text"
-                id="medicalConditionDetails"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-          </div>
-          <div className="flex flex-grow">
-            <hr className="flex-grow h-px my-8 bg-gray-300 border-0 dark:bg-gray-700 " />
-          </div>
-          <div className="block text-center my-5 ">
-              <h1 className=" font-medium ">Emergency Contact</h1>
-            </div>
-          <div className="flex-grow grid grid-cols-2 gap-2">
-            <div className="flex flex-col">
-              <label htmlFor="fullName">Full Name:</label>
-              <input
-                type="text"
-                id="fullName"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="relationship">Relationship:</label>
-              <input
-                type="text"
-                id="relationship"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="emergencyPhone">Emergency Phone:</label>
-              <input
-                type="tel"
-                id="emergencyPhone"
-                className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-              />
-            </div>
-          </div>
+  const dob = new Date(newVolunteer.dob).toDateString();
+
+  return (
+    <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50">
+      <div className="bg-[#F2F2F2] flex-grow max-w-[940px] p-6 rounded-lg w-96 h-[80vh] overflow-y-auto">
+        <div className="flex justify-center items-center p-5">
+          <h2 className="text-xxl font-bold mb-4">Create New Volunteer</h2>
         </div>
-        <div className="flex flex-grow">
-          <hr className="flex-grow h-px my-8 bg-gray-300 border-0 dark:bg-gray-700 " />
-        </div>
-        <div className="flex-grow grid grid-cols-2 gap-2">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-2 ">
+          <div className="flex flex-col ">
+            <label htmlFor="firstName">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
           <div className="flex flex-col">
-            <label htmlFor="interviewStatus">Interview Status:</label>
+            <label htmlFor="lastName">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="dob">
+              Date of Birth {dob && `(Age: ${calculateAge(dob)})`}{" "}
+            </label>
+            <input
+              type="date"
+              id="dob"
+              name="dob"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col"></div>
+          <div className="flex flex-col">
+            <label htmlFor="address">Address:</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="city">City:</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="province">Province:</label>
             <select
-              id="interviewStatus"
-              name="interviewStatus"
+              id="province"
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+              onChange={handleProvinceChange}
+            >
+              <option value="" hidden>
+                Select your province
+              </option>
+              {provinceChapters.map((provinceObj) => (
+                <option key={provinceObj.province} value={provinceObj.province}>
+                  {provinceObj.province}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="chapter">Chapter:</label>
+            <select
+              id="chapter"
+              name="chapter"
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
-              <option value="Accepted">Accepted</option>
-              <option value="Pending">Pending</option>
-              <option value="Rejected">Rejected</option>
+              {selectedProvinceChapters.map((chapter, index) => (
+                <option key={index} value={chapter}>
+                  {chapter}
+                </option>
+              ))}
             </select>
           </div>
+          <div className="flex flex-col">
+            <label htmlFor="postalCode">Postal Code:</label>
+            <input
+              type="text"
+              id="postalCode"
+              name="postalCode"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col"></div>
+          <div className="flex flex-col">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col"></div>
+          <div className="flex flex-col">
+            <label htmlFor="phone">Primary Phone:</label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="secondaryPhone">Secondary Phone:</label>
+            <input
+              type="text"
+              id="secondaryPhone"
+              name="secondaryPhone"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col ">
+            <label htmlFor="emergencyContact">Emergency Contact Name:</label>
+            <input
+              type="text"
+              id="emergencyContact"
+              name="emergencyContact"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col ">
+            <label htmlFor="emergencyContactRelationship">Relationship:</label>
+            <input
+              type="text"
+              id="emergencyContactRelationship"
+              name="emergencyContactRelationship"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="emergencyPhone">Emergency Phone:</label>
+            <input
+              type="text"
+              id="emergencyPhone"
+              name="emergencyPhone"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col"></div>
+          <div className="flex flex-col">
+            <label htmlFor="medicalCondition">Medical Condition:</label>
+            <select
+              id="medicalCondition"
+              name="medicalCondition"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="medicalConditionDetails">
+              Medical Condition Details:
+            </label>
+            <input
+              type="text"
+              id="medicalConditionDetails"
+              name="medicalConditionDetails"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="conviction">Conviction: </label>
+            <select
+              id="conviction"
+              name="conviction"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="bondable">Bondable: </label>
+            <select
+              id="bondable"
+              name="bondable"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="employer">Employer:</label>
+            <input
+              type="text"
+              id="employer"
+              name="employer"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="volunteerExperienceDetails">
+              Volunteer Experience(s):
+            </label>
+            <input
+              type="text"
+              id="volunteerExperienceDetails"
+              name="volunteerExperienceDetails"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            />
+          </div>
+
           <div className="flex flex-col">
             <label htmlFor="status">Status:</label>
             <select
@@ -325,28 +346,41 @@ const CreateNewVolunteer: React.FC = () => {
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
             </select>
           </div>
-        </div>
-
-        <div className="flex justify-between my-5">
-          <button
-            className="rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
-            onClick={() => setShowCreateVolunteerModal(false)}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="rounded-md bg-[#6CC24A] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75"
-          >
-            Create Volunteer
-          </button>
-        </div>
-      </form>
-    </>
+          <div className="flex flex-col">
+            <label htmlFor="role">Role:</label>
+            <select
+              id="role"
+              name="role"
+              onChange={handleChange}
+              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
+            >
+              <option value="eventVolunteer">Event Volunteer</option>
+              <option value="committeeVolunteer">Committee Volunteer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="flex justify-between mt-4 col-span-2 ">
+            <button
+              type="button"
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded mr-2"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-[#6CC24A] text-white px-4 py-2 rounded"
+            >
+              Add Volunteer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 
