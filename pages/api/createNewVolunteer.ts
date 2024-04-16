@@ -9,8 +9,6 @@ export default async function handler(
   console.log("Received request to create new volunteer");
   console.log("Request body: ", req.body);
 
-
-
   if (req.method === 'POST') {
     try {
       const {
@@ -54,10 +52,10 @@ export default async function handler(
           secondaryPhone,
           email,
           employer,
-          conviction,
-          bondable,
-          medicalCondition,
-          medicalConditionDetails,
+          conviction: Boolean(conviction),
+          bondable: Boolean(bondable),
+          medicalCondition: Boolean(medicalCondition),  
+          medicalConditionDetails,        
           emergencyContactName,
           emergencyContactRelationship,
           emergencyContactPhone,
