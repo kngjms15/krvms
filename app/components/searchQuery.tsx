@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MenuOutlined, CloseOutlined } from '@ant-design/icons';
 
 interface iSearchQuery{
     innerTexting: string;
@@ -38,13 +39,16 @@ const SearchQuery:React.FC<iSearchQuery> = ({innerTexting,submitSearch,clearSear
     return (
         <div className="text-gray-600 flex items-center mt-3 mb-3">
             Search:&nbsp;
-            <input type="search" name="search" id="search" value={value} placeholder={innerTexting} className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none" onKeyDown={emptyingInput} onInput={setThenSearch}/>
-            <div className="ml-2">
-                <button className="rounded-lg p-1 pr-4 pl-4 font-bold bg-gray-400 text-white hover:bg-cyan-400" onClick={()=>{togglefilter()}}>+</button>
-            </div>
-            <div className="ml-6">
-                <button className="bg-gray-200 border-2 border-black pb-1 pt-1 pr-5 pl-5 text-center rounded-md hover:bg-cyan-300 hover:border-white hover:text-white"
-                onClick={()=>{clearSearch()}}>Clear</button>
+            <div className="flex flex-row relative">
+                <input type="search" name="search" id="search" value={value} placeholder={innerTexting} className="bg-white h-10 px-5 pr-10 rounded-xl text-sm focus:outline-none" onKeyDown={emptyingInput} onInput={setThenSearch}/>
+                <span className="absolute right-3 top-1" style={{ fontSize: '20px', color: 'gray' }}>
+                    <button onClick={()=>{togglefilter()}}>
+                        <MenuOutlined/>
+                    </button>
+                    <button className='ml-2' onClick={()=>{clearSearch()}}>
+                        <CloseOutlined style={{color:'red', fontWeight:'bolder'}}/>
+                    </button>
+                </span>
             </div>
         </div>
     );
