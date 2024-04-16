@@ -172,8 +172,14 @@ const VolunteersList: React.FC<VolunteersListProps> = ({
   );
 };
 
-const VolunteersListPage: React.FC = () => {
+interface VolunteersListPageProps {
+  searchQuery: string;
+  sortOption: string;
+}
+
+const VolunteersListPage: React.FC<VolunteersListPageProps> = ({ searchQuery, sortOption }) => {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+  const [sortedVolunteers, setSortedVolunteers] = useState<Volunteer[]>([]);
 
   useEffect(() => {
     const fetchVolunteers = async () => {
@@ -192,15 +198,36 @@ const VolunteersListPage: React.FC = () => {
     fetchVolunteers();
   }, []);
 
+  useEffect(() => {
+    let sorted = [...volunteers];
+
+    if (sortOption === "name") {
+      sorted = sorted.sort((a, b) => a.firstName.localeCompare(b.firstName));
+    } else if (sortOption === "chapter") {
+      sorted = sorted.sort((a, b) => a.chapter?.localeCompare(b.chapter || ""));
+    } 
+
+    setSortedVolunteers(sorted);
+  }, [volunteers, sortOption]);
+
   return (
     <div className="flex-grow m-auto">
-      {volunteers.map((volunteer) => (
-        volunteer && volunteer.firstName && (
-        <VolunteersList key={volunteer.volunteerId} volunteer={volunteer} />
+      {sortedVolunteers
+        .filter((volunteer) =>
+          volunteer.firstName .toLowerCase().includes(searchQuery.toLowerCase()) ||
+          volunteer.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          volunteer.chapter?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          volunteer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          volunteer.primaryPhone.toLowerCase().includes(searchQuery.toLowerCase()) 
         )
-      ))}
+        .map((volunteer) => (
+          volunteer && volunteer.firstName && (
+            <VolunteersList key={volunteer.volunteerId} volunteer={volunteer} />
+          )
+        ))}
     </div>
   );
 };
+
 
 export default VolunteersListPage;

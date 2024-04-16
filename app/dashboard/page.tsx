@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useEffect, useState } from "react";
 import Header from "./header";
@@ -8,35 +8,24 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
 import ApplicantsListPage from "../components/applicantsList";
-import FilterComponent from "../components/applicantsFilter";
+import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
 
-const Dashboard = () => {
-  // const router = useRouter();
-  const [activeTab, setActiveTab] = useState("volunteers");
-  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
-    useState(false);
 
-  
+
+const Dashboard = () => {
+  const [activeTab, setActiveTab] = useState("volunteers");
+  const [showCreateVolunteerModal, setShowCreateVolunteerModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("");
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
-
   const toggleCreateVolunteerModal = () => {
     setShowCreateVolunteerModal((prev) => !prev);
   };
-
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     const session = await getSession();
-  //     if (!session) {
-  //       router.push("/login");
-  //     }
-  //   };
-  //   checkAuth();
-  // }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -74,8 +63,14 @@ const Dashboard = () => {
                     Add New Volunteer
                   </button>
                 </div>
+                <SortAndSearchComponent
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  sortOption={sortOption}
+                  setSortOption={setSortOption}
+                />
               </div>
-              <VolunteersListPage />
+              <VolunteersListPage searchQuery={searchQuery} sortOption={sortOption} />
             </div>
           )}
           {activeTab === "applicants" && (
@@ -84,8 +79,14 @@ const Dashboard = () => {
                 <div className="flex justify-between py-4">
                   <h1>Applicants</h1>
                 </div>
+                <SortAndSearchComponent
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  sortOption={sortOption}
+                  setSortOption={setSortOption}
+                />
               </div>
-              <ApplicantsListPage />
+              <ApplicantsListPage searchQuery={searchQuery} sortOption={sortOption} />
             </div>
           )}
         </div>
@@ -100,22 +101,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps =async (context) => {
-//   const session = await getSession(context);
-
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: {},
-//   };
-// };
 
 export default Dashboard;

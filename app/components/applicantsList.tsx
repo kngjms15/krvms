@@ -262,54 +262,14 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
   );
 };
 
-const ApplicantsListPage: React.FC = () => {
+interface ApplicantsListPageProps {
+  searchQuery: string;
+  sortOption: string;
+}
+
+const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({ searchQuery, sortOption }) => {
   const [applicants, setApplicants] = useState<VolunteerApplicant[]>([]);
-  const [filteredApplicants, setFilteredApplicants] = useState<
-    VolunteerApplicant[]
-  >([]);
-
-  useEffect(() => {
-    const fetchApplicants = async () => {
-      try {
-        const response = await fetch("/api/applicants");
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        setApplicants(data);
-        setFilteredApplicants(data); // Set filtered applicants initially
-      } catch (error) {
-        console.error("Failed to fetch applicants:", error);
-      }
-    };
-
-    fetchApplicants();
-  }, []);
-
-  const handleSort = (sortBy: string) => {
-    let sortedApplicants = [...applicants];
-
-    if (sortBy === "name") {
-      sortedApplicants.sort((a, b) => {
-        return (
-          a.firstName.localeCompare(b.firstName) ||
-          a.lastName.localeCompare(b.lastName)
-        );
-      });
-    } else if (sortBy === "date") {
-      sortedApplicants.sort((a, b) => {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      });
-    } else if (sortBy === "chapter") {
-      sortedApplicants.sort((a, b) => {
-        return a.chapter.localeCompare(b.chapter);
-      });
-    }
-
-    setFilteredApplicants(sortedApplicants);
-  };
+  const [sortedApplicants, setSortedApplicants] = useState<VolunteerApplicant[]>([]);
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -327,24 +287,37 @@ const ApplicantsListPage: React.FC = () => {
 
     fetchApplicants();
   }, []);
+
+  useEffect(() => {
+    let sorted = [...applicants];
+    if (sortOption === "name") {
+      sorted = sorted.sort((a, b) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+    } else if (sortOption === "chapter") {
+      sorted = sorted.sort((a, b) =>
+        a.chapter.localeCompare(b.chapter)
+      );
+    } 
+
+    setSortedApplicants(sorted);
+  }, [applicants, sortOption]);
 
   return (
     <div className="flex-grow m-auto">
-      <div className="sticky top-0 z-50">
-        <FilterComponent onSort={handleSort} />
-      </div>
-      <div>
-        {filteredApplicants.map(
-          (applicant) =>
-            applicant &&
-            applicant.firstName && (
-              <ApplicantsList
-                key={applicant.applicantId}
-                applicant={applicant}
-              />
-            )
-        )}
-      </div>
+      {sortedApplicants
+        .filter((applicant) =>
+          applicant.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          applicant.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          applicant.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          applicant.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          applicant.primaryPhone.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .map((applicant) => (
+          applicant && applicant.firstName && (
+            <ApplicantsList key={applicant.applicantId} applicant={applicant} />
+          )
+        ))}
     </div>
   );
 };
