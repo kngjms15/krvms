@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Header from "./header";
-import VolunteersListPage from "../components/volunteersList";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
-import ApplicantsListPage from "../components/applicantsList";
 import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
-import EventsTab from "../components/eventsTab";
+import ApplicantsListPage from "../components/ApplicantsList";
+import EventsTab from "../components/EventsTab";
+import VolunteersListPage from "../components/VolunteersList";
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");

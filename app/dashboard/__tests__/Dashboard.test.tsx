@@ -23,4 +23,37 @@ describe("Dashboard component", () => {
       expect(applicantsHeader).toBeInTheDocument();
     });
   });  
+
+  test("renders without error", () => {
+    render(<Dashboard />);
+  });
+
+  test("switches tabs when a different tab is clicked", () => {
+    render(<Dashboard />);
+    const applicantsTab = screen.getByText("Applicants");
+    fireEvent.click(applicantsTab);
+    expect(applicantsTab).toHaveClass("bg-[#6CC24A]");
+  });
+
+  test("updates search query when typing in search input", () => {
+    render(<Dashboard />);
+    const searchInput = screen.getByPlaceholderText("name, email, or phone");
+    fireEvent.change(searchInput, { target: { value: "John" } });
+    expect(searchInput).toHaveValue("John");
+  });
+  
+  test("updates sort option when selecting an option", () => {
+    render(<Dashboard />);
+    const sortSelect = screen.getByLabelText("Sort by:");
+    fireEvent.change(sortSelect, { target: { value: "name" } });
+    expect(sortSelect).toHaveValue("name");
+  });
+  
+  test("renders the CreateNewVolunteer component when the create volunteer modal is open", () => {
+    render(<Dashboard />);
+    const addButton = screen.getByText("Add New Volunteer");
+    fireEvent.click(addButton);
+    expect(screen.getByText("Create New Volunteer")).toBeInTheDocument();
+  });
+  
 });
