@@ -61,3 +61,25 @@ model Volunteer {
   interviewStatus              String   @db.VarChar(20)
   status                       String   @db.VarChar(20)
 }
+
+model Event {
+  eventId              String   @id @default(uuid())
+  chapterId            String   @db.VarChar(255)
+  chapter              Chapter  @relation(fields: [chapterId], references: [chapterId])
+  location             String   @db.VarChar(255)
+  date                 DateTime
+  startTime            String   @db.VarChar(10)
+  endTime              String   @db.VarChar(10)
+  volunteersNeeded     Int
+  volunteersRegistered Int
+}
+
+model Chapter {
+  chapterId         String  @id @default(uuid())
+  chapterName       String  @db.VarChar(255)
+  chapterAddress    String  @db.VarChar(255)
+  chapterCity       String  @db.VarChar(255)
+  chapterProvince   String  @db.VarChar(255)
+  chapterPostalCode String  @db.VarChar(10)
+  events            Event[]
+}
