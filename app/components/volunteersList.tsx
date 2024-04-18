@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
 import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
-import ConfirmationModal from "./confirmationModal";
 import EditVolunteerForm from "./EditVolunteerForm";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
