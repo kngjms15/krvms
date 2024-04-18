@@ -8,9 +8,9 @@ import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
 import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
-import ApplicantsListPage from "../components/ApplicantsList";
-import EventsTab from "../components/EventsTab";
-import VolunteersListPage from "../components/VolunteersList";
+import ApplicantsListPage from "../components/applicantsList";
+import EventsTab from "../components/eventsTab";
+import VolunteersListPage from "../components/volunteersList";
 
 
 const Dashboard = () => {
