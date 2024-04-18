@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { MenuOutlined, CloseOutlined} from "@ant-design/icons";
 
 interface iSearchQuery{
     innerTexting: string;
