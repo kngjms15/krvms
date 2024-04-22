@@ -38,32 +38,37 @@ describe("Dashboard component", () => { // Describes the Dashboard component tes
 
   });
 
+  // Test Case 4: Checks if the tab changes its style when clicked.
   test("switches tabs when a different tab is clicked", () => {
     render(<Dashboard />);
-    const applicantsTab = screen.getByText("Applicants");
-    fireEvent.click(applicantsTab);
-    expect(applicantsTab).toHaveClass("bg-[#6CC24A]");
+    const applicantsTab = screen.getByText("Applicants"); // Finds the "Applicants" tab.
+    fireEvent.click(applicantsTab); // Simulates a click event on the "Applicants" tab.
+    expect(applicantsTab).toHaveClass("bg-[#6CC24A]"); // Asserts that the "Applicants" tab has the class "bg-[#6CC24A]". 
   });
 
+  // Test Case 5: Tests that typing in the search input updates its value
   test("updates search query when typing in search input", () => {
     render(<Dashboard />);
-    const searchInput = screen.getByPlaceholderText("name, email, or phone");
-    fireEvent.change(searchInput, { target: { value: "John" } });
-    expect(searchInput).toHaveValue("John");
+    const searchInput = screen.getByPlaceholderText("name, email, or phone"); // Finds the search input by its placeholder
+    fireEvent.change(searchInput, { target: { value: "John" } }); // Simulates typing "John" into the input
+    expect(searchInput).toHaveValue("John"); // Asserts that the input's value is now "John"
   });
   
+  // Test Case 6: Tests changing the selection in a dropdown sorts the list
   test("updates sort option when selecting an option", () => {
     render(<Dashboard />);
-    const sortSelect = screen.getByLabelText("Sort by:");
-    fireEvent.change(sortSelect, { target: { value: "name" } });
-    expect(sortSelect).toHaveValue("name");
+    const sortSelect = screen.getByLabelText("Sort by:"); // Finds the sort dropdown by its label
+    fireEvent.change(sortSelect, { target: { value: "name" } }); // Simulates selecting "name" from the dropdown
+    expect(sortSelect).toHaveValue("name"); // Asserts that the dropdown's value is now "name"
   });
   
+
+  // Test Case 7: Tests if clicking the "Add New Volunteer" button opens the modal with the CreateNewVolunteer component
   test("renders the CreateNewVolunteer component when the create volunteer modal is open", () => {
     render(<Dashboard />);
-    const addButton = screen.getByText("Add New Volunteer");
-    fireEvent.click(addButton);
-    expect(screen.getByText("Create New Volunteer")).toBeInTheDocument();
+    const addButton = screen.getByText("Add New Volunteer"); // Finds the "Add New Volunteer" button
+    fireEvent.click(addButton); // Simulates clicking the button
+    expect(screen.getByText("Create New Volunteer")).toBeInTheDocument(); // Asserts that the "Create New Volunteer" text is present in the document
   });
   
 });
