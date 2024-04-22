@@ -8,9 +8,8 @@ import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
 import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
-import ApplicantsListPage from "../components/applicantsList";
-import EventsTab from "../components/eventsTab";
-import VolunteersListPage from "../components/volunteersList";
+import ApplicantsListPage from "../components/ApplicantsList";
+import VolunteersListPage from "../components/VolunteersList";
 
 
 const Dashboard = () => {
@@ -52,14 +51,6 @@ const Dashboard = () => {
             onClick={() => handleTabClick("applicants")}
           >
             Applicants
-          </div>
-          <div
-            className={`tab cursor-pointer py-4 pl-2  ${
-              activeTab === 'events' ? 'bg-[#6CC24A]' : ''
-            }`}
-            onClick={() => handleTabClick('events')}
-          >
-            Events
           </div>
         </div>
 
@@ -107,11 +98,6 @@ const Dashboard = () => {
                 searchQuery={searchQuery}
                 sortOption={sortOption}
               />
-            </div>
-          )}
-          {activeTab === 'events' && (
-            <div className="cards">
-              <EventsTab />
             </div>
           )}
         </div>

@@ -57,7 +57,7 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
             )
           );
           alert("Applicant deleted successfully!");
-          window.location.href = "/dashboard?activeTab=applicants";
+          window.location.reload();
         } else {
           console.error("Failed to delete applicant:", response.status);
           alert("Failed to delete applicant. Please try again.");

@@ -20,12 +20,11 @@ const Header = () => {
           className="h-100 w-100 rounded-md"
         />
       </div>
-      <div className="flex items-center space-x-4 ml-auto">
-        <div className="text-black">Username</div>
-        <Link href="/edit-profile">
-          <span className="text-black cursor-pointer">Edit Profile</span>
-        </Link>
-        <button className="text-black" onClick={handleSignOut}>
+        <div className="text-black align-left">
+          <h1>Welcome to the KidSport Dashboard</h1>
+        </div>
+      <div className="flex">
+        <button className="text-" onClick={handleSignOut}>
           Sign Out
         </button>
       </div>

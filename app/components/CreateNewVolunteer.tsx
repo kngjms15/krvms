@@ -75,6 +75,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
         setVolunteers([...volunteers, newVolunteerData]);
         alert("Volunteer created successfully!");
         onClose();
+        window.location.reload();
       } else {
         console.error(
           "Failed to create volunteer:",
@@ -166,6 +167,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <label htmlFor="province">Province:</label>
             <select
               id="province"
+              name="province"
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
               onChange={handleProvinceChange}
             >
@@ -217,11 +219,11 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
           </div>
           <div className="flex flex-col"></div>
           <div className="flex flex-col">
-            <label htmlFor="phone">Primary Phone:</label>
+            <label htmlFor="primaryPhone">Primary Phone:</label>
             <input
               type="text"
-              id="phone"
-              name="phone"
+              id="primaryPhone"
+              name="primaryPhone"
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -237,11 +239,11 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             />
           </div>
           <div className="flex flex-col ">
-            <label htmlFor="emergencyContact">Emergency Contact Name:</label>
+            <label htmlFor="emergencyContactName">Emergency Contact Name:</label>
             <input
               type="text"
-              id="emergencyContact"
-              name="emergencyContact"
+              id="emergencyContactName"
+              name="emergencyContactName"
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -257,11 +259,11 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="emergencyPhone">Emergency Phone:</label>
+            <label htmlFor="emergencyContactPhone">Emergency Phone:</label>
             <input
               type="text"
-              id="emergencyPhone"
-              name="emergencyPhone"
+              id="emergencyContactPhone"
+              name="emergencyContactPhone"
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
