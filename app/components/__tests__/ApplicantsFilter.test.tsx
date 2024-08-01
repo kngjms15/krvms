@@ -34,13 +34,13 @@ describe("ApplicantsFilter component", () => {
     expect(onSortMock).toHaveBeenCalledWith("name");
   });
 
-  test("calls onSort function with correct argument when select value changes", () => {
-    const onSortMock = jest.fn();
-    render(<FilterComponent onSort={onSortMock} />);
-    const selectElement = screen.getByRole("combobox", { name: "Sort By:" });
-    fireEvent.change(selectElement, { target: { value: "name" } });
-    expect(onSortMock).toHaveBeenCalledWith("name");
-  });
+  // test("calls onSort function with correct argument when select value changes", () => {
+  //   const onSortMock = jest.fn();
+  //   render(<FilterComponent onSort={onSortMock} />);
+  //   const selectElement = screen.getByRole("combobox", { name: "Sort By:" });
+  //   fireEvent.change(selectElement, { target: { value: "name" } });
+  //   expect(onSortMock).toHaveBeenCalledWith("name");
+  // });
   
   test("displays correct options in select element", () => {
     render(<FilterComponent onSort={() => {}} />);
