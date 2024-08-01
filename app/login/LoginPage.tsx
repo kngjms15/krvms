@@ -1,12 +1,25 @@
 'use client'
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 
 const LoginPage = () => {
+  const [errorMessage, setErrorMessage] = useState("");
 
+  const Username = "admin";
+  const Password = "123temp";
 
   function handleLogin(event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
+    event.preventDefault();
+    const username = event.currentTarget.username.value;
+    const password = event.currentTarget.password.value;
+
+    if (username === Username && password === Password) {
+      window.location.href = "/dashboard";
+      setErrorMessage("");
+    } else {
+      console.log("Invalid username or password");
+      setErrorMessage("Invalid username or password");
+    }
   }
 
   return (
@@ -21,9 +34,13 @@ const LoginPage = () => {
         <form className="mt-8 space-y-6" action="#" method="POST" onSubmit={handleLogin}>
           <input type="hidden" name="remember" value="true" />
           <div className="space-y-4">
+          <div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          </div>
+
             <div>
               <label htmlFor="email-address" className="sr-only">
-                Email address
+                Username
               </label>
               <input
                 id="username"
@@ -79,12 +96,12 @@ const LoginPage = () => {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-[#6CC24A] border border-transparent rounded-md group hover:bg-[#6CC24A] hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign in
-            </button>
+              <button
+                type="submit"
+                className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-[#6CC24A] border border-transparent rounded-md group hover:bg-[#6CC24A] hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign in
+              </button>
           </div>
         </form>
       </div>

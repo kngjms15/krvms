@@ -1,96 +1,93 @@
-"use client";
-
-import React, { useState } from "react";
-import provinceChapters from "../provinceChapters.json";
+import React, { use, useEffect, useState } from "react";
 import { Volunteer } from "@prisma/client";
+import provinceChapters from "../provinceChapters.json";
 
-interface CreateNewVolunteerProps {
+interface EditVolunteerFormProps {
+  volunteer: Volunteer;
   onClose: () => void;
 }
 
-const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
-  const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
-    useState(true);
-  const [newVolunteer, setNewVolunteer] = useState({
-    firstName: "",
-    lastName: "",
-    role: "Event Volunteer",
-    dob: new Date(),
-    address: "",
-    city: "",
-    province: "",
-    postalCode: "",
-    chapter: "",
-    primaryPhone: "",
-    secondaryPhone: "",
-    email: "",
-    employer: "",
-    conviction: false,
-    bondable: false,
-    medicalCondition: false,
-    medicalConditionDetails: "",
-    emergencyContactName: "",
-    emergencyContactRelationship: "",
-    emergencyContactPhone: "",
-    volunteerExperienceDetails: "",
-    interviewStatus: "Pending",
-    status: "Active",
+const EditVolunteerForm: React.FC<EditVolunteerFormProps> = ({
+  volunteer,
+  onClose,
+}) => {
+  const [editedVolunteer, setEditedVolunteer] = useState<Volunteer>({
+    ...volunteer,
+    province: volunteer.province || "",
+    chapter: volunteer.chapter || "",
   });
+  const [selectedProvince, setSelectedProvince] = useState(
+    editedVolunteer.province
+  );
+  const [reload, setReload] = useState(false);
 
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+  
+
+  useEffect(() => {
+    setSelectedProvince(editedVolunteer.province);
+  }, [editedVolunteer]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setEditedVolunteer((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const triggerReload = () => {
+    setReload((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const fetchVolunteerData = async () => {
+      // fetch updated volunteer data or perform any other actins
+      const response = await fetch(`/api/volunteers/${volunteer.volunteerId}`);
+      if (response.ok) {
+        const updatedVolunteer = await response.json();
+        setEditedVolunteer(updatedVolunteer);
+      } else {
+        console.error("Failed to fetch updated volunteer data:", response.status);
+      }
+    };
+    fetchVolunteerData();
+  }, [reload]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const response = await fetch(`/api/volunteers/${volunteer.volunteerId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editedVolunteer),
+    });
+
+    if (response.ok) {
+      console.log("Volunteer updated successfully!");
+      onClose();
+      window.location.reload();
+    } else {
+      console.error("Failed to update volunteer:", response.status);
+      alert("Failed to update volunteer. Please try again.");
+    }
+  };
+  
+  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProvince(e.target.value);
+    setEditedVolunteer((prev) => ({
+      ...prev,
+      province: e.target.value,
+      chapter: "",
+    }));
+  };
+
   const selectedProvinceChapters =
     provinceChapters.find(
       (provinceObj) => provinceObj.province === selectedProvince
     )?.chapters || [];
 
-  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProvince(e.target.value);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setNewVolunteer((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const newVolunteerResponse = await fetch(`/api/createNewVolunteer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newVolunteer),
-      });
-
-      if (newVolunteerResponse.ok) {
-        const newVolunteerData = await newVolunteerResponse.json();
-        setVolunteers([...volunteers, newVolunteerData]);
-        alert("Volunteer created successfully!");
-        onClose();
-        window.location.reload();
-      } else {
-        console.error(
-          "Failed to create volunteer:",
-          newVolunteerResponse.status
-        );
-        alert("Failed to create volunteer. Please try again later.");
-      }
-    } catch (error) {
-      console.error("Error creating volunteer:", error);
-      alert("Error creating volunteer. Please try again later.");
-    }
-  };
-
-  const calculateAge = (dob: string): number => {
-    if (!dob) return 0;
+  const calculateAge = (dob: Date) => {
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -101,14 +98,10 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
     return age;
   };
 
-  const dob = new Date(newVolunteer.dob).toDateString();
-
   return (
     <div className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50">
       <div className="bg-[#F2F2F2] flex-grow max-w-[940px] p-6 rounded-lg w-96 h-[80vh] overflow-y-auto">
-        <div className="flex justify-center items-center p-5">
-          <h2 className="text-xxl font-bold mb-4">Create New Volunteer</h2>
-        </div>
+        <h2 className="text-xl font-semibold mb-4">Edit Volunteer</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-2 ">
           <div className="flex flex-col ">
             <label htmlFor="firstName">First Name:</label>
@@ -116,6 +109,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="firstName"
               name="firstName"
+              value={editedVolunteer.firstName}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -126,21 +120,19 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="lastName"
               name="lastName"
+              value={editedVolunteer.lastName}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="dob">
-              Date of Birth {dob && `(Age: ${calculateAge(dob)})`}{" "}
-            </label>
-            <input
-              type="date"
-              id="dob"
-              name="dob"
-              onChange={handleChange}
-              className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
-            />
+            <label htmlFor="dob">Date of Birth:</label>
+            <p className="text-lg text-gray-500">
+              {new Date(editedVolunteer.dob).toDateString()}{" "}
+              <span>
+                (<strong>{calculateAge(editedVolunteer.dob)}</strong> Years old)
+              </span>
+            </p>
           </div>
           <div className="flex flex-col"></div>
           <div className="flex flex-col">
@@ -149,6 +141,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="address"
               name="address"
+              value={editedVolunteer.address}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -159,6 +152,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="city"
               name="city"
+              value={editedVolunteer.city}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -167,9 +161,9 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <label htmlFor="province">Province:</label>
             <select
               id="province"
-              name="province"
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
               onChange={handleProvinceChange}
+              value={editedVolunteer.province}
             >
               <option value="" hidden>
                 Select your province
@@ -186,6 +180,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="chapter"
               name="chapter"
+              value={editedVolunteer.chapter}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -202,6 +197,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="postalCode"
               name="postalCode"
+              value={editedVolunteer.postalCode}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -213,17 +209,19 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="email"
               id="email"
               name="email"
+              value={editedVolunteer.email}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
           </div>
           <div className="flex flex-col"></div>
           <div className="flex flex-col">
-            <label htmlFor="primaryPhone">Primary Phone:</label>
+            <label htmlFor="phone">Primary Phone:</label>
             <input
               type="text"
-              id="primaryPhone"
-              name="primaryPhone"
+              id="phone"
+              name="phone"
+              value={editedVolunteer.primaryPhone}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -234,16 +232,18 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="secondaryPhone"
               name="secondaryPhone"
+              value={editedVolunteer.secondaryPhone || ""}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
           </div>
           <div className="flex flex-col ">
-            <label htmlFor="emergencyContactName">Emergency Contact Name:</label>
+            <label htmlFor="emergencyContact">Emergency Contact Name:</label>
             <input
               type="text"
-              id="emergencyContactName"
-              name="emergencyContactName"
+              id="emergencyContact"
+              name="emergencyContact"
+              value={editedVolunteer.emergencyContactName}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -254,16 +254,18 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="emergencyContactRelationship"
               name="emergencyContactRelationship"
+              value={editedVolunteer.emergencyContactRelationship}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="emergencyContactPhone">Emergency Phone:</label>
+            <label htmlFor="emergencyPhone">Emergency Phone:</label>
             <input
               type="text"
-              id="emergencyContactPhone"
-              name="emergencyContactPhone"
+              id="emergencyPhone"
+              name="emergencyPhone"
+              value={editedVolunteer.emergencyContactPhone}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -274,6 +276,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="medicalCondition"
               name="medicalCondition"
+              value={editedVolunteer.medicalCondition.toString()} // Convert boolean to string
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -289,6 +292,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="medicalConditionDetails"
               name="medicalConditionDetails"
+              value={editedVolunteer.medicalConditionDetails ?? ""}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -298,6 +302,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="conviction"
               name="conviction"
+              value={editedVolunteer.conviction.toString()} // Convert boolean to string
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -310,6 +315,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="bondable"
               name="bondable"
+              value={editedVolunteer.bondable.toString()} // Convert boolean to string
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -323,6 +329,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="employer"
               name="employer"
+              value={editedVolunteer.employer ?? ""}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -335,6 +342,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="text"
               id="volunteerExperienceDetails"
               name="volunteerExperienceDetails"
+              value={editedVolunteer.volunteerExperienceDetails ?? ""}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             />
@@ -345,6 +353,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="status"
               name="status"
+              value={editedVolunteer.status}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -357,6 +366,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
             <select
               id="role"
               name="role"
+              value={editedVolunteer.role}
               onChange={handleChange}
               className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#6CC24A] sm:text-sm sm:leading-6`}
             >
@@ -377,7 +387,7 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
               type="submit"
               className="bg-[#6CC24A] text-white px-4 py-2 rounded"
             >
-              Add Volunteer
+              Save
             </button>
           </div>
         </form>
@@ -386,4 +396,4 @@ const CreateNewVolunteer: React.FC<CreateNewVolunteerProps> = ({ onClose }) => {
   );
 };
 
-export default CreateNewVolunteer;
+export default EditVolunteerForm;

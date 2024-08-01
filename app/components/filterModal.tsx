@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Filtering } from "./filtering";
+import { Filtering } from "./Filtering";
+
+
  
 interface FilterModalProps {
   message: string;

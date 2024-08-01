@@ -17,7 +17,7 @@ model VolunteerApplicant {
   address                      String   @db.VarChar(60)
   city                         String   @db.VarChar(50)
   province                     String   @db.VarChar(2)
-  postalCode                   String   @db.VarChar(6)
+  postalCode                   String   @db.VarChar(7)
   chapter                      String   @db.VarChar(50)
   primaryPhone                 String   @db.VarChar(15)
   secondaryPhone               String?
@@ -44,7 +44,7 @@ model Volunteer {
   address                      String   @db.VarChar(60)
   city                         String   @db.VarChar(50)
   province                     String   @db.VarChar(2)
-  postalCode                   String   @db.VarChar(6)
+  postalCode                   String   @db.VarChar(7)
   chapter                      String   @db.VarChar(20)
   primaryPhone                 String   @db.VarChar(15)
   secondaryPhone               String?
@@ -60,4 +60,26 @@ model Volunteer {
   volunteerExperienceDetails   String?  @db.VarChar(500)
   interviewStatus              String   @db.VarChar(20)
   status                       String   @db.VarChar(20)
+}
+
+model Event {
+  eventId              String   @id @default(uuid())
+  chapterId            String   @db.VarChar(255)
+  chapter              Chapter  @relation(fields: [chapterId], references: [chapterId])
+  location             String   @db.VarChar(255)
+  date                 DateTime
+  startTime            String   @db.VarChar(10)
+  endTime              String   @db.VarChar(10)
+  volunteersNeeded     Int
+  volunteersRegistered Int
+}
+
+model Chapter {
+  chapterId         String  @id @default(uuid())
+  chapterName       String  @db.VarChar(255)
+  chapterAddress    String  @db.VarChar(255)
+  chapterCity       String  @db.VarChar(255)
+  chapterProvince   String  @db.VarChar(255)
+  chapterPostalCode String  @db.VarChar(10)
+  events            Event[]
 }
