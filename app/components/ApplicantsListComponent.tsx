@@ -2,8 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
 import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { set } from "zod";
-import ConfirmationModal from "./ConfirmationModal";
-
+import ConfirmationModal from "./ModalConfirmation";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;
@@ -312,12 +311,13 @@ const Loading = () => {
             fill="currentFill"
           />
         </svg>
-        <span className="text-gray-700 text-lg mt-2">Loading applicants! Please wait one moment...</span>
+        <span className="text-gray-700 text-lg mt-2">
+          Loading applicants! Please wait one moment...
+        </span>
       </div>
     </div>
   );
 };
-
 
 const ApplicantsListPage: React.FC<ApplicantsListPageProps> = ({
   searchQuery,
