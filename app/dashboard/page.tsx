@@ -8,8 +8,8 @@ import { useRouter } from "next/router";
 import CreateNewVolunteer from "../components/CreateNewVolunteer";
 import SortAndSearchComponent from "../components/SortAndSearchComponent";
 import { VolunteerApplicant } from "@prisma/client";
-import ApplicantsListPage from "../components/ApplicantsList";
-import VolunteersListPage from "../components/VolunteersList";
+import ApplicantsListPage from "../components/ApplicantsListComponent";
+import VolunteersListPage from "../components/VolunteersListComponent";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");
