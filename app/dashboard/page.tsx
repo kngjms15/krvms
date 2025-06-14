@@ -11,7 +11,6 @@ import { VolunteerApplicant } from "@prisma/client";
 import ApplicantsListPage from "../components/ApplicantsList";
 import VolunteersListPage from "../components/VolunteersList";
 
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("volunteers");
   const [showCreateVolunteerModal, setShowCreateVolunteerModal] =
