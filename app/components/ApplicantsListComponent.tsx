@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import { PrismaClient, VolunteerApplicant } from "@prisma/client";
 import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { set } from "zod";
-import ConfirmationModal from "./ModalConfirmation";
+import ConfirmationModal from "./ModalConfirmationDialog";
 
 interface ApplicantsListProps {
   applicant: VolunteerApplicant;

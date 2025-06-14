@@ -3,7 +3,7 @@ import { Volunteer } from "@prisma/client";
 import { MdDelete, MdExpandLess, MdExpandMore } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import EditVolunteerForm from "./EditVolunteerForm";
-import ConfirmationModal from "./ModalConfirmation";
+import ConfirmationModal from "./ModalConfirmationDialog";
 
 interface VolunteersListProps {
   volunteer: Volunteer;
