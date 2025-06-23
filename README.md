@@ -2,7 +2,10 @@
 
 KRVMS is a full-stack volunteer management system built with **Next.js 13**, **TypeScript**, **Prisma**, and **PostgreSQL**. It helps streamline the application, screening, and onboarding of volunteers for community events.
 
-> 🧪 **Live Demo:** [https://krvms-bfhwozjun-kngjms15s-projects.vercel.app](https://krvms-bfhwozjun-kngjms15s-projects.vercel.app)
+## 🔗 Live Demo
+
+👉 [View KRVMS on Vercel](https://krvms-bfhwozjun-kngjms15s-projects.vercel.app)
+
 
 ---
 
@@ -54,3 +57,45 @@ npx prisma migrate dev --name init
 
 # 6. Start the development server
 npm run dev
+
+```
+## 📁 Folder Structure
+```
+KRVMS/
+├── app/
+│   ├── api/                        # API routes
+│   ├── assets/                     # Static images and resources
+│   ├── components/                 # Reusable UI components
+│   ├── createNewVolunteer/        # Volunteer creation workflow
+│   ├── dashboard/                 # Admin dashboard views
+│   ├── login/                     # Login page
+│   ├── VolunteerApplicationForm/  # Application intake form
+│   ├── layout.tsx                 # Root layout
+│   ├── page.tsx                   # Entry point
+│   └── provinceChapters.json      # Static chapter data
+├── prisma/                         # Prisma schema and migration logic
+├── public/                         # Public/static assets
+├── .env                            # Environment variables
+├── tailwind.config.ts              # Tailwind CSS config
+├── jest.config.js / jest.setup.js # Jest testing setup
+├── next.config.mjs                 # Next.js config
+├── package.json                    # Project metadata and scripts
+├── README.md                       # Project documentation
+└── .vercel/                        # Vercel deployment metadata
+```
+## 🧪 Testing
+
+```bash
+
+npm run test
+```
+
+## 🪪 License
+
+This project was created for educational purposes. For reuse, modifications, or contributions please contact author.
+
+## 🍾 Acknowledgements
+
+Developed for a capstone project at SAIT
+Built by: Savanna, Theo, James
+Software Development Students at SAIT
