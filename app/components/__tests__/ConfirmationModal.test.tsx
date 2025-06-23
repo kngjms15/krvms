@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/";
 
-import ConfirmationModal from "../ModalConfirmationDialog";
+import ConfirmationModal from "../ConfirmationModal";
 
 describe("ConfirmationModal component", () => {
   test("renders without error", () => {
