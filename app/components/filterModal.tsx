@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Filtering } from "./Filtering";
+import type { Filtering } from "./Filtering";
 
 
  
